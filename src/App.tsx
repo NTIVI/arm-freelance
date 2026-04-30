@@ -5,9 +5,14 @@ import { Users, Briefcase, ChevronRight, X, Sparkles, ArrowLeft, Camera, Upload 
 export default function App() {
   const [showInfo, setShowInfo] = useState(false);
   const [role, setRole] = useState<'client' | 'creator' | null>(null);
+  const [isRegistered, setIsRegistered] = useState(false);
+
+  if (isRegistered && role) {
+    return <Dashboard role={role} />;
+  }
 
   if (role) {
-    return <RegistrationScreen role={role} onBack={() => setRole(null)} />;
+    return <RegistrationScreen role={role} onBack={() => setRole(null)} onRegister={() => setIsRegistered(true)} />;
   }
 
   return (
@@ -147,7 +152,7 @@ export default function App() {
   );
 }
 
-function RegistrationScreen({ role, onBack }: { role: 'client' | 'creator', onBack: () => void }) {
+function RegistrationScreen({ role, onBack, onRegister }: { role: 'client' | 'creator', onBack: () => void, onRegister: () => void }) {
   const isCreator = role === 'creator';
   const categories = [
     "Разработка сайтов", "Разработка мобильных приложений", "Дизайн",
@@ -187,7 +192,7 @@ function RegistrationScreen({ role, onBack }: { role: 'client' | 'creator', onBa
           Заполните информацию о себе, чтобы начать работу в ARM Freelance.
         </p>
 
-        <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); alert("Регистрация успешна!"); }}>
+        <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); onRegister(); }}>
           
           {/* Avatar Upload */}
           <div className="flex flex-col items-center justify-center space-y-3 mb-8">
@@ -269,5 +274,28 @@ function RegistrationScreen({ role, onBack }: { role: 'client' | 'creator', onBa
         </form>
       </div>
     </motion.div>
+  );
+}
+
+function Dashboard({ role }: { role: 'client' | 'creator' }) {
+  const isCreator = role === 'creator';
+  
+  return (
+    <div className="min-h-screen bg-black text-white p-6 flex flex-col items-center justify-center relative overflow-hidden">
+      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-30"></div>
+      
+      <div className="z-10 text-center space-y-6">
+        <div className="inline-flex items-center justify-center p-4 bg-white/5 rounded-2xl backdrop-blur-xl border border-white/10 mb-4">
+          <Sparkles className="w-12 h-12 text-blue-400" />
+        </div>
+        <h1 className="text-3xl font-bold">
+          {isCreator ? "Биржа Заказов" : "Поиск Создателей"}
+        </h1>
+        <p className="text-white/60">
+          Вы успешно зарегистрировались!<br/>
+          Здесь скоро появится основной функционал.
+        </p>
+      </div>
+    </div>
   );
 }
