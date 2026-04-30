@@ -1,5 +1,6 @@
 import { Telegraf, Markup } from 'telegraf';
 import * as dotenv from 'dotenv';
+import http from 'http';
 
 dotenv.config();
 
@@ -20,6 +21,15 @@ bot.start((ctx) => {
       Markup.button.webApp('Отрыть ARM Freelance', webAppUrl)
     ]).resize()
   );
+});
+
+// Добавляем простой HTTP-сервер, чтобы Render не убивал процесс из-за отсутствия порта
+const port = process.env.PORT || 3000;
+http.createServer((req, res) => {
+  res.writeHead(200);
+  res.end('Bot is running!');
+}).listen(port, () => {
+  console.log(`Сервер запущен на порту ${port}`);
 });
 
 bot.launch().then(() => {
