@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Briefcase, ChevronRight, X, Sparkles, ArrowLeft, Camera, Upload, Home, List, MessageCircle, UserCircle, Search, Filter, Plus, Send } from "lucide-react";
+import { Users, Briefcase, ChevronRight, X, Sparkles, ArrowLeft, Camera, Upload, Home, List, MessageCircle, UserCircle, Search, Filter, Plus, Send, Settings, ShieldAlert, Trash2 } from "lucide-react";
 
 // --- Types ---
-type Role = 'client' | 'creator';
+type Role = 'client' | 'creator' | 'admin';
 type Tab = 'home' | 'my' | 'chats' | 'profile';
 
 // --- Main App Component ---
@@ -13,19 +13,50 @@ export default function App() {
   const [isRegistered, setIsRegistered] = useState(false);
   const [userProfile, setUserProfile] = useState<any>(null);
 
-  if (isRegistered && role) {
-    return <Dashboard role={role} userProfile={userProfile} />;
+  // Load state from localStorage
+  useEffect(() => {
+    const savedProfile = localStorage.getItem("arm_user_profile");
+    const savedRole = localStorage.getItem("arm_user_role");
+    if (savedProfile && savedRole) {
+      setUserProfile(JSON.parse(savedProfile));
+      setRole(savedRole as Role);
+      setIsRegistered(true);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("arm_user_profile");
+    localStorage.removeItem("arm_user_role");
+    setUserProfile(null);
+    setRole(null);
+    setIsRegistered(false);
+  };
+
+  if (isRegistered && role === 'admin') {
+    return <AdminDashboard onLogout={handleLogout} />;
   }
 
-  if (role) {
+  if (isRegistered && role) {
+    return <Dashboard role={role} userProfile={userProfile} onLogout={handleLogout} />;
+  }
+
+  if (role && role !== 'admin') {
     return <RegistrationScreen role={role} onBack={() => setRole(null)} onRegister={(profile) => {
       setUserProfile(profile);
+      setRole(role);
       setIsRegistered(true);
+      localStorage.setItem("arm_user_profile", JSON.stringify(profile));
+      localStorage.setItem("arm_user_role", role);
     }} />;
   }
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col justify-center items-center p-6 relative overflow-hidden">
+      {/* Hidden Admin Button */}
+      <button onClick={() => { setRole('admin'); setIsRegistered(true); localStorage.setItem("arm_user_role", "admin"); }} className="absolute top-6 right-6 p-2 bg-white/5 rounded-full hover:bg-white/10 z-20">
+        <Settings className="w-5 h-5 text-white/30" />
+      </button>
+
       <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-50 animate-blob"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-50 animate-blob animation-delay-2000"></div>
 
@@ -97,7 +128,7 @@ export default function App() {
 // --- Registration Screen ---
 function RegistrationScreen({ role, onBack, onRegister }: { role: Role, onBack: () => void, onRegister: (data: any) => void }) {
   const isCreator = role === 'creator';
-  const categories = ["Разработка сайтов", "Разработка мобильных приложений", "Дизайн", "Продажи", "Маркетинг", "Обмен криптовалюты", "Программирование", "SMM"];
+  const categories = ["Разработка сайтов", "Разработка мобильных приложений", "Дизайн", "Продажи", "Маркетинг", "Обмен криптовалюты", "Программирование", "SMM", "Копирайтинг"];
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
@@ -116,7 +147,7 @@ function RegistrationScreen({ role, onBack, onRegister }: { role: Role, onBack: 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onRegister({ name, surname, age, category, exp, desc, avatar: avatarPreview });
+    onRegister({ name, surname, age, category, exp, desc, avatar: avatarPreview, portfolio: [] });
   };
 
   return (
@@ -192,37 +223,43 @@ function RegistrationScreen({ role, onBack, onRegister }: { role: Role, onBack: 
 }
 
 // --- Dashboard Component ---
-function Dashboard({ role, userProfile }: { role: Role, userProfile: any }) {
+function Dashboard({ role, userProfile, onLogout }: { role: Role, userProfile: any, onLogout: () => void }) {
   const isCreator = role === 'creator';
   const [activeTab, setActiveTab] = useState<Tab>('home');
-  const categories = ["Все", "Разработка сайтов", "Дизайн", "Маркетинг", "SMM"];
+  const categories = ["Все", "Разработка сайтов", "Разработка мобильных приложений", "Дизайн", "Продажи", "Маркетинг", "Обмен криптовалюты", "Программирование", "SMM"];
   const [activeFilter, setActiveFilter] = useState("Все");
 
-  // Local State for interactive features
+  // Local State
   const [myItems, setMyItems] = useState<any[]>([]);
   const [chats, setChats] = useState<any[]>([]);
   const [activeChat, setActiveChat] = useState<any | null>(null);
+  const [portfolio, setPortfolio] = useState<string[]>(userProfile?.portfolio || []);
   
   // Modals
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const jobPhotoRef = useRef<HTMLInputElement>(null);
+  const [jobPhotoPreview, setJobPhotoPreview] = useState<string | null>(null);
 
   const showToast = (msg: string) => {
     setToast(msg);
     setTimeout(() => setToast(null), 3000);
   };
 
-  // Mock Feed Data
   const mockCreators = [
     { id: 1, name: "Алексей С.", category: "Разработка сайтов", exp: "5+ лет", desc: "Делаю крутые лендинги на React и Vite." },
     { id: 2, name: "Мария В.", category: "Дизайн", exp: "3-5 лет", desc: "UI/UX дизайнер, рисую в Figma премиум дизайн." },
-    { id: 3, name: "Дмитрий К.", category: "Маркетинг", exp: "1-3 года", desc: "Настрою Яндекс Директ и VK Рекламу." }
+    { id: 3, name: "Дмитрий К.", category: "Маркетинг", exp: "1-3 года", desc: "Настрою Яндекс Директ и VK Рекламу." },
+    { id: 4, name: "Олег П.", category: "Обмен криптовалюты", exp: "Более 5 лет", desc: "P2P переводы, консультации." }
   ];
   
   const mockJobs = [
-    { id: 1, title: "Нужен лендинг для салона", category: "Разработка сайтов", budget: "50 000 ₽", desc: "Срочно ищем разработчика для одностраничника." },
-    { id: 2, title: "Дизайн мобильного приложения", category: "Дизайн", budget: "80 000 ₽", desc: "Нужен дизайн 10 экранов для iOS." },
-    { id: 3, title: "Сделать интернет-магазин", category: "Разработка сайтов", budget: "150 000 ₽", desc: "Полный цикл от дизайна до деплоя на Next.js." }
+    { id: 1, title: "Нужен лендинг для салона", category: "Разработка сайтов", budget: "50 000 ₽", desc: "Срочно ищем разработчика для одностраничника.", deadline: "10 дней" },
+    { id: 2, title: "Дизайн мобильного приложения", category: "Дизайн", budget: "80 000 ₽", desc: "Нужен дизайн 10 экранов для iOS.", deadline: "2 недели" },
+    { id: 3, title: "Сделать интернет-магазин", category: "Разработка сайтов", budget: "150 000 ₽", desc: "Полный цикл от дизайна до деплоя на Next.js.", deadline: "1 месяц" },
+    { id: 4, title: "Продвижение в Instagram", category: "SMM", budget: "30 000 ₽", desc: "Ведение аккаунта магазина одежды.", deadline: "Постоянно" }
   ];
 
   const handleCreate = (e: any) => {
@@ -231,10 +268,11 @@ function Dashboard({ role, userProfile }: { role: Role, userProfile: any }) {
     const newItem = isCreator ? {
       title: formData.get("title"), category: formData.get("category"), price: formData.get("price"), desc: formData.get("desc")
     } : {
-      title: formData.get("title"), category: formData.get("category"), budget: formData.get("budget"), desc: formData.get("desc")
+      title: formData.get("title"), category: formData.get("category"), budget: formData.get("budget"), desc: formData.get("desc"), deadline: formData.get("deadline"), photo: jobPhotoPreview
     };
     setMyItems([newItem, ...myItems]);
     setShowCreateModal(false);
+    setJobPhotoPreview(null);
     showToast("Успешно добавлено!");
   };
 
@@ -244,12 +282,20 @@ function Dashboard({ role, userProfile }: { role: Role, userProfile: any }) {
     showToast("Чат создан! Перейдите во вкладку Чаты.");
   };
 
+  const handlePortfolioUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setPortfolio([...portfolio, URL.createObjectURL(file)]);
+      showToast("Фото добавлено в портфолио");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-black text-white flex flex-col relative">
       <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 pointer-events-none"></div>
 
       {toast && (
-        <motion.div initial={{ y: -50, opacity: 0 }} animate={{ y: 20, opacity: 1 }} exit={{ y: -50, opacity: 0 }} className="absolute top-0 left-1/2 -translate-x-1/2 bg-green-500/20 border border-green-500/50 text-green-300 px-4 py-2 rounded-xl z-50 text-sm font-medium shadow-lg backdrop-blur-md">
+        <motion.div initial={{ y: -50, opacity: 0 }} animate={{ y: 20, opacity: 1 }} exit={{ y: -50, opacity: 0 }} className="absolute top-0 left-1/2 -translate-x-1/2 bg-green-500/20 border border-green-500/50 text-green-300 px-4 py-2 rounded-xl z-50 text-sm font-medium shadow-lg backdrop-blur-md whitespace-nowrap">
           {toast}
         </motion.div>
       )}
@@ -274,7 +320,6 @@ function Dashboard({ role, userProfile }: { role: Role, userProfile: any }) {
                 <Search className="w-5 h-5 text-white/40" />
                 <input type="text" placeholder="Поиск..." className="bg-transparent border-none outline-none w-full text-white placeholder-white/40" />
               </div>
-              <button className="bg-white/5 border border-white/10 rounded-xl p-3"><Filter className="w-5 h-5 text-white/70" /></button>
             </div>
 
             <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
@@ -307,9 +352,12 @@ function Dashboard({ role, userProfile }: { role: Role, userProfile: any }) {
                     <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/10 rounded-full blur-3xl group-hover:bg-green-500/20 transition-colors"></div>
                     <div className="flex justify-between items-start relative z-10">
                       <h3 className="font-semibold text-lg max-w-[70%]">{j.title}</h3>
-                      <span className="text-green-400 font-bold bg-green-400/10 px-2 py-1 rounded-lg border border-green-400/20">{j.budget}</span>
+                      <span className="text-green-400 font-bold bg-green-400/10 px-2 py-1 rounded-lg border border-green-400/20 whitespace-nowrap">{j.budget}</span>
                     </div>
-                    <span className="text-xs text-blue-400 bg-blue-400/10 px-2 py-1 rounded-full w-max border border-blue-400/20 relative z-10">{j.category}</span>
+                    <div className="flex gap-2">
+                      <span className="text-xs text-blue-400 bg-blue-400/10 px-2 py-1 rounded-full w-max border border-blue-400/20">{j.category}</span>
+                      <span className="text-xs text-orange-400 bg-orange-400/10 px-2 py-1 rounded-full w-max border border-orange-400/20">Срок: {j.deadline}</span>
+                    </div>
                     <p className="text-white/70 text-sm leading-relaxed relative z-10">{j.desc}</p>
                     <button onClick={() => startChat("Клиент", j.title)} className="w-full py-2.5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 shadow-lg shadow-purple-500/20 rounded-xl text-sm font-semibold transition-colors mt-2 relative z-10">Откликнуться на заказ</button>
                   </div>
@@ -334,13 +382,17 @@ function Dashboard({ role, userProfile }: { role: Role, userProfile: any }) {
               </div>
             ) : (
               myItems.map((item, i) => (
-                <div key={i} className="bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col space-y-2">
-                  <div className="flex justify-between">
-                    <h3 className="font-semibold">{item.title}</h3>
+                <div key={i} className="bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col space-y-3">
+                  <div className="flex justify-between items-start">
+                    <h3 className="font-semibold text-lg">{item.title}</h3>
                     <span className="text-green-400 font-semibold">{item.budget || item.price}</span>
                   </div>
-                  <span className="text-xs text-blue-400 bg-blue-400/10 px-2 py-1 rounded-full w-max">{item.category}</span>
-                  <p className="text-white/60 text-sm">{item.desc}</p>
+                  <div className="flex gap-2">
+                    <span className="text-xs text-blue-400 bg-blue-400/10 px-2 py-1 rounded-full w-max">{item.category}</span>
+                    {item.deadline && <span className="text-xs text-orange-400 bg-orange-400/10 px-2 py-1 rounded-full w-max">Срок: {item.deadline}</span>}
+                  </div>
+                  {item.photo && <img src={item.photo} className="w-full h-32 object-cover rounded-xl mt-2" alt="Задание" />}
+                  <p className="text-white/60 text-sm mt-2">{item.desc}</p>
                 </div>
               ))
             )}
@@ -374,13 +426,9 @@ function Dashboard({ role, userProfile }: { role: Role, userProfile: any }) {
         {activeTab === 'profile' && (
           <div className="space-y-6">
             <div className="flex flex-col items-center space-y-4 pt-6">
-              <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-purple-500 to-blue-500 p-1">
+              <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-purple-500 to-blue-500 p-1 relative group">
                 <div className="w-full h-full rounded-full bg-black flex items-center justify-center overflow-hidden">
-                  {userProfile?.avatar ? (
-                    <img src={userProfile.avatar} alt="Profile" className="w-full h-full object-cover" />
-                  ) : (
-                    <UserCircle className="w-12 h-12 text-white/50" />
-                  )}
+                  {userProfile?.avatar ? <img src={userProfile.avatar} alt="Profile" className="w-full h-full object-cover" /> : <UserCircle className="w-12 h-12 text-white/50" />}
                 </div>
               </div>
               <div className="text-center">
@@ -402,17 +450,38 @@ function Dashboard({ role, userProfile }: { role: Role, userProfile: any }) {
             </div>
 
             {isCreator && (
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-2">
-                <h3 className="font-semibold text-white/70 text-sm uppercase tracking-wider">О себе</h3>
-                <p className="text-sm text-white/90 leading-relaxed">{userProfile?.desc}</p>
-                <div className="pt-2 flex flex-wrap gap-2">
-                  <span className="text-xs bg-white/10 px-2 py-1 rounded-md">{userProfile?.category}</span>
-                  <span className="text-xs bg-white/10 px-2 py-1 rounded-md">Опыт: {userProfile?.exp}</span>
+              <>
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-2">
+                  <h3 className="font-semibold text-white/70 text-sm uppercase tracking-wider">О себе</h3>
+                  <p className="text-sm text-white/90 leading-relaxed">{userProfile?.desc}</p>
+                  <div className="pt-2 flex flex-wrap gap-2">
+                    <span className="text-xs bg-white/10 px-2 py-1 rounded-md">{userProfile?.category}</span>
+                    <span className="text-xs bg-white/10 px-2 py-1 rounded-md">Опыт: {userProfile?.exp}</span>
+                  </div>
                 </div>
-              </div>
+
+                {/* Portfolio Section */}
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-semibold text-white/70 text-sm uppercase tracking-wider">Портфолио</h3>
+                    <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handlePortfolioUpload} />
+                    <button onClick={() => fileInputRef.current?.click()} className="text-purple-400 text-sm hover:text-purple-300 flex items-center"><Plus className="w-4 h-4 mr-1"/> Добавить фото</button>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {portfolio.map((img, i) => (
+                      <div key={i} className="aspect-square rounded-xl bg-white/10 overflow-hidden">
+                        <img src={img} alt="portfolio" className="w-full h-full object-cover" />
+                      </div>
+                    ))}
+                    {portfolio.length === 0 && (
+                      <div className="col-span-3 text-center text-white/40 py-4 text-sm">Здесь будут ваши выполненные проекты</div>
+                    )}
+                  </div>
+                </div>
+              </>
             )}
 
-            <button className="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-red-400 font-semibold transition-colors mt-8">
+            <button onClick={onLogout} className="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-red-400 font-semibold transition-colors mt-8 flex items-center justify-center">
               Выйти из аккаунта
             </button>
           </div>
@@ -448,7 +517,7 @@ function Dashboard({ role, userProfile }: { role: Role, userProfile: any }) {
         {showCreateModal && (
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/60 backdrop-blur-sm z-40" onClick={() => setShowCreateModal(false)} />
-            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} className="absolute bottom-0 left-0 right-0 bg-[#121214] border-t border-white/10 p-6 rounded-t-3xl z-50">
+            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} className="absolute bottom-0 left-0 right-0 bg-[#121214] border-t border-white/10 p-6 rounded-t-3xl z-50 max-h-[90vh] overflow-y-auto pb-20">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold">{isCreator ? "Новая услуга" : "Новое задание"}</h2>
                 <button onClick={() => setShowCreateModal(false)} className="p-2 bg-white/5 rounded-full"><X className="w-5 h-5" /></button>
@@ -460,6 +529,28 @@ function Dashboard({ role, userProfile }: { role: Role, userProfile: any }) {
                   {categories.filter(c => c !== "Все").map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
                 <input required name={isCreator ? "price" : "budget"} type="text" placeholder={isCreator ? "Цена (например, от 5000 ₽)" : "Бюджет (например, 50 000 ₽)"} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500" />
+                
+                {/* Client specific fields */}
+                {!isCreator && (
+                  <>
+                    <input required name="deadline" type="text" placeholder="Сроки (например, 2 недели)" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500" />
+                    <div className="w-full bg-white/5 border border-white/10 border-dashed rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" onClick={() => jobPhotoRef.current?.click()}>
+                      <input type="file" accept="image/*" className="hidden" ref={jobPhotoRef} onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) setJobPhotoPreview(URL.createObjectURL(file));
+                      }} />
+                      {jobPhotoPreview ? (
+                        <img src={jobPhotoPreview} className="h-20 object-contain rounded-md" />
+                      ) : (
+                        <>
+                          <Camera className="w-6 h-6 text-white/40 mb-2" />
+                          <span className="text-xs text-white/50">Прикрепить фото к заданию (опционально)</span>
+                        </>
+                      )}
+                    </div>
+                  </>
+                )}
+
                 <textarea required name="desc" rows={4} placeholder="Подробное описание..." className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 resize-none"></textarea>
                 <button type="submit" className="w-full py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 text-white font-semibold rounded-xl">Опубликовать</button>
               </form>
@@ -490,6 +581,79 @@ function Dashboard({ role, userProfile }: { role: Role, userProfile: any }) {
           </button>
         </div>
       </nav>
+    </div>
+  );
+}
+
+// --- Admin Panel Component ---
+function AdminDashboard({ onLogout }: { onLogout: () => void }) {
+  const [activeTab, setActiveTab] = useState<'users' | 'jobs' | 'stats'>('stats');
+
+  return (
+    <div className="min-h-screen bg-[#0a0a0c] text-white flex flex-col">
+      <header className="p-4 border-b border-white/10 flex justify-between items-center bg-white/5">
+        <div className="flex items-center space-x-2">
+          <ShieldAlert className="w-6 h-6 text-red-500" />
+          <h1 className="text-xl font-bold">Admin Panel</h1>
+        </div>
+        <button onClick={onLogout} className="text-sm text-red-400 hover:text-red-300">Выход</button>
+      </header>
+
+      <div className="flex p-4 space-x-2 overflow-x-auto scrollbar-hide border-b border-white/10">
+        <button onClick={() => setActiveTab('stats')} className={`px-4 py-2 rounded-lg text-sm font-medium ${activeTab === 'stats' ? 'bg-red-500/20 text-red-400' : 'bg-white/5 hover:bg-white/10'}`}>Статистика</button>
+        <button onClick={() => setActiveTab('users')} className={`px-4 py-2 rounded-lg text-sm font-medium ${activeTab === 'users' ? 'bg-red-500/20 text-red-400' : 'bg-white/5 hover:bg-white/10'}`}>Пользователи</button>
+        <button onClick={() => setActiveTab('jobs')} className={`px-4 py-2 rounded-lg text-sm font-medium ${activeTab === 'jobs' ? 'bg-red-500/20 text-red-400' : 'bg-white/5 hover:bg-white/10'}`}>Объявления</button>
+      </div>
+
+      <main className="flex-1 p-4 overflow-y-auto">
+        {activeTab === 'stats' && (
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-white/5 border border-white/10 p-4 rounded-xl text-center">
+              <span className="block text-3xl font-bold text-white">1,204</span>
+              <span className="text-xs text-white/50">Пользователей</span>
+            </div>
+            <div className="bg-white/5 border border-white/10 p-4 rounded-xl text-center">
+              <span className="block text-3xl font-bold text-white">450</span>
+              <span className="text-xs text-white/50">Активных задач</span>
+            </div>
+            <div className="bg-white/5 border border-white/10 p-4 rounded-xl text-center col-span-2">
+              <span className="block text-3xl font-bold text-green-400">12 400 ₽</span>
+              <span className="text-xs text-white/50">Доход (Комиссии)</span>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'users' && (
+          <div className="space-y-3">
+            {[1,2,3].map(i => (
+              <div key={i} className="bg-white/5 border border-white/10 p-3 rounded-xl flex justify-between items-center">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center"><UserCircle className="w-6 h-6 text-white/50" /></div>
+                  <div>
+                    <h4 className="font-semibold text-sm">User {i}</h4>
+                    <p className="text-xs text-white/50">Роль: Создатель</p>
+                  </div>
+                </div>
+                <button className="p-2 text-red-400 hover:bg-red-400/10 rounded-lg"><Trash2 className="w-4 h-4" /></button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {activeTab === 'jobs' && (
+          <div className="space-y-3">
+            {[1,2].map(i => (
+              <div key={i} className="bg-white/5 border border-white/10 p-3 rounded-xl flex flex-col space-y-2">
+                <div className="flex justify-between items-start">
+                  <h4 className="font-semibold text-sm">Задание {i}</h4>
+                  <button className="p-1 text-red-400 hover:bg-red-400/10 rounded-lg"><Trash2 className="w-4 h-4" /></button>
+                </div>
+                <p className="text-xs text-white/50 truncate">Сделать логотип для компании...</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </main>
     </div>
   );
 }
