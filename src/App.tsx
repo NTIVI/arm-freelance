@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Briefcase, ChevronRight, X, Sparkles, ArrowLeft, Camera, Upload, Home, List, MessageCircle, UserCircle, Search, Filter, Plus, Send, Settings, ShieldAlert, Trash2 } from "lucide-react";
+import { Users, Briefcase, ChevronRight, X, Sparkles, ArrowLeft, Camera, Upload, Home, List, MessageCircle, UserCircle, Search, Plus, Send, Settings, ShieldAlert, Trash2 } from "lucide-react";
 
 // --- Types ---
 type Role = 'client' | 'creator' | 'admin';
