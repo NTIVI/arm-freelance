@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Briefcase, ChevronRight, X, Sparkles, ArrowLeft, Camera, Upload } from "lucide-react";
+import { Users, Briefcase, ChevronRight, X, Sparkles, ArrowLeft, Camera, Upload, Home, List, MessageCircle, UserCircle, Search, Filter } from "lucide-react";
 
 export default function App() {
   const [showInfo, setShowInfo] = useState(false);
@@ -279,23 +279,129 @@ function RegistrationScreen({ role, onBack, onRegister }: { role: 'client' | 'cr
 
 function Dashboard({ role }: { role: 'client' | 'creator' }) {
   const isCreator = role === 'creator';
+  const [activeTab, setActiveTab] = useState<'home' | 'my' | 'chats' | 'profile'>('home');
+  const categories = ["Разработка сайтов", "Дизайн", "Маркетинг", "SMM"];
+
+  // Mock Data
+  const mockCreators = [
+    { name: "Алексей С.", category: "Разработка сайтов", exp: "5+ лет", desc: "Делаю крутые лендинги на React и Vite." },
+    { name: "Мария В.", category: "Дизайн", exp: "3-5 лет", desc: "UI/UX дизайнер, рисую в Figma премиум дизайн." },
+  ];
   
+  const mockJobs = [
+    { title: "Нужен лендинг для салона", category: "Разработка сайтов", budget: "50 000 ₽", desc: "Срочно ищем разработчика для одностраничника." },
+    { title: "Дизайн мобильного приложения", category: "Дизайн", budget: "80 000 ₽", desc: "Нужен дизайн 10 экранов для iOS." },
+  ];
+
   return (
-    <div className="min-h-screen bg-black text-white p-6 flex flex-col items-center justify-center relative overflow-hidden">
-      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-30"></div>
-      
-      <div className="z-10 text-center space-y-6">
-        <div className="inline-flex items-center justify-center p-4 bg-white/5 rounded-2xl backdrop-blur-xl border border-white/10 mb-4">
-          <Sparkles className="w-12 h-12 text-blue-400" />
+    <div className="min-h-screen bg-black text-white flex flex-col relative">
+      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20"></div>
+
+      {/* Header */}
+      <header className="p-6 pb-4 border-b border-white/10 relative z-10">
+        <h1 className="text-2xl font-bold">{isCreator ? "Биржа Заказов" : "Поиск Создателей"}</h1>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 overflow-y-auto p-4 pb-24 relative z-10 space-y-6">
+        {activeTab === 'home' && (
+          <>
+            {/* Search and Filter */}
+            <div className="flex space-x-2">
+              <div className="flex-1 bg-white/5 border border-white/10 rounded-xl p-3 flex items-center space-x-2">
+                <Search className="w-5 h-5 text-white/40" />
+                <input type="text" placeholder="Поиск..." className="bg-transparent border-none outline-none w-full text-white placeholder-white/40" />
+              </div>
+              <button className="bg-white/5 border border-white/10 rounded-xl p-3">
+                <Filter className="w-5 h-5 text-white/70" />
+              </button>
+            </div>
+
+            {/* Categories */}
+            <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
+              {categories.map(cat => (
+                <button key={cat} className="whitespace-nowrap px-4 py-2 bg-white/10 rounded-full text-sm font-medium hover:bg-white/20 transition-colors">
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            {/* Feed */}
+            <div className="space-y-4">
+              {!isCreator ? (
+                mockCreators.map((c, i) => (
+                  <div key={i} className="bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col space-y-3">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-purple-500 to-blue-500 flex items-center justify-center font-bold text-lg">{c.name[0]}</div>
+                      <div>
+                        <h3 className="font-semibold text-lg">{c.name}</h3>
+                        <span className="text-xs text-purple-400 bg-purple-400/10 px-2 py-1 rounded-full">{c.category} • {c.exp}</span>
+                      </div>
+                    </div>
+                    <p className="text-white/70 text-sm leading-relaxed">{c.desc}</p>
+                    <button className="w-full py-2.5 bg-white/10 hover:bg-white/20 rounded-xl text-sm font-semibold transition-colors mt-2">Написать</button>
+                  </div>
+                ))
+              ) : (
+                mockJobs.map((j, i) => (
+                  <div key={i} className="bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col space-y-3">
+                    <div className="flex justify-between items-start">
+                      <h3 className="font-semibold text-lg max-w-[70%]">{j.title}</h3>
+                      <span className="text-green-400 font-semibold">{j.budget}</span>
+                    </div>
+                    <span className="text-xs text-blue-400 bg-blue-400/10 px-2 py-1 rounded-full w-max">{j.category}</span>
+                    <p className="text-white/70 text-sm leading-relaxed">{j.desc}</p>
+                    <button className="w-full py-2.5 bg-purple-600 hover:bg-purple-500 rounded-xl text-sm font-semibold transition-colors mt-2">Откликнуться</button>
+                  </div>
+                ))
+              )}
+            </div>
+          </>
+        )}
+
+        {activeTab === 'my' && (
+          <div className="flex flex-col items-center justify-center h-full opacity-50 py-20">
+            <List className="w-16 h-16 mb-4" />
+            <p>{isCreator ? "Ваши опубликованные услуги" : "Ваши опубликованные задания"}</p>
+          </div>
+        )}
+
+        {activeTab === 'chats' && (
+          <div className="flex flex-col items-center justify-center h-full opacity-50 py-20">
+            <MessageCircle className="w-16 h-16 mb-4" />
+            <p>У вас пока нет активных диалогов</p>
+          </div>
+        )}
+
+        {activeTab === 'profile' && (
+          <div className="flex flex-col items-center justify-center h-full opacity-50 py-20">
+            <UserCircle className="w-16 h-16 mb-4" />
+            <p>Настройки профиля</p>
+          </div>
+        )}
+      </main>
+
+      {/* Tab Bar */}
+      <nav className="absolute bottom-0 left-0 right-0 bg-[#121214] border-t border-white/10 pb-safe z-50">
+        <div className="flex justify-around items-center p-4">
+          <button onClick={() => setActiveTab('home')} className={`flex flex-col items-center space-y-1 ${activeTab === 'home' ? 'text-purple-400' : 'text-white/40'}`}>
+            <Home className="w-6 h-6" />
+            <span className="text-[10px] font-medium">Главная</span>
+          </button>
+          <button onClick={() => setActiveTab('my')} className={`flex flex-col items-center space-y-1 ${activeTab === 'my' ? 'text-purple-400' : 'text-white/40'}`}>
+            <Briefcase className="w-6 h-6" />
+            <span className="text-[10px] font-medium">{isCreator ? "Мои услуги" : "Мои задания"}</span>
+          </button>
+          <button onClick={() => setActiveTab('chats')} className={`flex flex-col items-center space-y-1 ${activeTab === 'chats' ? 'text-purple-400' : 'text-white/40'}`}>
+            <MessageCircle className="w-6 h-6" />
+            <span className="text-[10px] font-medium">Чаты</span>
+          </button>
+          <button onClick={() => setActiveTab('profile')} className={`flex flex-col items-center space-y-1 ${activeTab === 'profile' ? 'text-purple-400' : 'text-white/40'}`}>
+            <UserCircle className="w-6 h-6" />
+            <span className="text-[10px] font-medium">Профиль</span>
+          </button>
         </div>
-        <h1 className="text-3xl font-bold">
-          {isCreator ? "Биржа Заказов" : "Поиск Создателей"}
-        </h1>
-        <p className="text-white/60">
-          Вы успешно зарегистрировались!<br/>
-          Здесь скоро появится основной функционал.
-        </p>
-      </div>
+      </nav>
     </div>
   );
 }
