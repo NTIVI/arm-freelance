@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Users, Briefcase, ChevronRight, X, Sparkles, ArrowLeft, Camera, Upload } from "lucide-react";
 
@@ -154,6 +154,17 @@ function RegistrationScreen({ role, onBack }: { role: 'client' | 'creator', onBa
     "Продажи", "Маркетинг", "Обмен криптовалюты", "Программирование", "SMM"
   ];
 
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setAvatarPreview(url);
+    }
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0, x: 20 }}
@@ -180,8 +191,22 @@ function RegistrationScreen({ role, onBack }: { role: 'client' | 'creator', onBa
           
           {/* Avatar Upload */}
           <div className="flex flex-col items-center justify-center space-y-3 mb-8">
-            <div className="w-24 h-24 rounded-full bg-white/5 border border-white/10 flex items-center justify-center relative overflow-hidden group cursor-pointer">
-              <Camera className="w-8 h-8 text-white/30 group-hover:scale-110 transition-transform" />
+            <input 
+              type="file" 
+              accept="image/*" 
+              className="hidden" 
+              ref={fileInputRef} 
+              onChange={handleAvatarChange} 
+            />
+            <div 
+              onClick={() => fileInputRef.current?.click()}
+              className="w-24 h-24 rounded-full bg-white/5 border border-white/10 flex items-center justify-center relative overflow-hidden group cursor-pointer"
+            >
+              {avatarPreview ? (
+                <img src={avatarPreview} alt="Avatar Preview" className="w-full h-full object-cover" />
+              ) : (
+                <Camera className="w-8 h-8 text-white/30 group-hover:scale-110 transition-transform" />
+              )}
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                 <Upload className="w-6 h-6 text-white" />
               </div>
