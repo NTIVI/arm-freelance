@@ -1,27 +1,41 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme inline {
-  --animate-blob: blob 7s infinite;
-}
-
-@keyframes blob {
-  0% { transform: translate(0px, 0px) scale(1); }
-  33% { transform: translate(30px, -50px) scale(1.1); }
-  66% { transform: translate(-20px, 20px) scale(0.9); }
-  100% { transform: translate(0px, 0px) scale(1); }
-}
-
-@layer utilities {
-  .animation-delay-2000 {
-    animation-delay: 2s;
-  }
+:root {
+  color-scheme: dark;
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif;
-  background-color: #000;
-  color: #fff;
-  overflow-x: hidden;
+  font-family: 'Inter', sans-serif;
+}
+
+@layer base {
+  .glass-card {
+    @apply bg-white/[0.03] backdrop-blur-2xl border border-white/5 shadow-2xl;
+  }
+  
+  .text-glow {
+    text-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+  }
+}
+
+.card-hover-effect {
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card-hover-effect:hover {
+  transform: translateY(-8px) scale(1.01);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-white/10 rounded-full hover:bg-white/20;
 }
