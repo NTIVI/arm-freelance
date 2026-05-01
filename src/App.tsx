@@ -208,11 +208,13 @@ function RegistrationScreen({ role, onBack, onRegister }: { role: Role, onBack: 
   const categories = ["Разработка сайтов", "Разработка мобильных приложений", "Дизайн", "Продажи", "Маркетинг", "Обмен криптовалюты", "Программирование", "SMM", "Копирайтинг"];
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [isLoginMode, setIsLoginMode] = useState(false);
+  const [step, setStep] = useState<'auth' | 'profile'>('auth');
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Form state
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [age, setAge] = useState("");
@@ -258,12 +260,21 @@ function RegistrationScreen({ role, onBack, onRegister }: { role: Role, onBack: 
         setTimeout(() => setError(null), 3000);
       }
     } else {
-      if (accounts.some((a: any) => a.username === username)) {
-        setError("Этот ник уже занят");
-        setTimeout(() => setError(null), 3000);
-        return;
+      if (step === 'auth') {
+        if (accounts.some((a: any) => a.username === username)) {
+          setError("Этот ник уже занят");
+          setTimeout(() => setError(null), 3000);
+          return;
+        }
+        if (password !== confirmPassword) {
+          setError("Пароли не совпадают");
+          setTimeout(() => setError(null), 3000);
+          return;
+        }
+        setStep('profile');
+      } else {
+        onRegister({ username, password, name, surname, age, category, exp, desc, avatar: avatarPreview, portfolio: [] });
       }
-      onRegister({ username, password, name, surname, age, category, exp, desc, avatar: avatarPreview, portfolio: [] });
     }
   };
 
@@ -276,8 +287,12 @@ function RegistrationScreen({ role, onBack, onRegister }: { role: Role, onBack: 
           <span className="text-sm font-medium text-white/70 pr-2">Назад</span>
         </button>
 
-        <h2 className="text-3xl font-bold mb-2">{isLoginMode ? "С возвращением!" : (isCreator ? "Профиль Создателя" : "Профиль Клиента")}</h2>
-        <p className="text-white/50 text-sm mb-8">{isLoginMode ? "Войдите в свой аккаунт для продолжения." : "Заполните информацию о себе, чтобы начать работу."}</p>
+        <h2 className="text-3xl font-bold mb-2">
+          {isLoginMode ? "С возвращением!" : (step === 'auth' ? "Создание аккаунта" : (isCreator ? "Профиль Создателя" : "Профиль Клиента"))}
+        </h2>
+        <p className="text-white/50 text-sm mb-8">
+          {isLoginMode ? "Войдите в свой аккаунт для продолжения." : (step === 'auth' ? "Придумайте никнейм и пароль для входа." : "Заполните информацию о себе, чтобы начать работу.")}
+        </p>
 
         {error && (
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-red-500/20 border border-red-500/50 text-red-400 p-3 rounded-xl text-sm mb-6">
@@ -286,18 +301,26 @@ function RegistrationScreen({ role, onBack, onRegister }: { role: Role, onBack: 
         )}
 
         <form className="space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-white/70">Никнейм (Логин)</label>
-              <input required value={username} onChange={e=>setUsername(e.target.value)} type="text" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="user123" />
+          {(isLoginMode || step === 'auth') && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-white/70">Никнейм (Логин)</label>
+                <input required value={username} onChange={e=>setUsername(e.target.value)} type="text" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="user123" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-white/70">Пароль</label>
+                <input required value={password} onChange={e=>setPassword(e.target.value)} type="password" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="••••••••" />
+              </div>
+              {!isLoginMode && (
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-white/70">Подтвердите пароль</label>
+                  <input required value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} type="password" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="••••••••" />
+                </div>
+              )}
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-white/70">Пароль</label>
-              <input required value={password} onChange={e=>setPassword(e.target.value)} type="password" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="••••••••" />
-            </div>
-          </div>
+          )}
 
-          {!isLoginMode && (
+          {!isLoginMode && step === 'profile' && (
             <>
               <div className="flex flex-col items-center justify-center space-y-3 mb-8">
             <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleAvatarChange} />
