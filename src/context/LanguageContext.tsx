@@ -23,6 +23,16 @@ const translations: Record<Language, Record<string, string>> = {
     role_question: 'How would you like to use the platform?',
     step_1: 'Step 1: Account Type',
     step_2: 'Step 2: Professional Details',
+    nav_dashboard: 'Dashboard',
+    nav_find: 'Find Work',
+    nav_my_jobs: 'My Jobs',
+    nav_catalog: 'Project Catalog',
+    nav_messages: 'Messages',
+    nav_settings: 'Profile Settings',
+    logout: 'Logout Session',
+    search_placeholder_freelancer: 'Search for high-tier projects...',
+    search_placeholder_client: 'Search for world-class specialists...',
+    post_job: 'Post New Project'
   },
   ru: {
     find_talent: 'Найти таланты',
@@ -38,6 +48,16 @@ const translations: Record<Language, Record<string, string>> = {
     role_question: 'Как вы планируете использовать платформу?',
     step_1: 'Шаг 1: Тип аккаунта',
     step_2: 'Шаг 2: Профессиональные данные',
+    nav_dashboard: 'Панель управления',
+    nav_find: 'Поиск работы',
+    nav_my_jobs: 'Мои проекты',
+    nav_catalog: 'Каталог услуг',
+    nav_messages: 'Сообщения',
+    nav_settings: 'Настройки профиля',
+    logout: 'Выйти из сессии',
+    search_placeholder_freelancer: 'Поиск топовых проектов...',
+    search_placeholder_client: 'Поиск специалистов мирового уровня...',
+    post_job: 'Разместить проект'
   },
   hy: {
     find_talent: 'Գտնել մասնագետ',
@@ -53,6 +73,16 @@ const translations: Record<Language, Record<string, string>> = {
     role_question: 'Ինչպե՞ս եք ցանկանում օգտագործել հարթակը:',
     step_1: 'Քայլ 1. Հաշվի տեսակը',
     step_2: 'Քայլ 2. Մասնագիտական տվյալներ',
+    nav_dashboard: 'Կառավարման վահանակ',
+    nav_find: 'Աշխատանքի փնտրում',
+    nav_my_jobs: 'Իմ նախագծերը',
+    nav_catalog: 'Ծառայությունների կատալոգ',
+    nav_messages: 'Հաղորդագրություններ',
+    nav_settings: 'Պրոֆիլի կարգավորումներ',
+    logout: 'Դուրս գալ',
+    search_placeholder_freelancer: 'Փնտրել բարձրակարգ նախագծեր...',
+    search_placeholder_client: 'Փնտրել համաշխարհային կարգի մասնագետների...',
+    post_job: 'Տեղադրել նախագիծ'
   }
 };
 

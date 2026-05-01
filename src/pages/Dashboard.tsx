@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useLanguage } from '../context/LanguageContext'
 import { 
   Search, 
   Plus, 
@@ -51,6 +52,7 @@ interface Proposal {
 // --- Main Dashboard ---
 
 export const Dashboard = ({ user, onLogout }: { user: any, onLogout: () => void }) => {
+  const { t } = useLanguage()
   const [activeTab, setActiveTab] = useState<'home' | 'my-jobs' | 'messages' | 'profile' | 'search' | 'catalog'>('home')
   const [showPostJob, setShowPostJob] = useState(false)
   const [selectedJob, setSelectedJob] = useState<Job | null>(null)
@@ -98,7 +100,9 @@ export const Dashboard = ({ user, onLogout }: { user: any, onLogout: () => void 
               <div className="relative z-10">
                  <h3 className="font-display font-black text-xl tracking-tight">{user.name}</h3>
                  <div className="flex items-center justify-center space-x-2 mt-1">
-                    <span className="text-[10px] text-white/30 uppercase tracking-[0.2em] font-black">{user.role}</span>
+                    <span className="text-[10px] text-white/30 uppercase tracking-[0.2em] font-black">
+                      {user.role === 'freelancer' ? t('freelancer') : user.role === 'client' ? t('client') : t('agency')}
+                    </span>
                     {user.verified && <CheckCircle2 className="w-3.5 h-3.5 text-primary" />}
                  </div>
               </div>
@@ -106,12 +110,12 @@ export const Dashboard = ({ user, onLogout }: { user: any, onLogout: () => void 
 
            <nav className="space-y-2">
              {[
-               { id: 'home', label: 'Dashboard', icon: LayoutGrid },
-               { id: 'search', label: isFreelancer ? 'Find Work' : 'Find Talent', icon: Search },
-               { id: 'my-jobs', label: isFreelancer ? 'My Proposals' : 'My Jobs', icon: Briefcase },
-               { id: 'catalog', label: isFreelancer ? 'Manage Services' : 'Project Catalog', icon: LayoutGrid },
-               { id: 'messages', label: 'Messages', icon: MessageSquare },
-               { id: 'profile', label: 'Profile Settings', icon: UserCircle },
+               { id: 'home', label: t('nav_dashboard'), icon: LayoutGrid },
+               { id: 'search', label: isFreelancer ? t('nav_find') : t('find_talent'), icon: Search },
+               { id: 'my-jobs', label: isFreelancer ? t('nav_my_jobs') : t('nav_my_jobs'), icon: Briefcase },
+               { id: 'catalog', label: isFreelancer ? t('nav_catalog') : t('nav_catalog'), icon: LayoutGrid },
+               { id: 'messages', label: t('nav_messages'), icon: MessageSquare },
+               { id: 'profile', label: t('nav_settings'), icon: UserCircle },
              ].map(item => (
                <button
                   key={item.id}
@@ -126,7 +130,7 @@ export const Dashboard = ({ user, onLogout }: { user: any, onLogout: () => void 
            
            <button onClick={onLogout} className="w-full flex items-center space-x-4 px-8 py-5 rounded-[2rem] text-red-500/30 hover:text-red-400 hover:bg-red-500/5 transition-all mt-12 group">
               <X className="w-5 h-5 group-hover:rotate-90 transition-transform duration-500" />
-              <span className="font-black text-[10px] uppercase tracking-[0.3em]">Logout Session</span>
+              <span className="font-black text-[10px] uppercase tracking-[0.3em]">{t('logout')}</span>
            </button>
         </aside>
 
@@ -137,7 +141,11 @@ export const Dashboard = ({ user, onLogout }: { user: any, onLogout: () => void 
            <div className="flex items-center justify-between gap-6">
               <div className="flex-1 glass-card p-1.5 rounded-[2rem] flex items-center px-6 border-white/5 bg-white/[0.01] shadow-none focus-within:border-primary/50 transition-all">
                  <Search className="w-5 h-5 text-white/10" />
-                 <input type="text" placeholder={isFreelancer ? "Search for high-tier projects..." : "Search for world-class specialists..."} className="bg-transparent border-none outline-none w-full p-4 text-base font-medium placeholder:text-white/10" />
+                 <input 
+                    type="text" 
+                    placeholder={isFreelancer ? t('search_placeholder_freelancer') : t('search_placeholder_client')} 
+                    className="bg-transparent border-none outline-none w-full p-4 text-base font-medium placeholder:text-white/10" 
+                 />
                  <div className="hidden sm:flex items-center space-x-1 px-3 py-1.5 bg-white/[0.03] rounded-xl border border-white/5 text-[9px] font-black text-white/20">
                     <span className="tracking-tighter">CMD</span>
                     <span>K</span>
@@ -147,7 +155,7 @@ export const Dashboard = ({ user, onLogout }: { user: any, onLogout: () => void 
               {!isFreelancer && (
                 <button onClick={() => setShowPostJob(true)} className="btn-primary flex items-center space-x-3 h-[70px] px-10 shrink-0">
                    <Plus className="w-6 h-6" />
-                   <span className="font-black text-sm uppercase tracking-[0.15em]">Post New Project</span>
+                   <span className="font-black text-sm uppercase tracking-[0.15em]">{t('post_job')}</span>
                 </button>
               )}
            </div>
@@ -214,6 +222,47 @@ export const Dashboard = ({ user, onLogout }: { user: any, onLogout: () => void 
                       <GigCard title="Modern Landing Page with React" price="Starting at $250" rating="5.0" />
                       <GigCard title="Armenian/English Professional Translation" price="Starting at $50" rating="4.9" />
                       <GigCard title="Social Media Management (30 days)" price="Starting at $400" rating="4.8" />
+                   </div>
+                </motion.div>
+              )}
+
+              {activeTab === 'search' && (
+                <motion.div key="search" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col lg:flex-row gap-8">
+                   <div className="lg:w-64 shrink-0 space-y-8">
+                      <div className="glass-card p-8 rounded-[2.5rem] space-y-6">
+                         <h4 className="text-xs font-black uppercase tracking-widest text-white/20">Filters</h4>
+                         <div className="space-y-4">
+                            <FilterOption label="Fixed Price" />
+                            <FilterOption label="Hourly Rate" />
+                            <FilterOption label="Verified Only" />
+                         </div>
+                         <div className="pt-6 border-t border-white/5 space-y-4">
+                            <h4 className="text-[10px] font-black uppercase tracking-widest text-white/20">Experience</h4>
+                            <div className="space-y-3">
+                               <label className="flex items-center space-x-3 cursor-pointer group">
+                                  <div className="w-5 h-5 rounded border border-white/10 flex items-center justify-center group-hover:border-primary transition-colors"><div className="w-2.5 h-2.5 bg-primary rounded-sm opacity-0 group-hover:opacity-100" /></div>
+                                  <span className="text-sm font-medium text-white/40 group-hover:text-white transition-colors">Entry Level</span>
+                                </label>
+                                <label className="flex items-center space-x-3 cursor-pointer group">
+                                  <div className="w-5 h-5 rounded border border-white/10 flex items-center justify-center group-hover:border-primary transition-colors"><div className="w-2.5 h-2.5 bg-primary rounded-sm opacity-100" /></div>
+                                  <span className="text-sm font-medium text-white transition-colors">Expert</span>
+                                </label>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                   <div className="flex-1 space-y-6">
+                      <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-2xl font-black">{isFreelancer ? 'Available Projects' : 'Top Talent'}</h2>
+                        <span className="text-xs text-white/30">{jobs.length} results found</span>
+                      </div>
+                      <div className="grid grid-cols-1 gap-6">
+                        {isFreelancer ? (
+                          jobs.map(job => <JobCard key={job.id} job={job} onClick={() => setSelectedJob(job)} />)
+                        ) : (
+                          <MockFreelancerFeed />
+                        )}
+                      </div>
                    </div>
                 </motion.div>
               )}
@@ -569,6 +618,15 @@ const GigCard = ({ title, price, rating }: any) => (
         </div>
      </div>
   </motion.div>
+)
+
+const FilterOption = ({ label }: { label: string }) => (
+  <label className="flex items-center space-x-3 cursor-pointer group">
+    <div className="w-5 h-5 rounded border border-white/10 flex items-center justify-center group-hover:border-primary transition-colors">
+       <div className="w-2.5 h-2.5 bg-primary rounded-sm opacity-0 group-hover:opacity-100" />
+    </div>
+    <span className="text-sm font-medium text-white/40 group-hover:text-white transition-colors">{label}</span>
+  </label>
 )
 
 const MOCK_JOBS: Job[] = [
