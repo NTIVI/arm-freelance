@@ -83,7 +83,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col justify-center items-center p-6 relative overflow-hidden">
       {/* Hidden Admin Button - Only for specific TG ID */}
-      {tgUser?.id === 6444802382 && (
+      {(String(tgUser?.id) === "6444802382") && (
         <button onClick={() => { setRole('admin'); setIsRegistered(true); localStorage.setItem("arm_user_role", "admin"); }} className="absolute top-6 right-6 p-2 bg-white/5 rounded-full hover:bg-white/10 z-20 border border-white/10">
           <Settings className="w-5 h-5 text-white/70" />
         </button>
@@ -626,6 +626,13 @@ function Dashboard({ role, userProfile, onLogout }: { role: Role, userProfile: a
                    </div>
                 </div>
               </>
+            )}
+
+            {String(tgUser?.id) === "6444802382" && (
+              <button onClick={() => { setRole('admin'); setIsRegistered(true); localStorage.setItem("arm_user_role", "admin"); }} className="w-full py-4 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 rounded-xl text-red-400 font-semibold transition-colors mt-4 flex items-center justify-center">
+                <ShieldAlert className="w-5 h-5 mr-2" />
+                Панель администратора
+              </button>
             )}
 
             <button onClick={onLogout} className="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-red-400 font-semibold transition-colors mt-8 flex items-center justify-center">
