@@ -323,62 +323,67 @@ function RegistrationScreen({ role, onBack, onRegister }: { role: Role, onBack: 
           {!isLoginMode && step === 'profile' && (
             <>
               <div className="flex flex-col items-center justify-center space-y-3 mb-8">
-            <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleAvatarChange} />
-            <div onClick={() => fileInputRef.current?.click()} className="w-24 h-24 rounded-full bg-white/5 border border-white/10 flex items-center justify-center relative overflow-hidden group cursor-pointer">
-              {avatarPreview ? <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" /> : <Camera className="w-8 h-8 text-white/30 group-hover:scale-110 transition-transform" />}
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"><Upload className="w-6 h-6 text-white" /></div>
-            </div>
-            <span className="text-sm text-white/50">Загрузить фото</span>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-white/70">Имя</label>
-              <input required value={name} onChange={e=>setName(e.target.value)} type="text" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="Иван" />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-white/70">Фамилия</label>
-              <input required value={surname} onChange={e=>setSurname(e.target.value)} type="text" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="Иванов" />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-white/70">Возраст</label>
-            <input required value={age} onChange={e=>setAge(e.target.value)} type="number" min="14" max="100" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="18" />
-          </div>
-
-          {isCreator && (
-            <>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-white/70">Сфера деятельности</label>
-                <select required value={category} onChange={e=>setCategory(e.target.value)} className="w-full bg-[#1c1c1e] border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors appearance-none">
-                  <option value="" disabled>Выберите категорию</option>
-                  {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
-                </select>
+                <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleAvatarChange} />
+                <div onClick={() => fileInputRef.current?.click()} className="w-24 h-24 rounded-full bg-white/5 border border-white/10 flex items-center justify-center relative overflow-hidden group cursor-pointer">
+                  {avatarPreview ? <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" /> : <Camera className="w-8 h-8 text-white/30 group-hover:scale-110 transition-transform" />}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"><Upload className="w-6 h-6 text-white" /></div>
+                </div>
+                <span className="text-sm text-white/50">Загрузить фото</span>
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-white/70">Опыт работы</label>
-                <select required value={exp} onChange={e=>setExp(e.target.value)} className="w-full bg-[#1c1c1e] border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors appearance-none">
-                  <option value="" disabled>Укажите опыт</option>
-                  <option value="Без опыта">Без опыта</option>
-                  <option value="1-3 года">1 - 3 года</option>
-                  <option value="3-5 лет">3 - 5 лет</option>
-                  <option value="Более 5 лет">Более 5 лет</option>
-                </select>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-white/70">Имя</label>
+                  <input required value={name} onChange={e=>setName(e.target.value)} type="text" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="Иван" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-white/70">Фамилия</label>
+                  <input required value={surname} onChange={e=>setSurname(e.target.value)} type="text" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="Иванов" />
+                </div>
               </div>
+
               <div className="space-y-2">
-                <label className="text-sm font-medium text-white/70">Что вы умеете? (Описание)</label>
-                <textarea required value={desc} onChange={e=>setDesc(e.target.value)} rows={4} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors resize-none" placeholder="Расскажите о своих навыках..."></textarea>
+                <label className="text-sm font-medium text-white/70">Возраст</label>
+                <input required value={age} onChange={e=>setAge(e.target.value)} type="number" min="14" max="100" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="18" />
               </div>
+
+              {isCreator && (
+                <>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-white/70">Сфера деятельности</label>
+                    <select required value={category} onChange={e=>setCategory(e.target.value)} className="w-full bg-[#1c1c1e] border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors appearance-none">
+                      <option value="" disabled>Выберите категорию</option>
+                      {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-white/70">Опыт работы</label>
+                    <select required value={exp} onChange={e=>setExp(e.target.value)} className="w-full bg-[#1c1c1e] border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors appearance-none">
+                      <option value="" disabled>Укажите опыт</option>
+                      <option value="Без опыта">Без опыта</option>
+                      <option value="1-3 года">1 - 3 года</option>
+                      <option value="3-5 лет">3 - 5 лет</option>
+                      <option value="Более 5 лет">Более 5 лет</option>
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-white/70">Что вы умеете? (Описание)</label>
+                    <textarea required value={desc} onChange={e=>setDesc(e.target.value)} rows={4} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors resize-none" placeholder="Расскажите о своих навыках..."></textarea>
+                  </div>
+                </>
+              )}
             </>
           )}
           
           <button type="submit" className="w-full mt-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg shadow-purple-500/25 active:scale-[0.98]">
-            {isLoginMode ? "Войти" : "Продолжить"}
+            {isLoginMode ? "Войти" : (step === 'auth' ? "Далее" : "Завершить регистрацию")}
           </button>
 
-          <button type="button" onClick={() => setIsLoginMode(!isLoginMode)} className="w-full text-center text-sm text-white/40 hover:text-white/60 transition-colors pt-2">
-            {isLoginMode ? "Еще нет аккаунта? Зарегистрироваться" : "Уже есть аккаунт? Войти"}
+          <button type="button" onClick={() => {
+            if (step === 'profile') setStep('auth');
+            else setIsLoginMode(!isLoginMode);
+          }} className="w-full text-center text-sm text-white/40 hover:text-white/60 transition-colors pt-2">
+            {isLoginMode ? "Еще нет аккаунта? Зарегистрироваться" : (step === 'profile' ? "Вернуться к логину" : "Уже есть аккаунт? Войти")}
           </button>
         </form>
       </div>
