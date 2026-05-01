@@ -54,6 +54,12 @@ export default function App() {
     }
   }, []);
 
+  const saveToAccounts = (profile: any, role: Role) => {
+    const savedAccounts = JSON.parse(localStorage.getItem("arm_accounts") || "[]");
+    const updatedAccounts = [...savedAccounts.filter((a: any) => a.username !== profile.username), { ...profile, role }];
+    localStorage.setItem("arm_accounts", JSON.stringify(updatedAccounts));
+  };
+
   // --- Image Compression Utility ---
   const compressImage = (file: File): Promise<string> => {
     return new Promise((resolve) => {
@@ -111,10 +117,11 @@ export default function App() {
   if (role && role !== 'admin') {
     return <RegistrationScreen role={role} onBack={() => setRole(null)} onRegister={(profile) => {
       setUserProfile(profile);
-      setRole(role);
+      setRole(profile.role || role);
       setIsRegistered(true);
       localStorage.setItem("arm_user_profile", JSON.stringify(profile));
-      localStorage.setItem("arm_user_role", role);
+      localStorage.setItem("arm_user_role", profile.role || role);
+      saveToAccounts(profile, profile.role || role);
     }} />;
   }
 
@@ -200,15 +207,20 @@ function RegistrationScreen({ role, onBack, onRegister }: { role: Role, onBack: 
   const isCreator = role === 'creator';
   const categories = ["Разработка сайтов", "Разработка мобильных приложений", "Дизайн", "Продажи", "Маркетинг", "Обмен криптовалюты", "Программирование", "SMM", "Копирайтинг"];
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [isLoginMode, setIsLoginMode] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Form state
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [age, setAge] = useState("");
   const [category, setCategory] = useState("");
   const [exp, setExp] = useState("");
   const [desc, setDesc] = useState("");
+
+  const [error, setError] = useState<string | null>(null);
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -235,7 +247,24 @@ function RegistrationScreen({ role, onBack, onRegister }: { role: Role, onBack: 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onRegister({ name, surname, age, category, exp, desc, avatar: avatarPreview, portfolio: [] });
+    const accounts = JSON.parse(localStorage.getItem("arm_accounts") || "[]");
+
+    if (isLoginMode) {
+      const user = accounts.find((a: any) => a.username === username && a.password === password);
+      if (user) {
+        onRegister(user);
+      } else {
+        setError("Неверный логин или пароль");
+        setTimeout(() => setError(null), 3000);
+      }
+    } else {
+      if (accounts.some((a: any) => a.username === username)) {
+        setError("Этот ник уже занят");
+        setTimeout(() => setError(null), 3000);
+        return;
+      }
+      onRegister({ username, password, name, surname, age, category, exp, desc, avatar: avatarPreview, portfolio: [] });
+    }
   };
 
   return (
@@ -247,11 +276,30 @@ function RegistrationScreen({ role, onBack, onRegister }: { role: Role, onBack: 
           <span className="text-sm font-medium text-white/70 pr-2">Назад</span>
         </button>
 
-        <h2 className="text-3xl font-bold mb-2">{isCreator ? "Профиль Создателя" : "Профиль Клиента"}</h2>
-        <p className="text-white/50 text-sm mb-8">Заполните информацию о себе, чтобы начать работу.</p>
+        <h2 className="text-3xl font-bold mb-2">{isLoginMode ? "С возвращением!" : (isCreator ? "Профиль Создателя" : "Профиль Клиента")}</h2>
+        <p className="text-white/50 text-sm mb-8">{isLoginMode ? "Войдите в свой аккаунт для продолжения." : "Заполните информацию о себе, чтобы начать работу."}</p>
+
+        {error && (
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-red-500/20 border border-red-500/50 text-red-400 p-3 rounded-xl text-sm mb-6">
+            {error}
+          </motion.div>
+        )}
 
         <form className="space-y-6" onSubmit={handleSubmit}>
-          <div className="flex flex-col items-center justify-center space-y-3 mb-8">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-white/70">Никнейм (Логин)</label>
+              <input required value={username} onChange={e=>setUsername(e.target.value)} type="text" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="user123" />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-white/70">Пароль</label>
+              <input required value={password} onChange={e=>setPassword(e.target.value)} type="password" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="••••••••" />
+            </div>
+          </div>
+
+          {!isLoginMode && (
+            <>
+              <div className="flex flex-col items-center justify-center space-y-3 mb-8">
             <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleAvatarChange} />
             <div onClick={() => fileInputRef.current?.click()} className="w-24 h-24 rounded-full bg-white/5 border border-white/10 flex items-center justify-center relative overflow-hidden group cursor-pointer">
               {avatarPreview ? <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" /> : <Camera className="w-8 h-8 text-white/30 group-hover:scale-110 transition-transform" />}
@@ -301,8 +349,13 @@ function RegistrationScreen({ role, onBack, onRegister }: { role: Role, onBack: 
               </div>
             </>
           )}
+          
           <button type="submit" className="w-full mt-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg shadow-purple-500/25 active:scale-[0.98]">
-            Продолжить
+            {isLoginMode ? "Войти" : "Продолжить"}
+          </button>
+
+          <button type="button" onClick={() => setIsLoginMode(!isLoginMode)} className="w-full text-center text-sm text-white/40 hover:text-white/60 transition-colors pt-2">
+            {isLoginMode ? "Еще нет аккаунта? Зарегистрироваться" : "Уже есть аккаунт? Войти"}
           </button>
         </form>
       </div>
