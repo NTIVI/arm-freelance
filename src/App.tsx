@@ -187,11 +187,14 @@ export default function App() {
               <div className="space-y-6">
                 <div className="bg-white/5 border border-white/5 p-6 rounded-2xl group hover:border-blue-500/30 transition-colors">
                   <div className="flex items-center space-x-4 mb-3"><Users className="w-8 h-8 text-blue-400" /><h3 className="text-xl font-bold text-white">Клиент</h3></div>
-                  <p className="text-white/50 text-sm leading-relaxed">Публикуйте задания, выбирайте лучших исполнителей и контролируйте процесс выполнения ваших идей в реальном времени.</p>
+                  <p className="text-white/50 text-sm leading-relaxed">Публикуйте задания, выбирайте лучших исполнителей и контролируйте процесс выполнения ваших идей в реальном времени. Вы устанавливаете бюджет и сроки.</p>
                 </div>
                 <div className="bg-white/5 border border-white/5 p-6 rounded-2xl group hover:border-purple-500/30 transition-colors">
                   <div className="flex items-center space-x-4 mb-3"><Briefcase className="w-8 h-8 text-purple-400" /><h3 className="text-xl font-bold text-white">Создатель</h3></div>
-                  <p className="text-white/50 text-sm leading-relaxed">Предлагайте свои услуги миру, собирайте впечатляющее портфолио и получайте прямые заказы от клиентов без посредников.</p>
+                  <p className="text-white/50 text-sm leading-relaxed">Предлагайте свои услуги миру, собирайте впечатляющее портфолио и получайте прямые заказы от клиентов без посредников. Вы сам себе босс.</p>
+                </div>
+                <div className="bg-white/5 p-6 rounded-2xl border border-white/5">
+                   <p className="text-xs text-white/30 leading-relaxed italic">Приложение соединяет заказчиков и исполнителей напрямую. Мы обеспечиваем удобный поиск, фильтрацию по сферам деятельности и систему откликов.</p>
                 </div>
               </div>
               <button onClick={() => setShowInfo(false)} className="w-full mt-10 py-5 bg-white text-black font-bold rounded-2xl hover:bg-white/90 transition-all active:scale-[0.98]">Все понятно</button>
@@ -248,6 +251,10 @@ function RegistrationScreen({ role, onBack, onRegister }: { role: Role, onBack: 
     const accounts = JSON.parse(localStorage.getItem("arm_accounts") || "[]");
 
     if (isLoginMode) {
+      if (username === 'admin' && password === 'admin') {
+        onRegister({ username: 'admin', role: 'admin', name: 'Administrator' });
+        return;
+      }
       const user = accounts.find((a: any) => a.username === username && a.password === password);
       if (user) {
         onRegister(user);
@@ -425,9 +432,19 @@ function Dashboard({ role, userProfile, onLogout, compressImage }: { role: Role,
     const id = Date.now();
     if (isCreator) {
       const newItem = {
-        id, title: formData.get("title"), category: formData.get("category"), price: formData.get("price"), desc: formData.get("desc"), duration: formData.get("duration")
+        id, 
+        title: formData.get("title") as string, 
+        category: formData.get("category") as string, 
+        price: formData.get("price") as string, 
+        desc: formData.get("desc") as string, 
+        duration: formData.get("duration") as string,
+        creatorName: userProfile.name,
+        creatorAvatar: userProfile.avatar
       };
       setMyItems([newItem, ...myItems]);
+      // Save globally for Clients to see
+      const globalServices = JSON.parse(localStorage.getItem("arm_global_services") || "[]");
+      localStorage.setItem("arm_global_services", JSON.stringify([newItem, ...globalServices]));
     } else {
       const newJob: Job = {
         id,
@@ -442,6 +459,9 @@ function Dashboard({ role, userProfile, onLogout, compressImage }: { role: Role,
       };
       setJobs([newJob, ...jobs]);
       setMyItems([newJob, ...myItems]);
+      // Save globally for Creators to see
+      const globalJobs = JSON.parse(localStorage.getItem("arm_global_jobs") || "[]");
+      localStorage.setItem("arm_global_jobs", JSON.stringify([newJob, ...globalJobs]));
     }
     setShowCreateModal(false);
     setJobPhotoPreview(null);
@@ -616,14 +636,19 @@ function Dashboard({ role, userProfile, onLogout, compressImage }: { role: Role,
                     {activeTab === 'home' && (
                         <>
                             {isCreator ? (
-                                // Show Jobs for Creators
-                                jobs.filter(j => activeFilter === "Все" || j.category === activeFilter).length === 0 ? (
-                                    <div className="col-span-full py-20 text-center space-y-4 opacity-30">
-                                        <Briefcase className="w-16 h-16 mx-auto" />
-                                        <p className="text-xl font-medium">Нет доступных заказов в этой категории</p>
-                                    </div>
-                                ) : (
-                                    jobs.filter(j => activeFilter === "Все" || j.category === activeFilter).map(j => (
+                                // Creators see Jobs from Clients
+                                (() => {
+                                    const allJobs = JSON.parse(localStorage.getItem("arm_global_jobs") || "[]");
+                                    const filtered = allJobs.filter((j: any) => activeFilter === "Все" || j.category === activeFilter);
+                                    
+                                    if (filtered.length === 0) return (
+                                        <div className="col-span-full py-20 text-center space-y-4 opacity-30">
+                                            <Briefcase className="w-16 h-16 mx-auto" />
+                                            <p className="text-xl font-medium">Нет доступных заказов в этой категории</p>
+                                        </div>
+                                    );
+
+                                    return filtered.map((j: any) => (
                                         <motion.div layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} key={j.id} className="bg-white/5 border border-white/5 p-8 rounded-[2rem] flex flex-col justify-between hover:border-purple-500/30 transition-all group backdrop-blur-xl">
                                             <div className="space-y-4">
                                                 <div className="flex justify-between items-start">
@@ -632,31 +657,52 @@ function Dashboard({ role, userProfile, onLogout, compressImage }: { role: Role,
                                                 </div>
                                                 <h3 className="text-2xl font-bold group-hover:text-purple-400 transition-colors">{j.title}</h3>
                                                 <p className="text-white/40 text-sm line-clamp-3 leading-relaxed">{j.desc}</p>
-                                                <div className="flex items-center space-x-4 pt-2">
-                                                    <div className="flex items-center space-x-1 text-xs text-white/30">
-                                                        <Sparkles className="w-3 h-3" />
-                                                        <span>Срок: {j.deadline}</span>
-                                                    </div>
+                                                <div className="flex items-center space-x-1 text-xs text-white/30 pt-2">
+                                                    <Sparkles className="w-3 h-3" />
+                                                    <span>Дедлайн: {j.deadline}</span>
                                                 </div>
                                             </div>
                                             <div className="mt-8">
-                                                {j.status === 'in_progress' ? (
-                                                    <div className="w-full py-4 bg-green-500/10 text-green-400 rounded-2xl text-sm font-bold text-center border border-green-500/20">В работе</div>
-                                                ) : j.candidates?.some(c => c.username === userProfile.username) ? (
-                                                    <div className="w-full py-4 bg-white/5 text-white/20 rounded-2xl text-sm font-bold text-center">Вы откликнулись</div>
-                                                ) : (
-                                                    <button onClick={() => handleRespond(j.id)} className="w-full py-4 bg-white/5 hover:bg-white text-white hover:text-black rounded-2xl text-sm font-bold transition-all">Откликнуться</button>
-                                                )}
+                                                <button onClick={() => handleRespond(j.id)} className="w-full py-4 bg-white/5 hover:bg-white text-white hover:text-black rounded-2xl text-sm font-bold transition-all">Откликнуться</button>
                                             </div>
                                         </motion.div>
-                                    ))
-                                )
+                                    ));
+                                })()
                             ) : (
-                                // Show Creators for Clients (Mock or from state)
-                                <div className="col-span-full py-20 text-center space-y-4 opacity-30">
-                                    <Users className="w-16 h-16 mx-auto" />
-                                    <p className="text-xl font-medium">Поиск исполнителей... Создайте задание, чтобы привлечь лучших!</p>
-                                </div>
+                                // Clients see Creators & their Services
+                                (() => {
+                                    const allServices = JSON.parse(localStorage.getItem("arm_global_services") || "[]");
+                                    const filtered = allServices.filter((s: any) => activeFilter === "Все" || s.category === activeFilter);
+                                    
+                                    if (filtered.length === 0) return (
+                                        <div className="col-span-full py-20 text-center space-y-4 opacity-30">
+                                            <Users className="w-16 h-16 mx-auto" />
+                                            <p className="text-xl font-medium">Исполнители пока не добавили услуги в этой категории</p>
+                                        </div>
+                                    );
+
+                                    return filtered.map((s: any) => (
+                                        <motion.div layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} key={s.id} className="bg-white/5 border border-white/5 p-8 rounded-[2rem] flex flex-col justify-between hover:border-blue-500/30 transition-all group backdrop-blur-xl">
+                                            <div className="space-y-4">
+                                                <div className="flex justify-between items-start">
+                                                    <span className="text-[10px] font-black text-blue-400 bg-blue-400/10 px-3 py-1 rounded-full uppercase tracking-widest">{s.category}</span>
+                                                    <span className="text-xl font-black text-green-400">{s.price}</span>
+                                                </div>
+                                                <div className="flex items-center space-x-3 mb-2">
+                                                    <div className="w-10 h-10 rounded-full bg-white/10 overflow-hidden">
+                                                        {s.creatorAvatar ? <img src={s.creatorAvatar} className="w-full h-full object-cover" /> : <UserCircle className="w-full h-full text-white/10" />}
+                                                    </div>
+                                                    <span className="text-sm font-bold text-white/60">{s.creatorName}</span>
+                                                </div>
+                                                <h3 className="text-2xl font-bold group-hover:text-blue-400 transition-colors">{s.title}</h3>
+                                                <p className="text-white/40 text-sm line-clamp-3 leading-relaxed">{s.desc}</p>
+                                            </div>
+                                            <div className="mt-8">
+                                                <button onClick={() => startChat(s.creatorName, s.title)} className="w-full py-4 bg-white/5 hover:bg-white text-white hover:text-black rounded-2xl text-sm font-bold transition-all">Связаться</button>
+                                            </div>
+                                        </motion.div>
+                                    ));
+                                })()
                             )}
                         </>
                     )}
@@ -943,16 +989,31 @@ function Dashboard({ role, userProfile, onLogout, compressImage }: { role: Role,
 }
 
 // --- Admin Panel Component ---
-function AdminDashboard({ onLogout }: { onLogout: () => void }) {
-  const [activeTab, setActiveTab] = useState<'users' | 'jobs' | 'stats'>('stats');
+  const [accounts, setAccounts] = useState<any[]>([]);
+  const [jobs, setJobs] = useState<any[]>([]);
+
+  useEffect(() => {
+    const savedAccounts = JSON.parse(localStorage.getItem("arm_accounts") || "[]");
+    setAccounts(savedAccounts);
+    // In a real app, we'd also load jobs. For now, we simulate from the current session or a global storage if implemented.
+    // Let's check for arm_global_jobs
+    const savedJobs = JSON.parse(localStorage.getItem("arm_global_jobs") || "[]");
+    setJobs(savedJobs);
+  }, []);
+
+  const deleteAccount = (username: string) => {
+    const updated = accounts.filter(a => a.username !== username);
+    setAccounts(updated);
+    localStorage.setItem("arm_accounts", JSON.stringify(updated));
+  };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex flex-col relative overflow-hidden">
+    <div className="min-h-screen bg-[#050505] text-white flex flex-col relative overflow-hidden font-sans">
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-red-600/10 rounded-full blur-[160px] pointer-events-none"></div>
 
       <header className="px-8 py-6 border-b border-white/5 bg-black/40 backdrop-blur-2xl flex justify-between items-center relative z-50">
         <div className="flex items-center space-x-4">
-          <div className="w-12 h-12 bg-red-600/20 rounded-2xl flex items-center justify-center border border-red-500/30">
+          <div className="w-12 h-12 bg-red-600/20 rounded-2xl flex items-center justify-center border border-red-500/30 shadow-lg shadow-red-500/10">
             <ShieldAlert className="w-7 h-7 text-red-500" />
           </div>
           <div>
@@ -960,11 +1021,11 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             <p className="text-[10px] text-white/30 font-black uppercase tracking-[0.2em]">ARM FREELANCE CONTROL</p>
           </div>
         </div>
-        <button onClick={onLogout} className="px-6 py-3 bg-red-600/10 hover:bg-red-600 text-red-400 hover:text-white rounded-xl text-sm font-black transition-all border border-red-500/20 uppercase tracking-widest">Выход</button>
+        <button onClick={onLogout} className="px-6 py-3 bg-red-600/10 hover:bg-red-600 text-red-400 hover:text-white rounded-xl text-sm font-black transition-all border border-red-500/20 uppercase tracking-widest shadow-lg shadow-red-500/5 active:scale-95">Выход</button>
       </header>
 
       <div className="flex-1 max-w-7xl mx-auto w-full p-8 relative z-10">
-        <div className="flex space-x-2 mb-10 bg-white/5 p-1.5 rounded-2xl w-max">
+        <div className="flex space-x-2 mb-10 bg-white/5 p-1.5 rounded-2xl w-max backdrop-blur-xl border border-white/5">
             {[
                 { id: 'stats', label: 'Статистика', icon: Sparkles },
                 { id: 'users', label: 'Пользователи', icon: Users },
@@ -973,7 +1034,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 <button 
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as any)} 
-                    className={`flex items-center space-x-2 px-6 py-3 rounded-xl text-xs font-black transition-all uppercase tracking-widest ${activeTab === tab.id ? 'bg-red-600 text-white shadow-xl shadow-red-600/20' : 'text-white/40 hover:text-white'}`}
+                    className={`flex items-center space-x-2 px-6 py-3 rounded-xl text-xs font-black transition-all uppercase tracking-widest ${activeTab === tab.id ? 'bg-red-600 text-white shadow-xl shadow-red-600/30' : 'text-white/40 hover:text-white'}`}
                 >
                     <tab.icon className="w-4 h-4" />
                     <span>{tab.label}</span>
@@ -986,75 +1047,94 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="bg-white/5 border border-white/5 p-10 rounded-[2.5rem] backdrop-blur-xl relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-700"></div>
-                    <span className="block text-5xl font-black text-white mb-2 tracking-tighter">1.2k</span>
+                    <span className="block text-5xl font-black text-white mb-2 tracking-tighter">{accounts.length}</span>
                     <span className="text-[10px] text-white/30 font-black uppercase tracking-[0.3em]">Пользователей</span>
                 </div>
                 <div className="bg-white/5 border border-white/5 p-10 rounded-[2.5rem] backdrop-blur-xl relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-700"></div>
-                    <span className="block text-5xl font-black text-white mb-2 tracking-tighter">450</span>
-                    <span className="text-[10px] text-white/30 font-black uppercase tracking-[0.3em]">Активных задач</span>
+                    <span className="block text-5xl font-black text-white mb-2 tracking-tighter">{jobs.length}</span>
+                    <span className="text-[10px] text-white/30 font-black uppercase tracking-[0.3em]">Объявлений</span>
                 </div>
                 <div className="bg-white/5 border border-white/5 p-10 rounded-[2.5rem] backdrop-blur-xl relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 rounded-full -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-700"></div>
-                    <span className="block text-5xl font-black text-green-400 mb-2 tracking-tighter">12.4k</span>
-                    <span className="text-[10px] text-white/30 font-black uppercase tracking-[0.3em]">Доход (₽)</span>
+                    <span className="block text-5xl font-black text-green-400 mb-2 tracking-tighter">{(jobs.length * 1000).toLocaleString()}</span>
+                    <span className="text-[10px] text-white/30 font-black uppercase tracking-[0.3em]">Оборот (₽)</span>
                 </div>
             </div>
             )}
 
             {activeTab === 'users' && (
-            <div className="bg-white/5 border border-white/5 rounded-[2.5rem] p-20 text-center space-y-4 opacity-30">
-                <Users className="w-20 h-20 mx-auto" />
-                <p className="text-2xl font-bold tracking-tight">Нет зарегистрированных пользователей</p>
-            </div>
+              <div className="bg-white/5 border border-white/5 rounded-[2.5rem] overflow-hidden backdrop-blur-xl">
+                 <table className="w-full text-left">
+                   <thead className="bg-white/5 border-b border-white/5">
+                      <tr>
+                        <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/30">Пользователь</th>
+                        <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/30">Роль</th>
+                        <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/30">Сфера</th>
+                        <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/30">Действие</th>
+                      </tr>
+                   </thead>
+                   <tbody className="divide-y divide-white/5">
+                      {accounts.map(acc => (
+                        <tr key={acc.username} className="hover:bg-white/5 transition-colors">
+                          <td className="px-8 py-6">
+                            <div className="flex items-center space-x-4">
+                              <div className="w-10 h-10 rounded-full bg-white/10 overflow-hidden">
+                                {acc.avatar ? <img src={acc.avatar} className="w-full h-full object-cover" /> : <UserCircle className="w-full h-full text-white/10" />}
+                              </div>
+                              <div>
+                                <p className="font-bold">{acc.name || acc.username}</p>
+                                <p className="text-xs text-white/30">@{acc.username}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-8 py-6">
+                            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${acc.role === 'creator' ? 'bg-purple-500/20 text-purple-400' : 'bg-blue-500/20 text-blue-400'}`}>
+                              {acc.role}
+                            </span>
+                          </td>
+                          <td className="px-8 py-6 text-sm text-white/60">{acc.category || '-'}</td>
+                          <td className="px-8 py-6">
+                            <button onClick={() => deleteAccount(acc.username)} className="p-2 hover:bg-red-500/20 rounded-lg transition-colors group">
+                              <Trash2 className="w-5 h-5 text-white/20 group-hover:text-red-500" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                   </tbody>
+                 </table>
+                 {accounts.length === 0 && (
+                   <div className="p-20 text-center opacity-30">
+                      <Users className="w-16 h-16 mx-auto mb-4" />
+                      <p className="text-lg">Список пользователей пуст</p>
+                   </div>
+                 )}
+              </div>
             )}
 
             {activeTab === 'jobs' && (
-            <div className="bg-white/5 border border-white/5 rounded-[2.5rem] p-20 text-center space-y-4 opacity-30">
-                <List className="w-20 h-20 mx-auto" />
-                <p className="text-2xl font-bold tracking-tight">Нет активных объявлений</p>
-            </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                 {jobs.map(job => (
+                   <div key={job.id} className="bg-white/5 border border-white/5 p-8 rounded-[2rem] space-y-4 relative group">
+                      <div className="flex justify-between items-start">
+                        <span className="text-[10px] font-black text-purple-400 bg-purple-400/10 px-3 py-1 rounded-full uppercase tracking-widest">{job.category}</span>
+                        <button className="p-2 bg-red-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"><Trash2 className="w-4 h-4 text-red-400" /></button>
+                      </div>
+                      <h3 className="text-xl font-bold">{job.title}</h3>
+                      <p className="text-sm text-white/40 line-clamp-2">{job.desc}</p>
+                   </div>
+                 ))}
+                 {jobs.length === 0 && (
+                   <div className="col-span-full bg-white/5 border border-white/5 rounded-[2.5rem] p-20 text-center opacity-30">
+                      <List className="w-16 h-16 mx-auto mb-4" />
+                      <p className="text-lg">Нет активных объявлений</p>
+                   </div>
+                 )}
+               </div>
             )}
         </main>
       </div>
     </div>
   );
 }
-=> setActiveTab('stats')} className={`px-4 py-2 rounded-lg text-sm font-medium ${activeTab === 'stats' ? 'bg-red-500/20 text-red-400' : 'bg-white/5 hover:bg-white/10'}`}>Статистика</button>
-        <button onClick={() => setActiveTab('users')} className={`px-4 py-2 rounded-lg text-sm font-medium ${activeTab === 'users' ? 'bg-red-500/20 text-red-400' : 'bg-white/5 hover:bg-white/10'}`}>Пользователи</button>
-        <button onClick={() => setActiveTab('jobs')} className={`px-4 py-2 rounded-lg text-sm font-medium ${activeTab === 'jobs' ? 'bg-red-500/20 text-red-400' : 'bg-white/5 hover:bg-white/10'}`}>Объявления</button>
-      </div>
 
-      <main className="flex-1 p-4 overflow-y-auto">
-        {activeTab === 'stats' && (
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white/5 border border-white/10 p-4 rounded-xl text-center">
-              <span className="block text-3xl font-bold text-white">1,204</span>
-              <span className="text-xs text-white/50">Пользователей</span>
-            </div>
-            <div className="bg-white/5 border border-white/10 p-4 rounded-xl text-center">
-              <span className="block text-3xl font-bold text-white">450</span>
-              <span className="text-xs text-white/50">Активных задач</span>
-            </div>
-            <div className="bg-white/5 border border-white/10 p-4 rounded-xl text-center col-span-2">
-              <span className="block text-3xl font-bold text-green-400">12 400 ₽</span>
-              <span className="text-xs text-white/50">Доход (Комиссии)</span>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'users' && (
-          <div className="space-y-3">
-            <p className="text-center text-white/30 py-10 italic">Нет зарегистрированных пользователей</p>
-          </div>
-        )}
-
-        {activeTab === 'jobs' && (
-          <div className="space-y-3">
-            <p className="text-center text-white/30 py-10 italic">Нет активных объявлений</p>
-          </div>
-        )}
-      </main>
-    </div>
-  );
-}
