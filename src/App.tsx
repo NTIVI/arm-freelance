@@ -439,6 +439,8 @@ function Dashboard({ role, userProfile, onLogout }: { role: Role, userProfile: a
                     <p className="text-white/70 text-sm leading-relaxed relative z-10">{j.desc}</p>
                     {j.status === 'in_progress' ? (
                         <div className="w-full py-2.5 bg-green-500/20 text-green-400 rounded-xl text-sm font-semibold text-center border border-green-500/30">Заказ в работе</div>
+                    ) : j.candidates?.some(c => c.name === userProfile.name) ? (
+                        <div className="w-full py-2.5 bg-white/5 text-white/40 rounded-xl text-sm font-semibold text-center border border-white/10">Вы уже откликнулись</div>
                     ) : (
                         <button onClick={() => handleRespond(j.id)} className="w-full py-2.5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 shadow-lg shadow-purple-500/20 rounded-xl text-sm font-semibold transition-colors mt-2 relative z-10">Откликнуться на заказ</button>
                     )}
