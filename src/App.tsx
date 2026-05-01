@@ -6,6 +6,26 @@ import { Users, Briefcase, ChevronRight, X, Sparkles, ArrowLeft, Camera, Upload,
 type Role = 'client' | 'creator' | 'admin';
 type Tab = 'home' | 'my' | 'chats' | 'profile';
 
+interface Review {
+  id: number;
+  from: string;
+  stars: number;
+  comment: string;
+}
+
+interface Job {
+  id: number;
+  title: string;
+  category: string;
+  budget: string;
+  desc: string;
+  deadline: string;
+  photo?: string | null;
+  status?: 'open' | 'in_progress' | 'completed';
+  candidates?: any[];
+  selectedCandidate?: any;
+}
+
 // --- Main App Component ---
 export default function App() {
   const [showInfo, setShowInfo] = useState(false);
@@ -230,10 +250,17 @@ function Dashboard({ role, userProfile, onLogout }: { role: Role, userProfile: a
   const [activeFilter, setActiveFilter] = useState("Все");
 
   // Local State
+  const [jobs, setJobs] = useState<Job[]>([
+    { id: 1, title: "Нужен лендинг для салона", category: "Разработка сайтов", budget: "50 000 ₽", desc: "Срочно ищем разработчика для одностраничника.", deadline: "10 дней", candidates: [], status: 'open' },
+    { id: 2, title: "Дизайн мобильного приложения", category: "Дизайн", budget: "80 000 ₽", desc: "Нужен дизайн 10 экранов для iOS.", deadline: "2 недели", candidates: [], status: 'open' },
+    { id: 3, title: "Сделать интернет-магазин", category: "Разработка сайтов", budget: "150 000 ₽", desc: "Полный цикл от дизайна до деплоя на Next.js.", deadline: "1 месяц", candidates: [], status: 'open' },
+    { id: 4, title: "Продвижение в Instagram", category: "SMM", budget: "30 000 ₽", desc: "Ведение аккаунта магазина одежды.", deadline: "Постоянно", candidates: [], status: 'open' }
+  ]);
   const [myItems, setMyItems] = useState<any[]>([]);
   const [chats, setChats] = useState<any[]>([]);
   const [activeChat, setActiveChat] = useState<any | null>(null);
   const [portfolio, setPortfolio] = useState<string[]>(userProfile?.portfolio || []);
+  const [selectedCandidateProfile, setSelectedCandidateProfile] = useState<any | null>(null);
   
   // Modals
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -249,31 +276,70 @@ function Dashboard({ role, userProfile, onLogout }: { role: Role, userProfile: a
   };
 
   const mockCreators = [
-    { id: 1, name: "Алексей С.", category: "Разработка сайтов", exp: "5+ лет", desc: "Делаю крутые лендинги на React и Vite." },
-    { id: 2, name: "Мария В.", category: "Дизайн", exp: "3-5 лет", desc: "UI/UX дизайнер, рисую в Figma премиум дизайн." },
-    { id: 3, name: "Дмитрий К.", category: "Маркетинг", exp: "1-3 года", desc: "Настрою Яндекс Директ и VK Рекламу." },
-    { id: 4, name: "Олег П.", category: "Обмен криптовалюты", exp: "Более 5 лет", desc: "P2P переводы, консультации." }
-  ];
-  
-  const mockJobs = [
-    { id: 1, title: "Нужен лендинг для салона", category: "Разработка сайтов", budget: "50 000 ₽", desc: "Срочно ищем разработчика для одностраничника.", deadline: "10 дней" },
-    { id: 2, title: "Дизайн мобильного приложения", category: "Дизайн", budget: "80 000 ₽", desc: "Нужен дизайн 10 экранов для iOS.", deadline: "2 недели" },
-    { id: 3, title: "Сделать интернет-магазин", category: "Разработка сайтов", budget: "150 000 ₽", desc: "Полный цикл от дизайна до деплоя на Next.js.", deadline: "1 месяц" },
-    { id: 4, title: "Продвижение в Instagram", category: "SMM", budget: "30 000 ₽", desc: "Ведение аккаунта магазина одежды.", deadline: "Постоянно" }
+    { id: 101, name: "Алексей С.", category: "Разработка сайтов", exp: "5+ лет", desc: "Делаю крутые лендинги на React и Vite.", rating: 4.8, reviews: [{id: 1, from: "Иван", stars: 5, comment: "Отличный спец!"}] },
+    { id: 102, name: "Мария В.", category: "Дизайн", exp: "3-5 лет", desc: "UI/UX дизайнер, рисую в Figma премиум дизайн.", rating: 5.0, reviews: [{id: 2, from: "Анна", stars: 5, comment: "Дизайн просто космос."}] },
+    { id: 103, name: "Дмитрий К.", category: "Маркетинг", exp: "1-3 года", desc: "Настрою Яндекс Директ и VK Рекламу.", rating: 4.2, reviews: [] },
+    { id: 104, name: "Олег П.", category: "Обмен криптовалюты", exp: "Более 5 лет", desc: "P2P переводы, консультации.", rating: 4.9, reviews: [] }
   ];
 
   const handleCreate = (e: any) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const newItem = isCreator ? {
-      title: formData.get("title"), category: formData.get("category"), price: formData.get("price"), desc: formData.get("desc")
-    } : {
-      title: formData.get("title"), category: formData.get("category"), budget: formData.get("budget"), desc: formData.get("desc"), deadline: formData.get("deadline"), photo: jobPhotoPreview
-    };
-    setMyItems([newItem, ...myItems]);
+    const id = Date.now();
+    if (isCreator) {
+      const newItem = {
+        id, title: formData.get("title"), category: formData.get("category"), price: formData.get("price"), desc: formData.get("desc")
+      };
+      setMyItems([newItem, ...myItems]);
+    } else {
+      const newJob: Job = {
+        id,
+        title: formData.get("title") as string,
+        category: formData.get("category") as string,
+        budget: formData.get("budget") as string,
+        desc: formData.get("desc") as string,
+        deadline: formData.get("deadline") as string,
+        photo: jobPhotoPreview,
+        status: 'open',
+        candidates: []
+      };
+      setJobs([newJob, ...jobs]);
+      setMyItems([newJob, ...myItems]);
+    }
     setShowCreateModal(false);
     setJobPhotoPreview(null);
     showToast("Успешно добавлено!");
+  };
+
+  const handleRespond = (jobId: number) => {
+    setJobs(prevJobs => prevJobs.map(job => {
+      if (job.id === jobId) {
+        const alreadyResponded = job.candidates?.some(c => c.name === userProfile.name);
+        if (alreadyResponded) {
+          showToast("Вы уже откликнулись!");
+          return job;
+        }
+        showToast("Отклик успешно отправлен!");
+        return { ...job, candidates: [...(job.candidates || []), { ...userProfile, id: Date.now() }] };
+      }
+      return job;
+    }));
+  };
+
+  const handleSelectCandidate = (jobId: number, candidate: any) => {
+    setJobs(prevJobs => prevJobs.map(job => {
+      if (job.id === jobId) {
+        return { ...job, status: 'in_progress', selectedCandidate: candidate };
+      }
+      return job;
+    }));
+    setMyItems(prev => prev.map(item => {
+      if (item.id === jobId) {
+        return { ...item, status: 'in_progress', selectedCandidate: candidate };
+      }
+      return item;
+    }));
+    showToast(`Исполнитель ${candidate.name} выбран!`);
   };
 
   const startChat = (personName: string, itemTitle: string) => {
@@ -347,7 +413,7 @@ function Dashboard({ role, userProfile, onLogout }: { role: Role, userProfile: a
                   </div>
                 ))
               ) : (
-                mockJobs.filter(j => activeFilter === "Все" || j.category === activeFilter).map((j) => (
+                jobs.filter(j => activeFilter === "Все" || j.category === activeFilter).map((j) => (
                   <div key={j.id} className="bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col space-y-3 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/10 rounded-full blur-3xl group-hover:bg-green-500/20 transition-colors"></div>
                     <div className="flex justify-between items-start relative z-10">
@@ -359,7 +425,11 @@ function Dashboard({ role, userProfile, onLogout }: { role: Role, userProfile: a
                       <span className="text-xs text-orange-400 bg-orange-400/10 px-2 py-1 rounded-full w-max border border-orange-400/20">Срок: {j.deadline}</span>
                     </div>
                     <p className="text-white/70 text-sm leading-relaxed relative z-10">{j.desc}</p>
-                    <button onClick={() => startChat("Клиент", j.title)} className="w-full py-2.5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 shadow-lg shadow-purple-500/20 rounded-xl text-sm font-semibold transition-colors mt-2 relative z-10">Откликнуться на заказ</button>
+                    {j.status === 'in_progress' ? (
+                        <div className="w-full py-2.5 bg-green-500/20 text-green-400 rounded-xl text-sm font-semibold text-center border border-green-500/30">Заказ в работе</div>
+                    ) : (
+                        <button onClick={() => handleRespond(j.id)} className="w-full py-2.5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 shadow-lg shadow-purple-500/20 rounded-xl text-sm font-semibold transition-colors mt-2 relative z-10">Откликнуться на заказ</button>
+                    )}
                   </div>
                 ))
               )}
@@ -393,6 +463,42 @@ function Dashboard({ role, userProfile, onLogout }: { role: Role, userProfile: a
                   </div>
                   {item.photo && <img src={item.photo} className="w-full h-32 object-cover rounded-xl mt-2" alt="Задание" />}
                   <p className="text-white/60 text-sm mt-2">{item.desc}</p>
+                  
+                  {!isCreator && item.candidates && item.candidates.length > 0 && (
+                    <div className="mt-4 space-y-3">
+                      <h4 className="text-sm font-bold text-white/40 uppercase">Отклики ({item.candidates.length}):</h4>
+                      <div className="space-y-2">
+                        {item.candidates.map((cand: any) => (
+                          <div key={cand.id} className="bg-white/5 border border-white/5 p-3 rounded-xl flex items-center justify-between">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-10 h-10 rounded-full bg-white/10 overflow-hidden">
+                                {cand.avatar ? <img src={cand.avatar} className="w-full h-full object-cover" /> : <UserCircle className="w-full h-full text-white/20" />}
+                              </div>
+                              <div>
+                                <p className="font-semibold text-sm">{cand.name} {cand.surname}</p>
+                                <p className="text-xs text-purple-400">{cand.category}</p>
+                              </div>
+                            </div>
+                            <div className="flex space-x-2">
+                              <button onClick={() => setSelectedCandidateProfile(cand)} className="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"><Search className="w-4 h-4 text-white/60" /></button>
+                              {item.status !== 'in_progress' && (
+                                <button onClick={() => handleSelectCandidate(item.id, cand)} className="px-3 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg text-xs font-bold transition-colors">Выбрать</button>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {item.selectedCandidate && (
+                    <div className="mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-xl flex items-center space-x-3">
+                      <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center"><Briefcase className="w-4 h-4 text-green-400" /></div>
+                      <div>
+                        <p className="text-xs text-green-400 font-bold">Выбран исполнитель:</p>
+                        <p className="text-sm font-semibold">{item.selectedCandidate.name} {item.selectedCandidate.surname}</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))
             )}
@@ -477,6 +583,33 @@ function Dashboard({ role, userProfile, onLogout }: { role: Role, userProfile: a
                       <div className="col-span-3 text-center text-white/40 py-4 text-sm">Здесь будут ваши выполненные проекты</div>
                     )}
                   </div>
+                </div>
+
+                {/* Reviews Section */}
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-4">
+                   <h3 className="font-semibold text-white/70 text-sm uppercase tracking-wider">Отзывы и Оценки</h3>
+                   <div className="flex items-center space-x-2">
+                      <div className="flex text-yellow-400">
+                        {[1,2,3,4,5].map(star => <Sparkles key={star} className={`w-4 h-4 ${star <= (userProfile.rating || 5) ? 'fill-yellow-400' : 'text-white/20'}`} />)}
+                      </div>
+                      <span className="font-bold">{userProfile.rating || "5.0"}</span>
+                   </div>
+                   <div className="space-y-3">
+                      {(userProfile.reviews || []).map((rev: Review) => (
+                        <div key={rev.id} className="p-3 bg-white/5 rounded-xl border border-white/5">
+                           <div className="flex justify-between items-center mb-1">
+                              <span className="text-sm font-bold">{rev.from}</span>
+                              <div className="flex text-yellow-400">
+                                {[1,2,3,4,5].map(s => <Sparkles key={s} className={`w-3 h-3 ${s <= rev.stars ? 'fill-yellow-400' : 'text-white/10'}`} />)}
+                              </div>
+                           </div>
+                           <p className="text-xs text-white/60">{rev.comment}</p>
+                        </div>
+                      ))}
+                      {(!userProfile.reviews || userProfile.reviews.length === 0) && (
+                        <p className="text-xs text-white/40 italic">У вас пока нет отзывов</p>
+                      )}
+                   </div>
                 </div>
               </>
             )}
@@ -581,6 +714,72 @@ function Dashboard({ role, userProfile, onLogout }: { role: Role, userProfile: a
           </button>
         </div>
       </nav>
+
+      {/* --- CANDIDATE PROFILE MODAL --- */}
+      <AnimatePresence>
+        {selectedCandidateProfile && (
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/80 backdrop-blur-md z-[60]" onClick={() => setSelectedCandidateProfile(null)} />
+            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} className="absolute bottom-0 left-0 right-0 bg-[#121214] border-t border-white/10 p-6 rounded-t-3xl z-[70] max-h-[90vh] overflow-y-auto">
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-xl font-bold">Профиль кандидата</h2>
+                    <button onClick={() => setSelectedCandidateProfile(null)} className="p-2 bg-white/5 rounded-full"><X className="w-5 h-5" /></button>
+                </div>
+                <div className="flex flex-col items-center space-y-4 mb-8">
+                    <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-purple-500 to-blue-500 p-1">
+                        <div className="w-full h-full rounded-full bg-black overflow-hidden">
+                            {selectedCandidateProfile.avatar ? <img src={selectedCandidateProfile.avatar} className="w-full h-full object-cover" /> : <UserCircle className="w-full h-full text-white/20" />}
+                        </div>
+                    </div>
+                    <div className="text-center">
+                        <h3 className="text-2xl font-bold">{selectedCandidateProfile.name} {selectedCandidateProfile.surname}</h3>
+                        <p className="text-purple-400 font-medium">{selectedCandidateProfile.category} • {selectedCandidateProfile.exp}</p>
+                    </div>
+                </div>
+
+                <div className="space-y-6">
+                    <div className="bg-white/5 p-4 rounded-2xl">
+                        <h4 className="text-xs font-bold text-white/40 uppercase mb-2">О кандидате</h4>
+                        <p className="text-sm text-white/80 leading-relaxed">{selectedCandidateProfile.desc || "Описание отсутствует"}</p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="bg-white/5 p-4 rounded-2xl text-center">
+                            <span className="block text-2xl font-bold text-yellow-400">{selectedCandidateProfile.rating || "5.0"}</span>
+                            <span className="text-[10px] text-white/40 uppercase">Рейтинг</span>
+                        </div>
+                        <div className="bg-white/5 p-4 rounded-2xl text-center">
+                            <span className="block text-2xl font-bold text-blue-400">{selectedCandidateProfile.reviews?.length || 0}</span>
+                            <span className="text-[10px] text-white/40 uppercase">Отзывов</span>
+                        </div>
+                    </div>
+
+                    {selectedCandidateProfile.reviews && selectedCandidateProfile.reviews.length > 0 && (
+                        <div className="space-y-3">
+                             <h4 className="text-xs font-bold text-white/40 uppercase">Последние отзывы:</h4>
+                             {selectedCandidateProfile.reviews.map((r: any) => (
+                                 <div key={r.id} className="p-3 bg-white/5 rounded-xl border border-white/5">
+                                    <div className="flex justify-between items-center mb-1">
+                                        <span className="text-sm font-bold">{r.from}</span>
+                                        <div className="flex text-yellow-400">
+                                            {[1,2,3,4,5].map(s => <Sparkles key={s} className={`w-3 h-3 ${s <= r.stars ? 'fill-yellow-400' : 'text-white/10'}`} />)}
+                                        </div>
+                                    </div>
+                                    <p className="text-xs text-white/60">{r.comment}</p>
+                                 </div>
+                             ))}
+                        </div>
+                    )}
+                    
+                    <button onClick={() => {
+                        startChat(selectedCandidateProfile.name, "Обсуждение работы");
+                        setSelectedCandidateProfile(null);
+                    }} className="w-full py-4 bg-white text-black font-bold rounded-xl mt-4">Написать кандидату</button>
+                </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
