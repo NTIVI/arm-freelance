@@ -4,6 +4,7 @@ import {
   Search, 
   Plus, 
   Briefcase, 
+  Users,
   MessageSquare, 
   UserCircle, 
   LayoutGrid, 
@@ -86,21 +87,24 @@ export const Dashboard = ({ user, onLogout }: { user: any, onLogout: () => void 
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
         
         {/* Sidebar Nav */}
-        <aside className="lg:w-64 shrink-0 space-y-2">
-           <div className="glass-card p-6 rounded-[2rem] mb-6 flex items-center space-x-4 border-white/5">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center font-bold shadow-lg">
-                 {user.name?.[0]}
+        <aside className="lg:w-72 shrink-0 space-y-2">
+           <div className="glass-card p-8 rounded-[3rem] mb-6 flex flex-col items-center text-center space-y-4 border-white/5 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div className="w-24 h-24 rounded-[2.5rem] bg-gradient-to-tr from-primary to-secondary p-1 relative z-10 shadow-2xl">
+                 <div className="w-full h-full bg-background rounded-[2.2rem] flex items-center justify-center text-3xl font-black text-white">
+                    {user.name?.[0]}
+                 </div>
               </div>
-              <div className="overflow-hidden">
-                 <h3 className="font-bold truncate text-sm">{user.name}</h3>
-                 <div className="flex items-center space-x-1">
-                    <span className="text-[9px] text-white/30 uppercase tracking-widest font-black">{user.role}</span>
-                    {user.verified && <CheckCircle2 className="w-3 h-3 text-primary" />}
+              <div className="relative z-10">
+                 <h3 className="font-display font-black text-xl tracking-tight">{user.name}</h3>
+                 <div className="flex items-center justify-center space-x-2 mt-1">
+                    <span className="text-[10px] text-white/30 uppercase tracking-[0.2em] font-black">{user.role}</span>
+                    {user.verified && <CheckCircle2 className="w-3.5 h-3.5 text-primary" />}
                  </div>
               </div>
            </div>
 
-           <nav className="space-y-1">
+           <nav className="space-y-2">
              {[
                { id: 'home', label: 'Dashboard', icon: LayoutGrid },
                { id: 'search', label: isFreelancer ? 'Find Work' : 'Find Talent', icon: Search },
@@ -112,35 +116,38 @@ export const Dashboard = ({ user, onLogout }: { user: any, onLogout: () => void 
                <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id as any)}
-                  className={`w-full flex items-center space-x-4 px-6 py-4 rounded-2xl transition-all ${activeTab === item.id ? 'bg-primary text-white shadow-xl shadow-primary/20' : 'text-white/40 hover:bg-white/5 hover:text-white'}`}
+                  className={`w-full flex items-center space-x-4 px-8 py-5 rounded-[2rem] transition-all duration-500 group ${activeTab === item.id ? 'bg-primary text-white shadow-[0_20px_40px_rgba(99,102,241,0.3)]' : 'text-white/40 hover:bg-white/[0.03] hover:text-white'}`}
                >
-                  <item.icon className={`w-5 h-5 ${activeTab === item.id ? 'text-white' : 'text-primary'}`} />
-                  <span className="font-bold text-sm">{item.label}</span>
+                  <item.icon className={`w-5 h-5 transition-transform duration-500 group-hover:scale-110 ${activeTab === item.id ? 'text-white' : 'text-primary'}`} />
+                  <span className="font-bold text-sm tracking-tight">{item.label}</span>
                </button>
              ))}
            </nav>
            
-           <button onClick={onLogout} className="w-full flex items-center space-x-4 px-6 py-4 rounded-2xl text-red-500/40 hover:text-red-400 hover:bg-red-500/5 transition-all mt-10">
-              <X className="w-5 h-5" />
-              <span className="font-bold text-sm uppercase tracking-widest">Logout</span>
+           <button onClick={onLogout} className="w-full flex items-center space-x-4 px-8 py-5 rounded-[2rem] text-red-500/30 hover:text-red-400 hover:bg-red-500/5 transition-all mt-12 group">
+              <X className="w-5 h-5 group-hover:rotate-90 transition-transform duration-500" />
+              <span className="font-black text-[10px] uppercase tracking-[0.3em]">Logout Session</span>
            </button>
         </aside>
 
         {/* Main Feed */}
-        <main className="flex-1 space-y-6 min-w-0">
+        <main className="flex-1 space-y-8 min-w-0">
            
            {/* Top Actions */}
-           <div className="flex items-center justify-between gap-4">
-              <div className="flex-1 glass-card p-1 rounded-2xl flex items-center px-4 border-white/5 bg-white/[0.02]">
-                 <Search className="w-5 h-5 text-white/20" />
-                 <input type="text" placeholder={isFreelancer ? "Search for projects..." : "Search for specialists..."} className="bg-transparent border-none outline-none w-full p-4 text-sm" />
-                 <kbd className="hidden sm:inline-block px-2 py-1 bg-white/5 rounded text-[10px] text-white/20 border border-white/10">/</kbd>
+           <div className="flex items-center justify-between gap-6">
+              <div className="flex-1 glass-card p-1.5 rounded-[2rem] flex items-center px-6 border-white/5 bg-white/[0.01] shadow-none focus-within:border-primary/50 transition-all">
+                 <Search className="w-5 h-5 text-white/10" />
+                 <input type="text" placeholder={isFreelancer ? "Search for high-tier projects..." : "Search for world-class specialists..."} className="bg-transparent border-none outline-none w-full p-4 text-base font-medium placeholder:text-white/10" />
+                 <div className="hidden sm:flex items-center space-x-1 px-3 py-1.5 bg-white/[0.03] rounded-xl border border-white/5 text-[9px] font-black text-white/20">
+                    <span className="tracking-tighter">CMD</span>
+                    <span>K</span>
+                 </div>
               </div>
               
               {!isFreelancer && (
-                <button onClick={() => setShowPostJob(true)} className="btn-primary flex items-center space-x-2 h-[58px] px-8 shrink-0">
-                   <Plus className="w-5 h-5" />
-                   <span className="font-black text-sm uppercase tracking-widest">Post a Job</span>
+                <button onClick={() => setShowPostJob(true)} className="btn-primary flex items-center space-x-3 h-[70px] px-10 shrink-0">
+                   <Plus className="w-6 h-6" />
+                   <span className="font-black text-sm uppercase tracking-[0.15em]">Post New Project</span>
                 </button>
               )}
            </div>
@@ -148,24 +155,27 @@ export const Dashboard = ({ user, onLogout }: { user: any, onLogout: () => void 
            {/* Content Tabs */}
            <AnimatePresence mode="wait">
               {activeTab === 'home' && (
-                <motion.div key="home" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-8">
+                <motion.div key="home" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }} className="space-y-10">
                   
                   {/* Hero Dashboard Section */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                      <QuickStatCard label="Earnings this month" value="$0.00" icon={TrendingUp} color="text-green-400" />
                      <QuickStatCard label="Active Applications" value={myProposals.length.toString()} icon={FileText} color="text-primary" />
                      <QuickStatCard label="Available Connects" value="80" icon={Sparkles} color="text-secondary" />
                   </div>
 
-                  <div className="flex justify-between items-end border-b border-white/5 pb-4">
-                     <div className="space-y-1">
-                        <h2 className="text-2xl font-black">{isFreelancer ? 'Jobs you might like' : 'Recommended Talent'}</h2>
-                        <p className="text-xs text-white/30 font-bold uppercase tracking-widest">Based on your professional profile</p>
+                  <div className="flex justify-between items-end border-b border-white/5 pb-6">
+                     <div className="space-y-2">
+                        <h2 className="text-3xl font-black font-display tracking-tight">{isFreelancer ? 'Recommended for you' : 'Top Armenian Specialists'}</h2>
+                        <p className="text-[10px] text-white/20 font-black uppercase tracking-[0.3em]">Curated based on your professional DNA</p>
                      </div>
-                     <button className="text-xs font-black text-primary hover:underline uppercase tracking-widest">View All</button>
+                     <button className="flex items-center space-x-2 text-xs font-black text-primary hover:text-white transition-colors uppercase tracking-widest">
+                        <span>View Marketplace</span>
+                        <ChevronRight className="w-4 h-4" />
+                     </button>
                   </div>
                   
-                  <div className="grid grid-cols-1 gap-6">
+                  <div className="grid grid-cols-1 gap-8">
                      {isFreelancer ? (
                        jobs.map(job => (
                          <JobCard key={job.id} job={job} onClick={() => setSelectedJob(job)} />
@@ -305,16 +315,22 @@ export const Dashboard = ({ user, onLogout }: { user: any, onLogout: () => void 
 // --- Sub-components ---
 
 const QuickStatCard = ({ label, value, icon: Icon, color }: any) => (
-  <div className="glass-card p-6 rounded-[2.5rem] space-y-4 border-white/5 hover:bg-white/[0.04] transition-all">
-     <div className="flex items-center justify-between">
-        <div className={`p-3 rounded-2xl bg-white/5 ${color} shadow-sm`}>
-           <Icon className="w-6 h-6" />
+  <div className="glass-card p-8 rounded-[3rem] space-y-6 border-white/5 hover:bg-white/[0.04] transition-all duration-500 group relative overflow-hidden">
+     <div className="absolute -right-4 -bottom-4 w-20 h-20 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-all"></div>
+     <div className="flex items-center justify-between relative z-10">
+        <div className={`p-4 rounded-2xl bg-white/[0.03] ${color} shadow-inner`}>
+           <Icon className="w-8 h-8" />
         </div>
-        <TrendingUp className="w-4 h-4 text-white/10" />
+        <div className="flex flex-col items-end">
+           <span className="text-[9px] font-black text-white/20 uppercase tracking-[0.3em]">{label}</span>
+           <div className="flex items-center space-x-1 text-green-500 text-[10px] font-bold mt-1">
+              <TrendingUp className="w-3 h-3" />
+              <span>+12.5%</span>
+           </div>
+        </div>
      </div>
-     <div>
-        <span className="block text-2xl font-black tracking-tighter">{value}</span>
-        <span className="text-[10px] font-black text-white/30 uppercase tracking-widest">{label}</span>
+     <div className="relative z-10">
+        <span className="block text-4xl font-black tracking-tighter font-display text-glow">{value}</span>
      </div>
   </div>
 )
@@ -323,26 +339,33 @@ const JobCard = ({ job, onClick }: { job: Job, onClick: () => void }) => (
   <motion.div 
     whileHover={{ x: 10 }}
     onClick={onClick}
-    className="glass-card p-8 rounded-[2.5rem] border-white/5 hover:border-primary/30 transition-all cursor-pointer group flex flex-col md:flex-row gap-6 items-start"
+    className="glass-card p-10 rounded-[3.5rem] border-white/5 hover:border-primary/30 transition-all duration-500 cursor-pointer group flex flex-col md:flex-row gap-8 items-start relative overflow-hidden"
   >
-     <div className="flex-1 space-y-4 min-w-0">
-        <div className="flex flex-wrap items-center gap-3">
-           <span className="text-[10px] font-black text-primary bg-primary/10 px-3 py-1 rounded-full uppercase tracking-widest">{job.category}</span>
-           <span className="text-[10px] font-black text-white/30 uppercase tracking-widest flex items-center"><Clock className="w-3 h-3 mr-1" /> {job.postedAt}</span>
+     <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+     
+     <div className="flex-1 space-y-6 min-w-0 relative z-10">
+        <div className="flex flex-wrap items-center gap-4">
+           <span className="text-[10px] font-black text-primary bg-primary/10 px-4 py-1.5 rounded-full uppercase tracking-[0.2em]">{job.category}</span>
+           <div className="flex items-center space-x-2 text-[10px] font-black text-white/20 uppercase tracking-widest">
+              <Clock className="w-3.5 h-3.5" /> 
+              <span>Posted {job.postedAt}</span>
+           </div>
         </div>
-        <h3 className="text-2xl font-black group-hover:text-primary transition-colors truncate">{job.title}</h3>
-        <p className="text-sm text-white/40 line-clamp-2 leading-relaxed">{job.desc}</p>
-        <div className="flex items-center space-x-6 text-xs font-bold text-white/30">
-           <div className="flex items-center space-x-2"><MapPin className="w-4 h-4" /> <span>{job.location}</span></div>
-           <div className="flex items-center space-x-2"><Briefcase className="w-4 h-4" /> <span>Proposals: {job.proposals}</span></div>
+        <h3 className="text-3xl font-black font-display group-hover:text-primary transition-colors truncate tracking-tight leading-none">{job.title}</h3>
+        <p className="text-base text-white/40 line-clamp-2 leading-relaxed font-medium">{job.desc}</p>
+        <div className="flex items-center gap-8 text-[11px] font-black text-white/20 uppercase tracking-widest">
+           <div className="flex items-center space-x-2.5 group-hover:text-white/40 transition-colors"><MapPin className="w-4 h-4 text-primary" /> <span>{job.location}</span></div>
+           <div className="flex items-center space-x-2.5 group-hover:text-white/40 transition-colors"><Users className="w-4 h-4 text-secondary" /> <span>{job.proposals} Proposals</span></div>
         </div>
      </div>
-     <div className="shrink-0 flex flex-col items-end justify-between self-stretch text-right space-y-4">
-        <div>
-           <span className="block text-2xl font-black text-green-400">{job.budget}</span>
-           <span className="text-[10px] uppercase font-black text-white/20 tracking-widest">{job.type === 'hourly' ? 'Hourly Rate' : 'Fixed Price'}</span>
+     <div className="shrink-0 flex flex-col items-end justify-between self-stretch text-right space-y-6 relative z-10">
+        <div className="bg-white/[0.03] p-6 rounded-[2rem] border border-white/5 group-hover:border-primary/20 transition-all">
+           <span className="block text-3xl font-black text-green-400 font-display leading-none">{job.budget}</span>
+           <span className="text-[10px] uppercase font-black text-white/20 tracking-[0.3em] mt-2 block">{job.type === 'hourly' ? 'Hourly' : 'Fixed Price'}</span>
         </div>
-        <ChevronRight className="w-8 h-8 text-white/5 group-hover:text-primary transition-colors group-hover:translate-x-2" />
+        <div className="w-14 h-14 rounded-2xl bg-white/[0.03] flex items-center justify-center group-hover:bg-primary transition-all duration-500 shadow-xl group-hover:shadow-primary/20 group-hover:translate-x-2">
+           <ChevronRight className="w-6 h-6 text-white/20 group-hover:text-white" />
+        </div>
      </div>
   </motion.div>
 )

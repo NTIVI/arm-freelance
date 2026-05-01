@@ -82,7 +82,10 @@ function MainApp() {
   }
 
   return (
-    <div className="min-h-screen bg-background selection:bg-primary/30">
+    <div className="min-h-screen bg-background selection:bg-primary/30 relative mesh-gradient">
+      {/* Dynamic Background Noise/Texture */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+
       {view !== 'dashboard' && <Navbar onAuth={() => setView('register')} />}
       
       <AnimatePresence mode="wait">
