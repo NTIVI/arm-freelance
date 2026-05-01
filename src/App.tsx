@@ -262,12 +262,7 @@ function Dashboard({ role, userProfile, onLogout }: { role: Role, userProfile: a
   const [activeFilter, setActiveFilter] = useState("Все");
 
   // Local State
-  const [jobs, setJobs] = useState<Job[]>([
-    { id: 1, title: "Нужен лендинг для салона", category: "Разработка сайтов", budget: "50 000 ₽", desc: "Срочно ищем разработчика для одностраничника.", deadline: "10 дней", candidates: [], status: 'open' },
-    { id: 2, title: "Дизайн мобильного приложения", category: "Дизайн", budget: "80 000 ₽", desc: "Нужен дизайн 10 экранов для iOS.", deadline: "2 недели", candidates: [], status: 'open' },
-    { id: 3, title: "Сделать интернет-магазин", category: "Разработка сайтов", budget: "150 000 ₽", desc: "Полный цикл от дизайна до деплоя на Next.js.", deadline: "1 месяц", candidates: [], status: 'open' },
-    { id: 4, title: "Продвижение в Instagram", category: "SMM", budget: "30 000 ₽", desc: "Ведение аккаунта магазина одежды.", deadline: "Постоянно", candidates: [], status: 'open' }
-  ]);
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [myItems, setMyItems] = useState<any[]>([]);
   const [chats, setChats] = useState<any[]>([]);
   const [activeChat, setActiveChat] = useState<any | null>(null);
@@ -287,12 +282,7 @@ function Dashboard({ role, userProfile, onLogout }: { role: Role, userProfile: a
     setTimeout(() => setToast(null), 3000);
   };
 
-  const mockCreators = [
-    { id: 101, name: "Алексей С.", category: "Разработка сайтов", exp: "5+ лет", desc: "Делаю крутые лендинги на React и Vite.", rating: 4.8, reviews: [{id: 1, from: "Иван", stars: 5, comment: "Отличный спец!"}] },
-    { id: 102, name: "Мария В.", category: "Дизайн", exp: "3-5 лет", desc: "UI/UX дизайнер, рисую в Figma премиум дизайн.", rating: 5.0, reviews: [{id: 2, from: "Анна", stars: 5, comment: "Дизайн просто космос."}] },
-    { id: 103, name: "Дмитрий К.", category: "Маркетинг", exp: "1-3 года", desc: "Настрою Яндекс Директ и VK Рекламу.", rating: 4.2, reviews: [] },
-    { id: 104, name: "Олег П.", category: "Обмен криптовалюты", exp: "Более 5 лет", desc: "P2P переводы, консультации.", rating: 4.9, reviews: [] }
-  ];
+  const mockCreators: any[] = [];
 
   const handleCreate = (e: any) => {
     e.preventDefault();
