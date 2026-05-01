@@ -54,6 +54,44 @@ export default function App() {
     }
   }, []);
 
+  // --- Image Compression Utility ---
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 800;
+          const MAX_HEIGHT = 800;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx?.drawImage(img, 0, 0, width, height);
+          const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7); // 70% quality
+          resolve(compressedBase64);
+        };
+      };
+    });
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("arm_user_profile");
     localStorage.removeItem("arm_user_role");
@@ -172,9 +210,27 @@ function RegistrationScreen({ role, onBack, onRegister }: { role: Role, onBack: 
   const [exp, setExp] = useState("");
   const [desc, setDesc] = useState("");
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) setAvatarPreview(URL.createObjectURL(file));
+    if (file) {
+      // In a real app we'd call compressImage from props or context, 
+      // but for simplicity in this structure, we'll use a local basic version if needed 
+      // or assume the parent handles it. Let's use a local helper here too.
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (readerEvent) => {
+        const img = new Image();
+        img.src = readerEvent.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const size = 300; // Small for avatar
+          canvas.width = size;
+          canvas.height = size;
+          canvas.getContext("2d")?.drawImage(img, 0, 0, size, size);
+          setAvatarPreview(canvas.toDataURL("image/jpeg", 0.8));
+        };
+      };
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -290,7 +346,7 @@ function Dashboard({ role, userProfile, onLogout }: { role: Role, userProfile: a
     const id = Date.now();
     if (isCreator) {
       const newItem = {
-        id, title: formData.get("title"), category: formData.get("category"), price: formData.get("price"), desc: formData.get("desc")
+        id, title: formData.get("title"), category: formData.get("category"), price: formData.get("price"), desc: formData.get("desc"), duration: formData.get("duration")
       };
       setMyItems([newItem, ...myItems]);
     } else {
@@ -350,11 +406,12 @@ function Dashboard({ role, userProfile, onLogout }: { role: Role, userProfile: a
     showToast("Чат создан! Перейдите во вкладку Чаты.");
   };
 
-  const handlePortfolioUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePortfolioUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setPortfolio([...portfolio, URL.createObjectURL(file)]);
-      showToast("Фото добавлено в портфолио");
+      const compressed = await compressImage(file);
+      setPortfolio([...portfolio, compressed]);
+      showToast("Фото сжато и добавлено");
     }
   };
 
@@ -463,7 +520,7 @@ function Dashboard({ role, userProfile, onLogout }: { role: Role, userProfile: a
                   </div>
                   <div className="flex gap-2">
                     <span className="text-xs text-blue-400 bg-blue-400/10 px-2 py-1 rounded-full w-max">{item.category}</span>
-                    {item.deadline && <span className="text-xs text-orange-400 bg-orange-400/10 px-2 py-1 rounded-full w-max">Срок: {item.deadline}</span>}
+                    {(item.deadline || item.duration) && <span className="text-xs text-orange-400 bg-orange-400/10 px-2 py-1 rounded-full w-max">Срок: {item.deadline || item.duration}</span>}
                   </div>
                   {item.photo && <img src={item.photo} className="w-full h-32 object-cover rounded-xl mt-2" alt="Задание" />}
                   <p className="text-white/60 text-sm mt-2">{item.desc}</p>
@@ -674,14 +731,19 @@ function Dashboard({ role, userProfile, onLogout }: { role: Role, userProfile: a
                 </select>
                 <input required name={isCreator ? "price" : "budget"} type="text" placeholder={isCreator ? "Цена (например, от 5000 ₽)" : "Бюджет (например, 50 000 ₽)"} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500" />
                 
-                {/* Client specific fields */}
+                {/* Duration/Deadline */}
+                <input required name={isCreator ? "duration" : "deadline"} type="text" placeholder={isCreator ? "За сколько дней сделаете? (напр. 3 дня)" : "Сроки (например, 2 недели)"} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500" />
+
+                {/* Client specific photo upload */}
                 {!isCreator && (
                   <>
-                    <input required name="deadline" type="text" placeholder="Сроки (например, 2 недели)" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500" />
                     <div className="w-full bg-white/5 border border-white/10 border-dashed rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" onClick={() => jobPhotoRef.current?.click()}>
-                      <input type="file" accept="image/*" className="hidden" ref={jobPhotoRef} onChange={(e) => {
+                      <input type="file" accept="image/*" className="hidden" ref={jobPhotoRef} onChange={async (e) => {
                         const file = e.target.files?.[0];
-                        if (file) setJobPhotoPreview(URL.createObjectURL(file));
+                        if (file) {
+                          const compressed = await compressImage(file);
+                          setJobPhotoPreview(compressed);
+                        }
                       }} />
                       {jobPhotoPreview ? (
                         <img src={jobPhotoPreview} className="h-20 object-contain rounded-md" />
