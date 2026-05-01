@@ -32,9 +32,19 @@ export default function App() {
   const [role, setRole] = useState<Role | null>(null);
   const [isRegistered, setIsRegistered] = useState(false);
   const [userProfile, setUserProfile] = useState<any>(null);
+  const [tgUser, setTgUser] = useState<any>(null);
 
   // Load state from localStorage
   useEffect(() => {
+    // Get Telegram user info
+    const tg = (window as any).Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+      const user = tg.initDataUnsafe?.user;
+      if (user) setTgUser(user);
+    }
+
     const savedProfile = localStorage.getItem("arm_user_profile");
     const savedRole = localStorage.getItem("arm_user_role");
     if (savedProfile && savedRole) {
@@ -72,10 +82,12 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col justify-center items-center p-6 relative overflow-hidden">
-      {/* Hidden Admin Button */}
-      <button onClick={() => { setRole('admin'); setIsRegistered(true); localStorage.setItem("arm_user_role", "admin"); }} className="absolute top-6 right-6 p-2 bg-white/5 rounded-full hover:bg-white/10 z-20">
-        <Settings className="w-5 h-5 text-white/30" />
-      </button>
+      {/* Hidden Admin Button - Only for specific TG ID */}
+      {tgUser?.id === 6444802382 && (
+        <button onClick={() => { setRole('admin'); setIsRegistered(true); localStorage.setItem("arm_user_role", "admin"); }} className="absolute top-6 right-6 p-2 bg-white/5 rounded-full hover:bg-white/10 z-20 border border-white/10">
+          <Settings className="w-5 h-5 text-white/70" />
+        </button>
+      )}
 
       <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-50 animate-blob"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-50 animate-blob animation-delay-2000"></div>
