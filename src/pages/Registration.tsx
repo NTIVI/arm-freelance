@@ -8,10 +8,9 @@ export const RegistrationForm = ({ onBack, onComplete }: { onBack: () => void, o
   const [step, setStep] = useState(1)
   const [role, setRole] = useState<'freelancer' | 'agency' | 'client' | null>(null)
   const [authMethod, setAuthMethod] = useState<'email' | 'phone' | null>(null)
-  const [profileData, setProfileData] = useState<any>({})
 
   const handleComplete = () => {
-    onComplete({ ...profileData, role });
+    onComplete({ role });
   }
 
   return (
@@ -81,7 +80,7 @@ export const RegistrationForm = ({ onBack, onComplete }: { onBack: () => void, o
   )
 }
 
-const RoleCard = ({ role, selected, onClick, title, desc, icon: Icon }: any) => (
+const RoleCard = ({ selected, onClick, title, desc, icon: Icon }: any) => (
   <div onClick={onClick} className={`glass p-10 rounded-[3rem] space-y-6 cursor-pointer border-2 transition-all text-center ${selected ? 'border-primary bg-primary/5 shadow-2xl shadow-primary/20 scale-105' : 'border-white/5 hover:border-white/20'}`}>
     <div className={`w-20 h-20 rounded-3xl mx-auto flex items-center justify-center ${selected ? 'bg-primary' : 'bg-white/5'}`}>
       <Icon className={`w-10 h-10 ${selected ? 'text-white' : 'text-primary'}`} />

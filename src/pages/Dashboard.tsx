@@ -11,7 +11,6 @@ import {
   MapPin, 
   Clock, 
   DollarSign,
-  ChevronRight,
   Filter
 } from 'lucide-react'
 
