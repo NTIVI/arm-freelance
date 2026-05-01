@@ -835,32 +835,13 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
 
         {activeTab === 'users' && (
           <div className="space-y-3">
-            {[1,2,3].map(i => (
-              <div key={i} className="bg-white/5 border border-white/10 p-3 rounded-xl flex justify-between items-center">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center"><UserCircle className="w-6 h-6 text-white/50" /></div>
-                  <div>
-                    <h4 className="font-semibold text-sm">User {i}</h4>
-                    <p className="text-xs text-white/50">Роль: Создатель</p>
-                  </div>
-                </div>
-                <button className="p-2 text-red-400 hover:bg-red-400/10 rounded-lg"><Trash2 className="w-4 h-4" /></button>
-              </div>
-            ))}
+            <p className="text-center text-white/30 py-10 italic">Нет зарегистрированных пользователей</p>
           </div>
         )}
 
         {activeTab === 'jobs' && (
           <div className="space-y-3">
-            {[1,2].map(i => (
-              <div key={i} className="bg-white/5 border border-white/10 p-3 rounded-xl flex flex-col space-y-2">
-                <div className="flex justify-between items-start">
-                  <h4 className="font-semibold text-sm">Задание {i}</h4>
-                  <button className="p-1 text-red-400 hover:bg-red-400/10 rounded-lg"><Trash2 className="w-4 h-4" /></button>
-                </div>
-                <p className="text-xs text-white/50 truncate">Сделать логотип для компании...</p>
-              </div>
-            ))}
+            <p className="text-center text-white/30 py-10 italic">Нет активных объявлений</p>
           </div>
         )}
       </main>
