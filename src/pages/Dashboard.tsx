@@ -44,7 +44,7 @@ const MOCK_JOBS: Job[] = [
 
 // --- Main Dashboard ---
 export const Dashboard = ({ user, onLogout }: { user?: any, onLogout: () => void }) => {
-  useLanguage()
+  const { lang, setLang, t } = useLanguage()
   const [activeTab, setActiveTab] = useState<'home' | 'search' | 'projects' | 'catalog' | 'messages' | 'profile'>('home')
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedJob, setSelectedJob] = useState<Job | null>(null)
@@ -66,22 +66,27 @@ export const Dashboard = ({ user, onLogout }: { user?: any, onLogout: () => void
             <div className="w-20 h-20 rounded-full border-2 border-indigo-500 shadow-[0_0_20px_rgba(99,102,241,0.4)] flex items-center justify-center bg-indigo-500/10 text-indigo-400 font-bold text-2xl">
                {user?.username?.[0]?.toUpperCase() || 'Ф'}
             </div>
-            <span className="text-[10px] font-black uppercase tracking-widest text-white/50">{user?.role === 'client' ? 'КЛИЕНТ' : 'ФРИЛАНСЕР'}</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-white/50">{user?.role === 'client' ? t('client') : t('freelancer')}</span>
          </div>
 
          <nav className="flex-1 space-y-2">
-            <SidebarLink active={activeTab === 'home'} onClick={() => setActiveTab('home')} icon={LayoutGrid} label="Панель управления" />
-            <SidebarLink active={activeTab === 'search'} onClick={() => setActiveTab('search')} icon={Search} label="Поиск работы" />
-            <SidebarLink active={activeTab === 'projects'} onClick={() => setActiveTab('projects')} icon={Briefcase} label="Мои проекты" />
-            <SidebarLink active={activeTab === 'catalog'} onClick={() => setActiveTab('catalog')} icon={List} label="Каталог услуг" />
-            <SidebarLink active={activeTab === 'messages'} onClick={() => setActiveTab('messages')} icon={MessageSquare} label="Сообщения" badge="3" />
-            <SidebarLink active={activeTab === 'profile'} onClick={() => setActiveTab('profile')} icon={Settings} label="Настройки профиля" />
+            <SidebarLink active={activeTab === 'home'} onClick={() => setActiveTab('home')} icon={LayoutGrid} label={t('nav_dashboard')} />
+            <SidebarLink active={activeTab === 'search'} onClick={() => setActiveTab('search')} icon={Search} label={t('nav_find')} />
+            <SidebarLink active={activeTab === 'projects'} onClick={() => setActiveTab('projects')} icon={Briefcase} label={t('nav_my_jobs')} />
+            <SidebarLink active={activeTab === 'catalog'} onClick={() => setActiveTab('catalog')} icon={List} label={t('nav_catalog')} />
+            <SidebarLink active={activeTab === 'messages'} onClick={() => setActiveTab('messages')} icon={MessageSquare} label={t('nav_messages')} badge="3" />
+            <SidebarLink active={activeTab === 'profile'} onClick={() => setActiveTab('profile')} icon={Settings} label={t('nav_settings')} />
          </nav>
 
-         <div className="pt-6 mt-6">
-            <button onClick={onLogout} className="flex items-center space-x-4 px-4 py-3 text-xs font-bold uppercase tracking-widest text-red-500/80 hover:text-red-500 transition-colors w-full">
+         <div className="pt-6 mt-6 border-t border-white/5 space-y-4">
+            <div className="flex items-center justify-center space-x-2 bg-white/5 rounded-xl p-1">
+               <button onClick={() => setLang('en')} className={`flex-1 text-[10px] font-bold uppercase tracking-widest py-2 rounded-lg transition-colors ${lang === 'en' ? 'bg-indigo-500 text-white' : 'text-white/40 hover:text-white hover:bg-white/5'}`}>EN</button>
+               <button onClick={() => setLang('ru')} className={`flex-1 text-[10px] font-bold uppercase tracking-widest py-2 rounded-lg transition-colors ${lang === 'ru' ? 'bg-indigo-500 text-white' : 'text-white/40 hover:text-white hover:bg-white/5'}`}>RU</button>
+               <button onClick={() => setLang('hy')} className={`flex-1 text-[10px] font-bold uppercase tracking-widest py-2 rounded-lg transition-colors ${lang === 'hy' ? 'bg-indigo-500 text-white' : 'text-white/40 hover:text-white hover:bg-white/5'}`}>HY</button>
+            </div>
+            <button onClick={onLogout} className="flex items-center justify-center space-x-3 px-4 py-3 text-xs font-bold uppercase tracking-widest text-red-500/80 hover:bg-red-500/10 hover:text-red-500 rounded-xl transition-colors w-full">
                <X className="w-4 h-4" />
-               <span>Выйти из сессии</span>
+               <span>{t('logout')}</span>
             </button>
          </div>
       </aside>
