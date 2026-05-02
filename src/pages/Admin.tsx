@@ -32,13 +32,13 @@ export const Admin = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] p-8 font-sans">
+    <div className="min-h-screen bg-transparent p-8 font-sans">
       <div className="max-w-7xl mx-auto space-y-12">
         <header className="flex items-center justify-between">
           <div className="space-y-2">
              <button 
                onClick={() => navigate('/dashboard')}
-               className="flex items-center gap-2 text-[10px] font-black uppercase text-gray-400 hover:text-black transition-all mb-4"
+               className="flex items-center gap-2 text-[10px] font-black uppercase text-gray-400 hover:text-white transition-all mb-4"
              >
                <ArrowLeft className="w-4 h-4" />
                Exit Admin Panel
@@ -120,13 +120,13 @@ export const Admin = () => {
                           <td className="py-6 text-xs text-gray-400 font-medium">{u.joined}</td>
                           <td className="py-6 pr-4">
                              <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
-                                <button className="p-2 hover:bg-black/5 rounded-xl text-gray-400 hover:text-black transition-colors">
+                                <button className="p-2 hover:bg-white/5 rounded-xl text-gray-400 hover:text-white transition-colors">
                                    <UserCheck className="w-4 h-4" />
                                 </button>
                                 <button className="p-2 hover:bg-red-500/10 rounded-xl text-gray-400 hover:text-red-500 transition-colors">
                                    <Trash2 className="w-4 h-4" />
                                 </button>
-                                <button className="p-2 hover:bg-black/5 rounded-xl text-gray-400 hover:text-black transition-colors">
+                                <button className="p-2 hover:bg-white/5 rounded-xl text-gray-400 hover:text-white transition-colors">
                                    <MoreHorizontal className="w-4 h-4" />
                                 </button>
                              </div>

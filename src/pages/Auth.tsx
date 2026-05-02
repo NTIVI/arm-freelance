@@ -40,7 +40,7 @@ export const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] flex items-center justify-center p-6 font-sans">
+    <div className="min-h-screen bg-transparent flex items-center justify-center p-6 font-sans">
       <div className="w-full max-w-lg">
         <div className="flex flex-col items-center mb-16 space-y-4">
           <div className="w-14 h-14 rounded-2xl bg-black flex items-center justify-center shadow-xl">
@@ -93,7 +93,7 @@ export const Auth = () => {
                 </div>
               </div>
 
-              <button onClick={() => setIsLogin(!isLogin)} className="w-full text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors pt-4">
+              <button onClick={() => setIsLogin(!isLogin)} className="w-full text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-white transition-colors pt-4">
                 {isLogin ? "Create an Elite Account" : "Access Existing Workspace"}
               </button>
             </motion.div>
@@ -123,14 +123,14 @@ const SocialBtn = ({ label, color }: any) => (
 )
 
 const RoleOption = ({ selected, onClick, icon: Icon, title, desc }: any) => (
-  <div onClick={onClick} className={`glass-panel p-10 rounded-[3rem] border-2 cursor-pointer transition-all ${selected ? 'border-black bg-white shadow-2xl scale-105' : 'border-white/60 hover:border-black/10'} flex items-center gap-8`}>
-    <div className={`w-16 h-16 rounded-3xl flex items-center justify-center transition-all ${selected ? 'bg-black text-white' : 'bg-black/5 text-black'}`}>
+  <div onClick={onClick} className={`glass-panel p-10 rounded-[3rem] border-2 cursor-pointer transition-all ${selected ? 'border-white bg-white/10 shadow-2xl scale-105' : 'border-white/20 hover:border-white/40'} flex items-center gap-8`}>
+    <div className={`w-16 h-16 rounded-3xl flex items-center justify-center transition-all ${selected ? 'bg-white text-black' : 'bg-white/5 text-white'}`}>
       <Icon className="w-8 h-8" />
     </div>
     <div className="flex-1">
-      <h4 className="text-lg font-black uppercase italic">{title}</h4>
+      <h4 className="text-lg font-black uppercase italic text-white">{title}</h4>
       <p className="text-[11px] text-gray-400 font-medium">{desc}</p>
     </div>
-    {selected && <CheckCircle2 className="w-6 h-6 text-black" />}
+    {selected && <CheckCircle2 className="w-6 h-6 text-white" />}
   </div>
 )

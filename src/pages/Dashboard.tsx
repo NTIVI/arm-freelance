@@ -189,7 +189,7 @@ export const Dashboard = () => {
 const SidebarItem = ({ active, icon: Icon, onClick }: any) => (
   <button 
     onClick={onClick}
-    className={`w-full flex items-center justify-center p-4 rounded-3xl transition-all ${active ? 'bg-black text-white shadow-xl shadow-black/10 scale-105' : 'text-gray-400 hover:text-black hover:bg-black/5'}`}
+    className={`w-full flex items-center justify-center p-4 rounded-3xl transition-all ${active ? 'bg-white text-black shadow-xl scale-105' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
   >
     <Icon className="w-6 h-6" />
   </button>
@@ -240,12 +240,12 @@ const LanguageSwitcher = () => {
         <button 
           key={l.id}
           onClick={() => setLang(l.id as any)}
-          className={`relative px-6 py-2 rounded-full text-xs font-black uppercase transition-all z-10 ${lang === l.id ? 'text-white' : 'text-gray-500 hover:text-black'}`}
+          className={`relative px-6 py-2 rounded-full text-xs font-black uppercase transition-all z-10 ${lang === l.id ? 'text-black' : 'text-gray-500 hover:text-white'}`}
         >
           {lang === l.id && (
             <motion.div
               layoutId="activeLangDashboard"
-              className="absolute inset-0 bg-black rounded-full -z-10 shadow-lg"
+              className="absolute inset-0 bg-white rounded-full -z-10 shadow-lg"
               transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
             />
           )}

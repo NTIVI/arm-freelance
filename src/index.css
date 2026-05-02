@@ -5,20 +5,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  --primary: #000000;
-  --secondary: #6b7280;
-  --background: #f3f4f6;
-  --glass-bg: rgba(255, 255, 255, 0.4);
-  --glass-border: rgba(255, 255, 255, 0.5);
-  --text-main: #111827;
-  --text-muted: #6b7280;
+  --primary: #ffffff;
+  --secondary: #9ca3af;
+  --background: #0a0a0a;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --text-main: #ffffff;
+  --text-muted: #9ca3af;
   --radius: 2rem;
 }
 
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
-  background: radial-gradient(circle at top left, #ffffff, #e5e7eb);
+  background: radial-gradient(circle at top left, #1a1a1a, #000000);
   color: var(--text-main);
   min-height: 100vh;
   overflow-x: hidden;
@@ -26,24 +26,24 @@ body {
 
 @layer components {
   .glass-panel {
-    @apply bg-white/40 backdrop-blur-2xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.05)];
+    @apply bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)];
   }
 
   .btn-capsule {
-    @apply px-6 py-2 bg-black text-white rounded-full font-semibold transition-all active:scale-95 hover:bg-black/80 flex items-center gap-2;
+    @apply px-6 py-2 bg-white text-black rounded-full font-bold transition-all active:scale-95 hover:bg-gray-200 flex items-center gap-2;
   }
 
   .btn-ghost {
-    @apply px-6 py-2 bg-white/40 border border-white/60 rounded-full font-semibold transition-all hover:bg-white/60 flex items-center gap-2;
+    @apply px-6 py-2 bg-white/5 border border-white/10 rounded-full font-semibold transition-all hover:bg-white/10 flex items-center gap-2 text-white;
   }
 
   .input-capsule {
-    @apply bg-white/40 border border-white/60 rounded-full px-6 py-3 outline-none focus:bg-white/60 transition-all placeholder:text-gray-400 text-sm text-black;
+    @apply bg-white/5 border border-white/10 rounded-full px-6 py-3 outline-none focus:bg-white/10 transition-all placeholder:text-gray-500 text-sm text-white;
   }
 }
 
 input, textarea, select {
-  @apply text-black;
+  @apply text-white;
 }
 
 /* Custom Scrollbar */
