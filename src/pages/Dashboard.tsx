@@ -44,7 +44,7 @@ const MOCK_JOBS: Job[] = [
 
 // --- Main Dashboard ---
 export const Dashboard = ({ user, onLogout }: { user?: any, onLogout: () => void }) => {
-  const { lang, setLang, t } = useLanguage()
+   const { lang, setLang, t } = useLanguage()
   const [activeTab, setActiveTab] = useState<'home' | 'search' | 'projects' | 'catalog' | 'messages' | 'profile'>('home')
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedJob, setSelectedJob] = useState<Job | null>(null)
@@ -63,10 +63,13 @@ export const Dashboard = ({ user, onLogout }: { user?: any, onLogout: () => void
       {/* --- Sidebar --- */}
       <aside className="w-72 flex flex-col h-screen shrink-0 bg-[#0E0E10] border-r border-white/5 py-8 px-6">
          <div className="mb-10 p-8 rounded-3xl bg-[#131315] border border-white/5 flex flex-col items-center justify-center space-y-4 shadow-xl">
-            <div className="w-20 h-20 rounded-full border-2 border-indigo-500 shadow-[0_0_20px_rgba(99,102,241,0.4)] flex items-center justify-center bg-indigo-500/10 text-indigo-400 font-bold text-2xl">
-               {user?.username?.[0]?.toUpperCase() || 'Ф'}
+            <div className="w-20 h-20 rounded-full border-2 border-indigo-500 shadow-[0_0_20px_rgba(99,102,241,0.4)] flex items-center justify-center bg-indigo-500/10 text-indigo-400 font-bold text-2xl overflow-hidden">
+               {user?.avatar ? <img src={user.avatar} className="w-full h-full object-cover" /> : (user?.fullName?.[0]?.toUpperCase() || 'U')}
             </div>
-            <span className="text-[10px] font-black uppercase tracking-widest text-white/50">{user?.role === 'client' ? t('client') : t('freelancer')}</span>
+            <div className="text-center">
+               <h3 className="text-sm font-bold text-white truncate w-40">{user?.fullName || 'User'}</h3>
+               <p className="text-[9px] font-black uppercase tracking-widest text-white/30 mt-1">{user?.title || (user?.role === 'client' ? t('client') : t('freelancer'))}</p>
+            </div>
          </div>
 
          <nav className="flex-1 space-y-2">
