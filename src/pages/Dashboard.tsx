@@ -51,7 +51,7 @@ interface Proposal {
 // --- Main Dashboard ---
 
 export const Dashboard = ({ user, onLogout }: { user: any, onLogout: () => void }) => {
-  const { t } = useLanguage()
+  useLanguage()
   const [activeTab, setActiveTab] = useState<'home' | 'my-jobs' | 'messages' | 'profile' | 'catalog'>('home')
   const [showPostJob, setShowPostJob] = useState(false)
   const [selectedJob, setSelectedJob] = useState<Job | null>(null)
@@ -94,45 +94,57 @@ export const Dashboard = ({ user, onLogout }: { user: any, onLogout: () => void 
   return (
     <div className="min-h-screen bg-background text-white font-sans flex overflow-hidden">
       
-      {/* --- Sidebar (PC Optimized) --- */}
-      <aside className="w-64 border-r border-border flex flex-col h-screen shrink-0 bg-surface/50 backdrop-blur-xl">
-         <div className="p-6 flex items-center space-x-3 mb-4">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center font-black text-xl shadow-lg shadow-primary/20">A</div>
-            <span className="font-bold text-lg tracking-tight uppercase">Armenia Freelance</span>
+      {/* --- Sidebar (VK Style) --- */}
+      <aside className="w-64 flex flex-col h-screen shrink-0 bg-surface/80 border-r border-border">
+         <div className="p-6">
+            <h1 className="text-xl font-bold text-primary tracking-tight">ARM Freelance</h1>
          </div>
 
-         <nav className="flex-1 px-4 space-y-1">
-            {[
-               { id: 'home', label: t('nav_dashboard'), icon: LayoutGrid },
-               { id: 'my-jobs', label: isFreelancer ? t('nav_my_jobs') : 'My Postings', icon: Briefcase },
-               { id: 'messages', label: t('nav_messages'), icon: MessageSquare },
-               { id: 'catalog', label: 'Marketplace', icon: Search },
-               { id: 'profile', label: t('nav_settings'), icon: Settings },
-            ].map(item => (
-               <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id as any)}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all ${activeTab === item.id ? 'bg-primary/10 text-primary border border-primary/20 font-bold' : 'text-white/60 hover:bg-white/5 hover:text-white'}`}
-               >
-                  <item.icon className={`w-5 h-5 ${activeTab === item.id ? 'text-primary' : 'text-white/40'}`} />
-                  <span className="text-sm">{item.label}</span>
-               </button>
-            ))}
+         <nav className="flex-1 px-3 space-y-0.5 overflow-y-auto">
+            <SidebarLink 
+               active={activeTab === 'home'} 
+               onClick={() => setActiveTab('home')} 
+               icon={LayoutGrid} 
+               label="Моя страница" 
+            />
+            <SidebarLink 
+               active={activeTab === 'catalog'} 
+               onClick={() => setActiveTab('catalog')} 
+               icon={Search} 
+               label="Поиск работы" 
+            />
+            <SidebarLink 
+               active={activeTab === 'messages'} 
+               onClick={() => setActiveTab('messages')} 
+               icon={MessageSquare} 
+               label="Сообщения" 
+               badge="3"
+            />
+            <SidebarLink 
+               active={activeTab === 'my-jobs'} 
+               onClick={() => setActiveTab('my-jobs')} 
+               icon={Briefcase} 
+               label={isFreelancer ? "Мои отклики" : "Мои заказы"} 
+            />
+            
+            <div className="my-4 border-t border-border/50 mx-4" />
+            
+            <SidebarLink 
+               active={activeTab === 'profile'} 
+               onClick={() => setActiveTab('profile')} 
+               icon={Settings} 
+               label="Настройки" 
+            />
          </nav>
 
-         <div className="p-4 mt-auto border-t border-border">
-            <div className="p-4 rounded-xl bg-white/5 flex items-center space-x-3 mb-4">
-               <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center font-bold text-xs">
-                  {user.name?.[0]}
-               </div>
-               <div className="flex-1 min-w-0">
-                  <p className="text-xs font-bold truncate">{user.name}</p>
-                  <p className="text-[10px] text-white/40 uppercase tracking-widest">{user.role}</p>
-               </div>
-               <button onClick={onLogout} className="p-2 text-white/20 hover:text-red-400 transition-colors">
-                  <X className="w-4 h-4" />
-               </button>
-            </div>
+         <div className="p-4 border-t border-border">
+            <button 
+               onClick={onLogout}
+               className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-white/40 hover:text-white/80 transition-colors rounded-lg hover:bg-white/5"
+            >
+               <X className="w-4 h-4" />
+               <span>Выйти</span>
+            </button>
          </div>
       </aside>
 
@@ -287,6 +299,23 @@ export const Dashboard = ({ user, onLogout }: { user: any, onLogout: () => void 
     </div>
   )
 }
+
+// --- Sub-components ---
+
+const SidebarLink = ({ icon: Icon, label, active, onClick, badge }: any) => (
+   <button
+      onClick={onClick}
+      className={`w-full flex items-center space-x-3 px-4 py-2 rounded-lg transition-all ${active ? 'bg-white/10 text-white font-bold' : 'text-white/40 hover:bg-white/5 hover:text-white/80'}`}
+   >
+      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${active ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white/5 text-white/30'}`}>
+         <Icon className="w-4 h-4" />
+      </div>
+      <span className="text-sm flex-1 text-left">{label}</span>
+      {badge && (
+         <span className="px-2 py-0.5 bg-primary/20 text-primary text-[10px] font-bold rounded-full">{badge}</span>
+      )}
+   </button>
+)
 
 // --- PC Optimized Sub-components ---
 
