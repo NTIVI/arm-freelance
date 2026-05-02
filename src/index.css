@@ -38,8 +38,12 @@ body {
   }
 
   .input-capsule {
-    @apply bg-white/40 border border-white/60 rounded-full px-6 py-3 outline-none focus:bg-white/60 transition-all placeholder:text-gray-400 text-sm;
+    @apply bg-white/40 border border-white/60 rounded-full px-6 py-3 outline-none focus:bg-white/60 transition-all placeholder:text-gray-400 text-sm text-black;
   }
+}
+
+input, textarea, select {
+  @apply text-black;
 }
 
 /* Custom Scrollbar */
