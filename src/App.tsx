@@ -6,6 +6,7 @@ import { Dashboard } from './pages/Dashboard'
 import { PostJob } from './pages/PostJob'
 import { JobDetails } from './pages/JobDetails'
 import { Profile } from './pages/Profile'
+import { Admin } from './pages/Admin'
 import { LanguageProvider } from './context/LanguageContext'
 
 const ProtectedRoute = ({ children, role }: { children: React.ReactNode, role?: 'client' | 'freelancer' }) => {
@@ -45,6 +46,8 @@ function AppRoutes() {
           <Profile />
         </ProtectedRoute>
       } />
+
+      <Route path="/admin" element={<Admin />} />
 
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>

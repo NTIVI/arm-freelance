@@ -15,6 +15,7 @@ import {
   Briefcase
 } from 'lucide-react'
 import { useAppContext } from '../context/AppContext'
+import { useLanguage } from '../context/LanguageContext'
 
 export const Dashboard = () => {
   const { user, logout } = useAppContext();
@@ -65,8 +66,10 @@ export const Dashboard = () => {
           </div>
 
           <div className="flex items-center gap-4">
+            <LanguageSwitcher />
+
             <div className="flex items-center gap-2 bg-white/40 border border-white/60 p-1.5 rounded-full">
-              <HeaderAction icon={Video} />
+               <HeaderAction icon={Video} />
               <HeaderAction icon={Bell} dot />
               <div className="h-6 w-px bg-black/10 mx-1"></div>
               <div className="flex items-center gap-3 px-3">
@@ -221,3 +224,29 @@ const ProjectStat = ({ label, value }: any) => (
     <span>{value}</span>
   </div>
 )
+
+const LanguageSwitcher = () => {
+  const { lang, setLang } = useLanguage();
+  return (
+    <div className="flex items-center gap-1 bg-white/40 border border-white/60 p-1 rounded-full shadow-sm">
+      <button 
+        onClick={() => setLang('en')}
+        className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase transition-all ${lang === 'en' ? 'bg-black text-white shadow-lg' : 'text-gray-400 hover:text-black'}`}
+      >
+        EN
+      </button>
+      <button 
+        onClick={() => setLang('ru')}
+        className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase transition-all ${lang === 'ru' ? 'bg-black text-white shadow-lg' : 'text-gray-400 hover:text-black'}`}
+      >
+        RU
+      </button>
+      <button 
+        onClick={() => setLang('hy')}
+        className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase transition-all ${lang === 'hy' ? 'bg-black text-white shadow-lg' : 'text-gray-400 hover:text-black'}`}
+      >
+        HY
+      </button>
+    </div>
+  );
+};

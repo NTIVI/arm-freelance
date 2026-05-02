@@ -66,19 +66,34 @@ export const Auth = () => {
                 )}
                 <div className="relative group">
                   <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300" />
-                  <input required type="email" placeholder="Email Address" className="input-capsule pl-14 w-full" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+                  <input required type="email" placeholder="Gmail / Email Address" className="input-capsule pl-14 w-full" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
                 </div>
                 <div className="relative group">
                   <Lock className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300" />
                   <input required type="password" placeholder="Password" className="input-capsule pl-14 w-full" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} />
                 </div>
+                {!isLogin && (
+                  <div className="relative group">
+                    <Lock className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300" />
+                    <input required type="password" placeholder="Confirm Password" className="input-capsule pl-14 w-full" />
+                  </div>
+                )}
                 
                 <button type="submit" className="btn-capsule w-full py-5 justify-center shadow-2xl shadow-black/10 mt-6">
-                  {isLogin ? 'Enter Workspace' : 'Continue'} <ArrowRight className="w-5 h-5" />
+                  {isLogin ? 'Enter Workspace' : 'Create Account'} <ArrowRight className="w-5 h-5" />
                 </button>
               </form>
 
-              <button onClick={() => setIsLogin(!isLogin)} className="w-full text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors">
+              <div className="space-y-4 pt-6 border-t border-black/5">
+                <p className="text-[9px] font-black uppercase text-gray-400 text-center tracking-widest">Or connect with</p>
+                <div className="grid grid-cols-3 gap-3">
+                  <SocialBtn icon="/google-icon.svg" label="Google" />
+                  <SocialBtn icon="/vk-icon.svg" label="VK" />
+                  <SocialBtn icon="/fb-icon.svg" label="Facebook" color="bg-[#1877F2]" />
+                </div>
+              </div>
+
+              <button onClick={() => setIsLogin(!isLogin)} className="w-full text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors pt-4">
                 {isLogin ? "Create an Elite Account" : "Access Existing Workspace"}
               </button>
             </motion.div>
@@ -98,6 +113,14 @@ export const Auth = () => {
     </div>
   )
 }
+
+const SocialBtn = ({ label, color }: any) => (
+  <button className={`flex items-center justify-center p-3 rounded-2xl bg-white/40 border border-white/60 hover:bg-white/60 transition-all group`}>
+    <div className={`w-5 h-5 rounded-md ${color || 'bg-white'} flex items-center justify-center text-[10px] font-bold`}>
+      {label[0]}
+    </div>
+  </button>
+)
 
 const RoleOption = ({ selected, onClick, icon: Icon, title, desc }: any) => (
   <div onClick={onClick} className={`glass-panel p-10 rounded-[3rem] border-2 cursor-pointer transition-all ${selected ? 'border-black bg-white shadow-2xl scale-105' : 'border-white/60 hover:border-black/10'} flex items-center gap-8`}>

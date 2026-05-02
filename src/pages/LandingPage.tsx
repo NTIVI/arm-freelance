@@ -8,8 +8,10 @@ import {
   Globe, 
   Command
 } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 export const LandingPage = () => {
+  const { lang, setLang } = useLanguage();
   return (
     <div className="min-h-screen bg-[#f3f4f6] text-[#111827] selection:bg-black/10 font-sans">
       <nav className="fixed top-0 left-0 right-0 z-50 px-12 py-8">
@@ -22,6 +24,7 @@ export const LandingPage = () => {
           </div>
           
           <div className="hidden md:flex items-center space-x-12">
+            <LanguageSwitcher lang={lang} setLang={setLang} />
             <a href="#" className="text-[11px] font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors">Talent</a>
             <a href="#" className="text-[11px] font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors">Projects</a>
             <Link to="/auth" className="btn-capsule">Sign In</Link>
@@ -106,3 +109,28 @@ const FeatureCard = ({ icon: Icon, title, desc }: any) => (
     <p className="text-gray-500 text-sm leading-relaxed font-medium">{desc}</p>
   </div>
 )
+
+const LanguageSwitcher = ({ lang, setLang }: any) => {
+  return (
+    <div className="flex items-center gap-1 bg-white/40 border border-white/60 p-1 rounded-full shadow-sm scale-90">
+      <button 
+        onClick={() => setLang('en')}
+        className={`px-4 py-1 rounded-full text-[9px] font-black uppercase transition-all ${lang === 'en' ? 'bg-black text-white shadow-lg' : 'text-gray-400 hover:text-black'}`}
+      >
+        EN
+      </button>
+      <button 
+        onClick={() => setLang('ru')}
+        className={`px-4 py-1 rounded-full text-[9px] font-black uppercase transition-all ${lang === 'ru' ? 'bg-black text-white shadow-lg' : 'text-gray-400 hover:text-black'}`}
+      >
+        RU
+      </button>
+      <button 
+        onClick={() => setLang('hy')}
+        className={`px-4 py-1 rounded-full text-[9px] font-black uppercase transition-all ${lang === 'hy' ? 'bg-black text-white shadow-lg' : 'text-gray-400 hover:text-black'}`}
+      >
+        HY
+      </button>
+    </div>
+  );
+};
