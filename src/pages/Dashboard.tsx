@@ -126,20 +126,20 @@ export const Dashboard = ({ user, onLogout }: { user?: any, onLogout: () => void
                            <motion.div key="home" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-12">
                               {/* Stat Cards */}
                               <div className="grid grid-cols-3 gap-6">
-                                 <StatCard icon={TrendingUp} iconColor="text-emerald-400" iconBg="bg-emerald-400/10" title="EARNINGS THIS MONTH" trend="+12.5%" value="$0.00" />
-                                 <StatCard icon={FileText} iconColor="text-indigo-400" iconBg="bg-indigo-400/10" title="ACTIVE APPLICATIONS" trend="+12.5%" value="1" />
-                                 <StatCard icon={Sparkles} iconColor="text-purple-400" iconBg="bg-purple-400/10" title="AVAILABLE CONNECTS" trend="+12.5%" value="80" />
+                                 <StatCard icon={TrendingUp} iconColor="text-emerald-400" iconBg="bg-emerald-400/10" title={t('earnings_month')} trend="+12.5%" value="$0.00" />
+                                 <StatCard icon={FileText} iconColor="text-indigo-400" iconBg="bg-indigo-400/10" title={t('active_applications')} trend="+12.5%" value="1" />
+                                 <StatCard icon={Sparkles} iconColor="text-purple-400" iconBg="bg-purple-400/10" title={t('available_connects')} trend="+12.5%" value="80" />
                               </div>
 
                               {/* Recommended Projects */}
                               <div className="space-y-6">
                                  <div className="flex justify-between items-end mb-6">
                                     <div>
-                                       <h2 className="text-3xl font-black mb-1">Recommended for you</h2>
-                                       <p className="text-[10px] font-bold uppercase tracking-widest text-white/30">Curated based on your professional DNA</p>
+                                       <h2 className="text-3xl font-black mb-1">{t('recommended_for_you')}</h2>
+                                       <p className="text-[10px] font-bold uppercase tracking-widest text-white/30">{t('curated_dna')}</p>
                                     </div>
                                     <button onClick={() => setActiveTab('search')} className="text-xs font-bold text-indigo-400 hover:text-indigo-300 uppercase tracking-widest flex items-center space-x-1">
-                                       <span>View Marketplace</span>
+                                       <span>{t('view_marketplace')}</span>
                                        <ChevronRight className="w-4 h-4" />
                                     </button>
                                  </div>
@@ -154,13 +154,13 @@ export const Dashboard = ({ user, onLogout }: { user?: any, onLogout: () => void
 
                         {activeTab === 'search' && (
                            <motion.div key="search" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
-                              <h2 className="text-3xl font-black mb-8">Top Projects Feed</h2>
+                              <h2 className="text-3xl font-black mb-8">{t('top_projects_feed')}</h2>
                               {filteredJobs.length > 0 ? filteredJobs.map(job => (
                                  <DashboardJobCard key={job.id} job={job} onClick={() => setSelectedJob(job)} />
                               )) : (
                                  <div className="text-center py-20 bg-[#131315] border border-white/5 rounded-[2rem]">
                                     <Search className="w-10 h-10 text-white/10 mx-auto mb-4" />
-                                    <p className="text-white/40">No projects found matching "{searchQuery}"</p>
+                                    <p className="text-white/40">{t('no_projects_found')} "{searchQuery}"</p>
                                  </div>
                               )}
                            </motion.div>
@@ -170,8 +170,8 @@ export const Dashboard = ({ user, onLogout }: { user?: any, onLogout: () => void
                            <motion.div key="other" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
                               <div className="bg-[#131315] border border-white/5 rounded-[2rem] p-12 text-center h-[50vh] flex flex-col items-center justify-center">
                                  <Sparkles className="w-12 h-12 text-indigo-500/50 mb-6" />
-                                 <h2 className="text-2xl font-bold mb-2">Module "{activeTab}" is active</h2>
-                                 <p className="text-white/40 text-sm max-w-md mx-auto">This section is part of the professional CRM workflow. Ready to integrate data API.</p>
+                                 <h2 className="text-2xl font-bold mb-2">{t('module_active').replace('Module', `Module "${activeTab}"`)}</h2>
+                                 <p className="text-white/40 text-sm max-w-md mx-auto">{t('module_desc')}</p>
                               </div>
                            </motion.div>
                         )}
@@ -182,10 +182,10 @@ export const Dashboard = ({ user, onLogout }: { user?: any, onLogout: () => void
                   <div className="w-80 shrink-0 space-y-8 sticky top-0 pb-8">
                      {/* Account Summary */}
                      <div className="bg-[#131315] border border-white/5 p-6 rounded-[2rem] space-y-6">
-                        <h4 className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-2">Account Summary</h4>
+                        <h4 className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-2">{t('account_summary')}</h4>
                         <div className="space-y-2">
                            <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-white/30">
-                              <span>Profile completeness:</span>
+                              <span>{t('profile_completeness')}</span>
                               <span className="text-white">35%</span>
                            </div>
                            <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
@@ -196,14 +196,14 @@ export const Dashboard = ({ user, onLogout }: { user?: any, onLogout: () => void
                            <button className="w-full flex items-center justify-between p-4 bg-[#1A1A1D] rounded-2xl hover:bg-[#202023] transition-colors border border-white/5">
                               <div className="flex items-center space-x-3">
                                  <ShieldCheck className="w-5 h-5 text-indigo-400" />
-                                 <span className="text-sm font-bold">Identity verified</span>
+                                 <span className="text-sm font-bold">{t('identity_verified')}</span>
                               </div>
                               <ChevronRight className="w-4 h-4 text-white/30" />
                            </button>
                            <button className="w-full flex items-center justify-between p-4 bg-[#1A1A1D] rounded-2xl hover:bg-[#202023] transition-colors border border-white/5">
                               <div className="flex items-center space-x-3">
                                  <CreditCard className="w-5 h-5 text-purple-400" />
-                                 <span className="text-sm font-bold">Payment method</span>
+                                 <span className="text-sm font-bold">{t('payment_method')}</span>
                               </div>
                               <Plus className="w-4 h-4 text-white/30" />
                            </button>
@@ -212,8 +212,8 @@ export const Dashboard = ({ user, onLogout }: { user?: any, onLogout: () => void
 
                      {/* Upcoming Deadlines */}
                      <div className="space-y-4">
-                        <h4 className="text-[10px] font-bold uppercase tracking-widest text-white/30">Upcoming Deadlines</h4>
-                        <p className="text-xs font-medium text-white/20 italic">No active contracts with deadlines.</p>
+                        <h4 className="text-[10px] font-bold uppercase tracking-widest text-white/30">{t('upcoming_deadlines')}</h4>
+                        <p className="text-xs font-medium text-white/20 italic">{t('no_deadlines')}</p>
                      </div>
 
                      {/* Agency CTA */}
@@ -222,11 +222,11 @@ export const Dashboard = ({ user, onLogout }: { user?: any, onLogout: () => void
                            <Building2 className="w-6 h-6 text-indigo-400" />
                         </div>
                         <div>
-                           <h4 className="text-xl font-bold mb-3">Start an Agency to scale your business</h4>
-                           <p className="text-xs text-white/50 leading-relaxed">Collaborate with other specialists under one banner and win bigger projects.</p>
+                           <h4 className="text-xl font-bold mb-3">{t('start_agency')}</h4>
+                           <p className="text-xs text-white/50 leading-relaxed">{t('agency_desc')}</p>
                         </div>
                         <button className="w-full py-4 bg-white text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-gray-200 transition-colors">
-                           Create Agency
+                           {t('create_agency')}
                         </button>
                      </div>
                   </div>
@@ -252,16 +252,16 @@ export const Dashboard = ({ user, onLogout }: { user?: any, onLogout: () => void
                      </div>
                      <div className="p-8 overflow-y-auto space-y-8">
                         <div>
-                           <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-widest mb-4">Description</h4>
+                           <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-widest mb-4">{t('description')}</h4>
                            <p className="text-white/70 leading-relaxed">{selectedJob.desc}</p>
                         </div>
                         <div className="grid grid-cols-2 gap-6 p-6 bg-white/5 rounded-2xl border border-white/5">
                            <div>
-                              <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest mb-1">Location</p>
+                              <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest mb-1">{t('location')}</p>
                               <p className="text-sm font-bold flex items-center"><MapPin className="w-4 h-4 mr-2 text-indigo-400" />{selectedJob.location}</p>
                            </div>
                            <div>
-                              <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest mb-1">Client</p>
+                              <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest mb-1">{t('client_label')}</p>
                               <p className="text-sm font-bold">{selectedJob.postedBy}</p>
                            </div>
                         </div>
@@ -269,7 +269,7 @@ export const Dashboard = ({ user, onLogout }: { user?: any, onLogout: () => void
                      <div className="p-6 border-t border-white/5 bg-[#0E0E10]">
                         <button onClick={() => setSelectedJob(null)} className="w-full py-4 bg-indigo-500 hover:bg-indigo-600 transition-colors text-white text-[12px] font-black uppercase tracking-widest rounded-xl flex items-center justify-center space-x-2">
                            <Send className="w-4 h-4" />
-                           <span>Submit Proposal</span>
+                           <span>{t('submit_proposal')}</span>
                         </button>
                      </div>
                   </motion.div>
@@ -309,6 +309,7 @@ const StatCard = ({ icon: Icon, iconColor, iconBg, title, trend, value }: any) =
 )
 
 const DashboardJobCard = ({ job, onClick }: { job: Job, onClick: () => void }) => {
+   const { t } = useLanguage()
    const colorMap: Record<string, { bg: string, text: string }> = {
       'Web Development': { bg: 'bg-indigo-500/20', text: 'text-indigo-400' },
       'Mobile Apps': { bg: 'bg-purple-500/20', text: 'text-purple-400' },
@@ -321,11 +322,11 @@ const DashboardJobCard = ({ job, onClick }: { job: Job, onClick: () => void }) =
          <div className="flex justify-between items-start mb-6">
             <div className="flex items-center space-x-3">
                <span className={`px-3 py-1 ${colors.bg} ${colors.text} text-[10px] font-black uppercase tracking-widest rounded-md`}>{job.category}</span>
-               <span className="text-[10px] font-bold uppercase tracking-widest text-white/20">{job.postedAt}</span>
+               <span className="text-[10px] font-bold uppercase tracking-widest text-white/20">{job.postedAt === 'Just now' ? t('posted_just_now') : job.postedAt === '2h ago' ? t('posted_2h') : job.postedAt === '5h ago' ? t('posted_5h') : job.postedAt === '1d ago' ? t('posted_1d') : job.postedAt}</span>
             </div>
             <div className="text-right">
                <p className="text-3xl font-black text-emerald-400">{job.budget}</p>
-               <p className="text-[10px] font-bold uppercase tracking-widest text-white/30">{job.type} Price</p>
+               <p className="text-[10px] font-bold uppercase tracking-widest text-white/30">{job.type === 'fixed' ? t('fixed') : t('hourly')} {t('price')}</p>
             </div>
          </div>
          
@@ -335,7 +336,7 @@ const DashboardJobCard = ({ job, onClick }: { job: Job, onClick: () => void }) =
          <div className="flex items-center justify-between">
             <div className="flex items-center space-x-6 text-[10px] font-bold uppercase tracking-widest text-white/30">
                <div className="flex items-center space-x-2"><MapPin className="w-3.5 h-3.5 text-indigo-400" /> <span>{job.location}</span></div>
-               <div className="flex items-center space-x-2"><Users className="w-3.5 h-3.5 text-indigo-400" /> <span>{job.proposals} Proposals</span></div>
+               <div className="flex items-center space-x-2"><Users className="w-3.5 h-3.5 text-indigo-400" /> <span>{job.proposals} {t('proposals')}</span></div>
             </div>
             
             <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
