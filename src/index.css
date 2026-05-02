@@ -2,43 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
 :root {
-  color-scheme: dark;
-  --primary: #4F46E5;
-  --primary-glow: rgba(79, 70, 229, 0.3);
-  --secondary: #7C3AED;
-  --background: #0B0E14;
-  --surface: #161B22;
-  --border: rgba(255, 255, 255, 0.08);
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --primary-glow: rgba(99, 102, 241, 0.3);
+  --secondary: #ec4899;
+  --background: #030712;
+  --surface: #0f172a;
+  --surface-hover: #1e293b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border: rgba(255, 255, 255, 0.05);
 }
 
 body {
   margin: 0;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Outfit', sans-serif;
   background-color: var(--background);
-  color: #E6EDF3;
+  color: var(--text-main);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, .font-display {
-  font-family: 'Inter', sans-serif;
-  letter-spacing: -0.02em;
-}
-
-.glass-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
-}
-
 @layer components {
   .btn-primary {
-    @apply px-6 py-2.5 bg-primary hover:bg-opacity-90 text-white font-semibold rounded-lg transition-all active:scale-[0.98] shadow-lg shadow-primary/20;
+    @apply px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-2xl transition-all active:scale-[0.98] shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2;
   }
   
   .btn-secondary {
-    @apply px-6 py-2.5 bg-white/5 border border-white/10 text-white font-semibold rounded-lg transition-all hover:bg-white/10 active:scale-[0.98];
+    @apply px-6 py-3 bg-white/5 border border-white/10 text-white font-bold rounded-2xl transition-all hover:bg-white/10 active:scale-[0.98] flex items-center justify-center gap-2;
+  }
+
+  .glass-card {
+    @apply bg-[#0f172a]/50 backdrop-blur-xl border border-white/5 shadow-2xl;
+  }
+
+  .input-field {
+    @apply w-full bg-white/[0.03] border border-white/5 rounded-2xl p-4 text-white focus:border-indigo-500/50 outline-none transition-all placeholder:text-white/10 text-sm font-medium;
   }
 }
 
@@ -46,22 +48,44 @@ h1, h2, h3, h4, .font-display {
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { 
-  background: rgba(255, 255, 255, 0.1); 
-  border-radius: 4px; 
+  background: rgba(255, 255, 255, 0.05); 
+  border-radius: 10px; 
 }
-::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.1); }
 
-/* Animation Utils */
-.fade-in {
-  animation: fadeIn 0.4s ease-out forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
 }
 
-/* Profile Integrity Progress Bar */
-.progress-bar-glow {
-  box-shadow: 0 0 12px var(--primary-glow);
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400;
+}
+
+/* Dashboard Grid Layout */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr 340px;
+  height: 100vh;
+  overflow: hidden;
+}
+
+@media (max-width: 1280px) {
+  .dashboard-grid {
+    grid-template-columns: 240px 1fr;
+  }
+  .dashboard-right { display: none; }
+}
+
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  .dashboard-sidebar { display: none; }
 }
