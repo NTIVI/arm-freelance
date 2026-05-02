@@ -27,7 +27,10 @@ export const LandingPage = () => {
             <LanguageSwitcher lang={lang} setLang={setLang} />
             <a href="#" className="text-[11px] font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors">Talent</a>
             <a href="#" className="text-[11px] font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors">Projects</a>
-            <Link to="/auth" className="btn-capsule">Sign In</Link>
+            <div className="flex items-center gap-2">
+              <Link to="/auth" className="btn-capsule">Sign In</Link>
+              <Link to="/auth" className="btn-ghost">Register</Link>
+            </div>
           </div>
         </div>
       </nav>
@@ -110,27 +113,31 @@ const FeatureCard = ({ icon: Icon, title, desc }: any) => (
   </div>
 )
 
+const languages = [
+  { id: 'en', label: 'EN' },
+  { id: 'ru', label: 'RU' },
+  { id: 'hy', label: 'HY' },
+];
+
 const LanguageSwitcher = ({ lang, setLang }: any) => {
   return (
-    <div className="flex items-center gap-1 bg-white/40 border border-white/60 p-1 rounded-full shadow-sm scale-90">
-      <button 
-        onClick={() => setLang('en')}
-        className={`px-4 py-1 rounded-full text-[9px] font-black uppercase transition-all ${lang === 'en' ? 'bg-black text-white shadow-lg' : 'text-gray-400 hover:text-black'}`}
-      >
-        EN
-      </button>
-      <button 
-        onClick={() => setLang('ru')}
-        className={`px-4 py-1 rounded-full text-[9px] font-black uppercase transition-all ${lang === 'ru' ? 'bg-black text-white shadow-lg' : 'text-gray-400 hover:text-black'}`}
-      >
-        RU
-      </button>
-      <button 
-        onClick={() => setLang('hy')}
-        className={`px-4 py-1 rounded-full text-[9px] font-black uppercase transition-all ${lang === 'hy' ? 'bg-black text-white shadow-lg' : 'text-gray-400 hover:text-black'}`}
-      >
-        HY
-      </button>
+    <div className="flex items-center gap-2 bg-white/40 border border-white/60 p-1.5 rounded-full shadow-sm">
+      {languages.map((l) => (
+        <button 
+          key={l.id}
+          onClick={() => setLang(l.id as any)}
+          className={`relative px-6 py-2 rounded-full text-xs font-black uppercase transition-all z-10 ${lang === l.id ? 'text-white' : 'text-gray-500 hover:text-black'}`}
+        >
+          {lang === l.id && (
+            <motion.div
+              layoutId="activeLang"
+              className="absolute inset-0 bg-black rounded-full -z-10 shadow-lg"
+              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+            />
+          )}
+          {l.label}
+        </button>
+      ))}
     </div>
   );
 };
