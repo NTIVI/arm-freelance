@@ -23,17 +23,17 @@ const LanguageSwitcher = () => {
   )
 }
 
-const Navbar = ({ onAuth }: { onAuth: () => void }) => {
+const Navbar = ({ onAuth, onLogoClick }: { onAuth: () => void, onLogoClick: () => void }) => {
   const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false)
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4 bg-[#0A0A0B]/80 backdrop-blur-xl border-b border-white/5">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <div className="flex items-center space-x-3 cursor-pointer group">
-          <div className="w-10 h-10 rounded-2xl border border-primary/20 flex items-center justify-center bg-primary/10 group-hover:bg-primary/20 transition-colors shadow-[0_0_15px_rgba(79,70,229,0.15)]">
+        <div className="flex items-center space-x-3 cursor-pointer group" onClick={onLogoClick}>
+          <div className="w-10 h-10 rounded-2xl border border-primary/20 flex items-center justify-center bg-primary/10 group-hover:bg-primary/20 transition-all shadow-[0_0_15px_rgba(79,70,229,0.15)] group-hover:shadow-[0_0_20px_rgba(79,70,229,0.25)]">
             <Command className="w-5 h-5 text-primary" />
           </div>
-          <span className="text-lg font-black tracking-tight hidden sm:inline-block text-white">Armenia Freelance</span>
+          <span className="text-lg font-black tracking-tight hidden sm:inline-block text-white group-hover:text-primary transition-colors">Armenia Freelance</span>
         </div>
         
         <div className="hidden md:flex items-center space-x-8">
@@ -45,7 +45,7 @@ const Navbar = ({ onAuth }: { onAuth: () => void }) => {
 
         <div className="hidden md:flex items-center space-x-4">
           <button onClick={onAuth} className="text-sm font-semibold text-white/60 hover:text-white transition-colors px-4 py-2">{t('login')}</button>
-          <button onClick={onAuth} className="px-5 py-2.5 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition-all text-sm tracking-tight">
+          <button onClick={onAuth} className="px-5 py-2.5 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition-all text-sm tracking-tight shadow-lg shadow-white/5">
             {t('signup')}
           </button>
         </div>
@@ -82,25 +82,53 @@ function MainApp() {
     setView('home');
   }
 
+  const goHome = () => {
+    if (view !== 'dashboard') {
+      setView('home');
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#0A0A0B] selection:bg-primary/30 text-white font-sans">
-      {view !== 'dashboard' && <Navbar onAuth={() => setView('register')} />}
+      {view !== 'dashboard' && (
+        <Navbar 
+          onAuth={() => setView('register')} 
+          onLogoClick={goHome}
+        />
+      )}
       
       <AnimatePresence mode="wait">
         {view === 'home' && (
-          <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div 
+            key="home" 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
             <Hero onStart={() => setView('register')} />
           </motion.div>
         )}
 
         {view === 'register' && (
-          <motion.div key="register" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="pt-24">
+          <motion.div 
+            key="register" 
+            initial={{ opacity: 0, x: 20 }} 
+            animate={{ opacity: 1, x: 0 }} 
+            exit={{ opacity: 0, x: -20 }} 
+            className="pt-24"
+          >
             <RegistrationForm onBack={() => setView('home')} onComplete={handleRegistrationComplete} />
           </motion.div>
         )}
 
         {view === 'dashboard' && user && (
-          <motion.div key="dashboard" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div 
+            key="dashboard" 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }}
+          >
             <Dashboard user={user} onLogout={handleLogout} />
           </motion.div>
         )}
@@ -110,7 +138,7 @@ function MainApp() {
         <footer className="py-20 px-6 border-t border-white/5 bg-[#0A0A0B]">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 text-white/40 text-sm">
             <div className="space-y-6">
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 cursor-pointer" onClick={goHome}>
                   <Command className="w-6 h-6 text-primary" />
                   <span className="text-white font-bold tracking-tight">Armenia Freelance</span>
                 </div>
