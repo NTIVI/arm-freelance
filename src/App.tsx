@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { TrendingUp, Menu, X } from 'lucide-react'
+import { Menu, X, Command } from 'lucide-react'
 import { LanguageProvider, useLanguage } from './context/LanguageContext'
 import { Hero } from './pages/LandingPage'
 import { RegistrationForm } from './pages/Registration'
@@ -9,14 +9,14 @@ import { Dashboard } from './pages/Dashboard'
 const LanguageSwitcher = () => {
   const { lang, setLang } = useLanguage();
   return (
-    <div className="flex items-center space-x-2 bg-white/5 border border-white/10 rounded-full px-2 py-1">
+    <div className="flex items-center space-x-1 bg-[#121212] border border-white/5 rounded-lg p-1">
       {(['hy', 'ru', 'en'] as const).map((l) => (
         <button
           key={l}
           onClick={() => setLang(l)}
-          className={`px-3 py-1 rounded-full text-xs font-black transition-all ${lang === l ? 'bg-primary text-white' : 'text-white/40 hover:text-white'}`}
+          className={`px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-widest transition-all ${lang === l ? 'bg-[#1e1e1e] text-white shadow-sm' : 'text-white/40 hover:text-white'}`}
         >
-          {l.toUpperCase()}
+          {l}
         </button>
       ))}
     </div>
@@ -27,28 +27,30 @@ const Navbar = ({ onAuth }: { onAuth: () => void }) => {
   const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false)
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
-      <div className="max-w-7xl mx-auto flex items-center justify-between glass px-6 py-3 rounded-[2rem]">
-        <div className="flex items-center space-x-2">
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/30">
-            <TrendingUp className="w-6 h-6 text-white" />
+    <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4 bg-[#0A0A0B]/80 backdrop-blur-xl border-b border-white/5">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="flex items-center space-x-3 cursor-pointer group">
+          <div className="w-10 h-10 rounded-2xl border border-primary/20 flex items-center justify-center bg-primary/10 group-hover:bg-primary/20 transition-colors shadow-[0_0_15px_rgba(79,70,229,0.15)]">
+            <Command className="w-5 h-5 text-primary" />
           </div>
-          <span className="text-xl font-black tracking-tighter hidden sm:inline-block">ARMENIA FREELANCE</span>
-          <span className="text-xl font-black tracking-tighter sm:hidden">AF</span>
+          <span className="text-lg font-black tracking-tight hidden sm:inline-block text-white">Armenia Freelance</span>
         </div>
         
         <div className="hidden md:flex items-center space-x-8">
-          <a href="#" className="text-sm font-medium text-white/70 hover:text-white transition-colors">{t('find_talent')}</a>
-          <a href="#" className="text-sm font-medium text-white/70 hover:text-white transition-colors">{t('find_work')}</a>
+          <a href="#" className="text-sm font-semibold text-white/60 hover:text-white transition-colors">{t('find_talent')}</a>
+          <a href="#" className="text-sm font-semibold text-white/60 hover:text-white transition-colors">{t('find_work')}</a>
+          <a href="#" className="text-sm font-semibold text-white/60 hover:text-white transition-colors">Agencies</a>
           <LanguageSwitcher />
         </div>
 
         <div className="hidden md:flex items-center space-x-4">
-          <button onClick={onAuth} className="text-sm font-bold text-white/70 hover:text-white transition-colors">{t('login')}</button>
-          <button onClick={onAuth} className="btn-primary">{t('signup')}</button>
+          <button onClick={onAuth} className="text-sm font-semibold text-white/60 hover:text-white transition-colors px-4 py-2">{t('login')}</button>
+          <button onClick={onAuth} className="px-5 py-2.5 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition-all text-sm tracking-tight">
+            {t('signup')}
+          </button>
         </div>
 
-        <button className="md:hidden p-2" onClick={() => setIsOpen(!isOpen)}>
+        <button className="md:hidden p-2 text-white/70" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X /> : <Menu />}
         </button>
       </div>
@@ -60,7 +62,6 @@ function MainApp() {
   const [view, setView] = useState<'home' | 'register' | 'dashboard'>('home')
   const [user, setUser] = useState<any>(null)
 
-  // Auto-login simulation if user data exists
   useEffect(() => {
     const savedUser = localStorage.getItem('af_user');
     if (savedUser) {
@@ -82,10 +83,7 @@ function MainApp() {
   }
 
   return (
-    <div className="min-h-screen bg-background selection:bg-primary/30 relative mesh-gradient">
-      {/* Dynamic Background Noise/Texture */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
-
+    <div className="min-h-screen bg-[#0A0A0B] selection:bg-primary/30 text-white font-sans">
       {view !== 'dashboard' && <Navbar onAuth={() => setView('register')} />}
       
       <AnimatePresence mode="wait">
@@ -96,7 +94,7 @@ function MainApp() {
         )}
 
         {view === 'register' && (
-          <motion.div key="register" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div key="register" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="pt-24">
             <RegistrationForm onBack={() => setView('home')} onComplete={handleRegistrationComplete} />
           </motion.div>
         )}
@@ -109,39 +107,47 @@ function MainApp() {
       </AnimatePresence>
 
       {view !== 'dashboard' && (
-        <footer className="py-20 px-6 border-t border-white/5 bg-black/50">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 text-white/30 text-sm">
-            <div className="space-y-4">
-                <TrendingUp className="w-8 h-8 text-primary" />
-                <p>The first premier marketplace dedicated to high-tier Armenian talent. Connect, collaborate, and succeed globally.</p>
+        <footer className="py-20 px-6 border-t border-white/5 bg-[#0A0A0B]">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 text-white/40 text-sm">
+            <div className="space-y-6">
+                <div className="flex items-center space-x-2">
+                  <Command className="w-6 h-6 text-primary" />
+                  <span className="text-white font-bold tracking-tight">Armenia Freelance</span>
+                </div>
+                <p className="leading-relaxed">The professional marketplace for top-tier Armenian talent. Connect, collaborate, and scale globally.</p>
             </div>
             <div>
-              <h4 className="text-white font-bold mb-6">Explore</h4>
-              <ul className="space-y-4">
-                <li><a href="#" className="hover:text-primary">Find Work</a></li>
-                <li><a href="#" className="hover:text-primary">Find Talent</a></li>
-                <li><a href="#" className="hover:text-primary">Agencies</a></li>
+              <h4 className="text-white font-semibold mb-6">Explore</h4>
+              <ul className="space-y-3">
+                <li><a href="#" className="hover:text-white transition-colors">Find Work</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Find Talent</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Agencies</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="text-white font-bold mb-6">Company</h4>
-              <ul className="space-y-4">
-                <li><a href="#" className="hover:text-primary">About Us</a></li>
-                <li><a href="#" className="hover:text-primary">Security</a></li>
-                <li><a href="#" className="hover:text-primary">Help Center</a></li>
+              <h4 className="text-white font-semibold mb-6">Company</h4>
+              <ul className="space-y-3">
+                <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Security</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="text-white font-bold mb-6">Legal</h4>
-              <ul className="space-y-4">
-                <li><a href="#" className="hover:text-primary">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-primary">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-primary">Cookie Policy</a></li>
+              <h4 className="text-white font-semibold mb-6">Legal</h4>
+              <ul className="space-y-3">
+                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Cookie Policy</a></li>
               </ul>
             </div>
           </div>
-          <div className="max-w-7xl mx-auto mt-20 pt-10 border-t border-white/5 text-center text-white/20 text-xs font-bold uppercase tracking-[0.2em]">
-            &copy; 2026 Armenia Freelance Marketplace. All Rights Reserved.
+          <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-white/30 text-xs">
+            <p>&copy; 2026 Armenia Freelance. All Rights Reserved.</p>
+            <div className="flex space-x-6 mt-4 md:mt-0">
+               <a href="#" className="hover:text-white transition-colors">Twitter</a>
+               <a href="#" className="hover:text-white transition-colors">LinkedIn</a>
+               <a href="#" className="hover:text-white transition-colors">GitHub</a>
+            </div>
           </div>
         </footer>
       )}
