@@ -112,7 +112,7 @@ export const Dashboard = ({ user, onLogout }: { user?: any, onLogout: () => void
 
             {/* Scrollable Content */}
             <div className="flex-1 overflow-y-auto pr-4 custom-scrollbar">
-               <div className="flex gap-10">
+               <div className="flex gap-10 items-start">
                   
                   {/* Center Column */}
                   <div className="flex-1 space-y-12">
@@ -174,7 +174,7 @@ export const Dashboard = ({ user, onLogout }: { user?: any, onLogout: () => void
                   </div>
 
                   {/* Right Sidebar */}
-                  <div className="w-80 shrink-0 space-y-8">
+                  <div className="w-80 shrink-0 space-y-8 sticky top-0 pb-8">
                      {/* Account Summary */}
                      <div className="bg-[#131315] border border-white/5 p-6 rounded-[2rem] space-y-6">
                         <h4 className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-2">Account Summary</h4>
