@@ -1,134 +1,223 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { 
   Search, 
-  Briefcase, 
-  MessageSquare, 
   LayoutGrid, 
-  MapPin, 
-  ShieldCheck, 
-  Zap, 
-  TrendingUp,
-  CreditCard,
+  Calendar, 
+  Users, 
+  Settings, 
+  Bell, 
+  Video, 
+  Sun, 
+  MoreHorizontal,
   ChevronRight,
-  Plus,
-  Command,
   LogOut,
-  Clock,
-  Star
+  Plus,
+  Briefcase
 } from 'lucide-react'
 import { useAppContext } from '../context/AppContext'
 
 export const Dashboard = () => {
-  const { user, jobs, logout } = useAppContext();
-  const [activeTab, setActiveTab] = useState('feed');
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const filteredJobs = jobs.filter(j => 
-    j.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    j.category.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const { user, logout } = useAppContext();
+  const [activeTab, setActiveTab] = useState('projects');
 
   return (
-    <div className="dashboard-grid bg-background">
-      <aside className="dashboard-sidebar border-r border-white/5 bg-[#050811] flex flex-col p-8">
-        <div className="flex items-center space-x-3 mb-12 px-2">
-          <Command className="w-8 h-8 text-indigo-500" />
-          <span className="text-xl font-black italic tracking-tighter uppercase">AF Platform</span>
+    <div className="app-container">
+      {/* Sidebar */}
+      <aside className="glass-panel rounded-[2.5rem] p-8 flex flex-col items-center">
+        <div className="flex items-center gap-3 mb-16 self-start px-2">
+          <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+            <div className="w-4 h-4 border-2 border-white rounded-sm rotate-45"></div>
+          </div>
+          <span className="font-bold text-lg tracking-tight">Armenia Freelance</span>
         </div>
-        <nav className="flex-1 space-y-2">
-          <SidebarLink active={activeTab === 'feed'} onClick={() => setActiveTab('feed')} icon={LayoutGrid} label="Dashboard" />
-          <SidebarLink active={activeTab === 'search'} onClick={() => setActiveTab('search')} icon={Search} label="Browse Jobs" />
-          <SidebarLink active={activeTab === 'messages'} onClick={() => setActiveTab('messages')} icon={MessageSquare} label="Messages" badge="3" />
+
+        <nav className="flex-1 w-full space-y-2">
+          <SidebarItem active={activeTab === 'home'} icon={LayoutGrid} onClick={() => setActiveTab('home')} />
+          <SidebarItem active={activeTab === 'schedule'} icon={Calendar} onClick={() => setActiveTab('schedule')} />
+          <SidebarItem active={activeTab === 'projects'} icon={Users} onClick={() => setActiveTab('projects')} />
+          <SidebarItem active={activeTab === 'settings'} icon={Settings} onClick={() => setActiveTab('settings')} />
         </nav>
-        <div className="pt-8 border-t border-white/5 space-y-6">
-          <div className="flex items-center space-x-4 px-2">
-            <div className="w-12 h-12 rounded-2xl bg-indigo-500 flex items-center justify-center font-black text-white">{user?.fullName?.[0]}</div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold truncate">{user?.fullName}</p>
-              <p className="text-[10px] font-bold text-slate-500 uppercase">{user?.role}</p>
+
+        <div className="mt-auto pt-8 border-t border-black/5 w-full flex flex-col items-center gap-6">
+          <div className="relative group cursor-pointer">
+            <div className="w-14 h-14 rounded-3xl bg-black/5 p-1 transition-all group-hover:scale-105">
+              <div className="w-full h-full rounded-2xl bg-gradient-to-tr from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold text-xl">
+                {user?.fullName?.[0]}
+              </div>
             </div>
           </div>
-          <button onClick={logout} className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-red-500/5 text-red-500 hover:bg-red-500/10 transition-all text-[10px] font-black uppercase">
-            <LogOut className="w-4 h-4" /> Logout
+          <button onClick={logout} className="p-3 text-gray-400 hover:text-red-500 transition-colors">
+            <LogOut className="w-5 h-5" />
           </button>
         </div>
       </aside>
 
-      <main className="flex-1 flex flex-col h-screen overflow-hidden">
-        <header className="p-8 pb-0 shrink-0">
-          <div className="flex items-center justify-between gap-8 max-w-5xl mx-auto w-full">
-            <div className="relative flex-1">
-              <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
-              <input type="text" placeholder="Search projects..." className="input-field pl-14" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+      {/* Main Content Area */}
+      <main className="main-content">
+        {/* Top Header Bar */}
+        <header className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+             <h1 className="text-4xl font-bold tracking-tight">Management</h1>
+             <div className="flex items-center gap-2 px-4 py-1.5 bg-white/40 border border-white/60 rounded-full text-[10px] font-bold text-gray-500">
+               <Calendar className="w-3 h-3" />
+               JUNE 1, 2023
+             </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 bg-white/40 border border-white/60 p-1.5 rounded-full">
+              <HeaderAction icon={Video} />
+              <HeaderAction icon={Bell} dot />
+              <div className="h-6 w-px bg-black/10 mx-1"></div>
+              <div className="flex items-center gap-3 px-3">
+                <Sun className="w-4 h-4 text-orange-400" />
+                <span className="text-[11px] font-bold">23° Sunny</span>
+              </div>
             </div>
-            {user?.role === 'client' && <Link to="/post-job" className="btn-primary px-8"><Plus className="w-4 h-4" /> Post Job</Link>}
+
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input type="text" placeholder="Type searching..." className="input-capsule pl-11 w-64 shadow-sm" />
+            </div>
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
-          <div className="max-w-5xl mx-auto space-y-12">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <StatCard title="Earnings" value="$12,450" trend="+12%" icon={TrendingUp} color="text-emerald-400" bg="bg-emerald-400/10" />
-              <StatCard title="Active Jobs" value="4" trend="0%" icon={Briefcase} color="text-indigo-400" bg="bg-indigo-400/10" />
-              <StatCard title="Response" value="98%" trend="+2%" icon={Zap} color="text-amber-400" bg="bg-amber-400/10" />
+        {/* Dashboard Grid */}
+        <div className="dashboard-grid">
+          {/* Center Content */}
+          <div className="space-y-6 overflow-hidden">
+            <div className="glass-panel rounded-[2.5rem] p-10 h-[480px] relative overflow-hidden">
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Active Timeline</span>
+                  <div className="flex gap-2 bg-black/5 p-1 rounded-full">
+                    <button className="px-4 py-1 rounded-full bg-white text-[10px] font-bold shadow-sm">Day</button>
+                    <button className="px-4 py-1 rounded-full text-[10px] font-bold text-gray-400">Week</button>
+                  </div>
+                </div>
+                <MoreHorizontal className="w-5 h-5 text-gray-400" />
+              </div>
+
+              {/* Timeline Mockup */}
+              <div className="space-y-8">
+                 <TimelineRow label="Design" progress="25%" time="2 hours" color="bg-black" />
+                 <TimelineRow label="Mobile Apps" progress="45%" time="5 hours" color="bg-indigo-500" />
+                 <TimelineRow label="Infography" progress="15%" time="1 hour" color="bg-pink-500" />
+                 <TimelineRow label="Team Management" progress="70%" time="3 hours" color="bg-emerald-500" />
+              </div>
             </div>
-            <div className="space-y-6">
-              {filteredJobs.map(job => <JobCard key={job.id} job={job} />)}
+
+            <div className="grid grid-cols-2 gap-6">
+              <div className="glass-panel rounded-[2.5rem] p-8 space-y-6">
+                 <h3 className="font-bold text-lg">My Team</h3>
+                 <div className="flex -space-x-4">
+                    {[1,2,3,4].map(i => (
+                      <div key={i} className="w-12 h-12 rounded-full border-4 border-white bg-gray-200 overflow-hidden">
+                        <img src={`https://i.pravatar.cc/100?u=${i}`} alt="avatar" />
+                      </div>
+                    ))}
+                    <div className="w-12 h-12 rounded-full border-4 border-white bg-black text-white flex items-center justify-center text-xs font-bold">
+                      +5
+                    </div>
+                 </div>
+                 <button className="w-full py-4 bg-black/5 hover:bg-black/10 rounded-3xl text-xs font-bold flex items-center justify-center gap-2 transition-all">
+                    View All Members <ChevronRight className="w-4 h-4" />
+                 </button>
+              </div>
+
+              <div className="glass-panel rounded-[2.5rem] p-8 flex flex-col justify-between">
+                 <div className="flex justify-between items-start">
+                    <h3 className="font-bold text-lg">Quick Post</h3>
+                    <Plus className="w-5 h-5" />
+                 </div>
+                 <p className="text-xs text-gray-400">Need to hire someone quickly? Start a new project draft here.</p>
+                 <button className="btn-capsule w-full justify-center">Start Drafting</button>
+              </div>
             </div>
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-6">
+             <div className="glass-panel rounded-[2.5rem] p-8 space-y-8">
+                <div className="flex justify-between items-center">
+                  <h3 className="font-bold">Ongoing Projects</h3>
+                  <LayoutGrid className="w-4 h-4 text-gray-400" />
+                </div>
+                <div className="text-center space-y-1">
+                   <p className="text-4xl font-black">68,5%</p>
+                   <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Sales trend vs last month</p>
+                </div>
+                {/* Mini Chart Mockup */}
+                <div className="h-20 flex items-end gap-1 px-4">
+                   {[40,70,45,90,65,80,50].map((h, i) => (
+                     <div key={i} className="flex-1 bg-black/5 rounded-t-lg transition-all hover:bg-black" style={{ height: `${h}%` }}></div>
+                   ))}
+                </div>
+                <div className="space-y-4">
+                   <ProjectStat label="Finance" value="48,800" />
+                   <ProjectStat label="Design Reviews" value="15,200" />
+                   <ProjectStat label="Other" value="09,400" />
+                </div>
+             </div>
+
+             <div className="glass-panel rounded-[2.5rem] p-6 bg-black text-white relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl group-hover:scale-150 transition-all"></div>
+                <div className="relative z-10 space-y-6">
+                   <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center">
+                     <Briefcase className="w-6 h-6 text-white" />
+                   </div>
+                   <div>
+                     <h4 className="text-lg font-bold italic">Armenia Elite</h4>
+                     <p className="text-[10px] text-white/50 uppercase font-bold tracking-widest mt-1">Premium Membership</p>
+                   </div>
+                   <button className="w-full py-4 bg-white text-black rounded-3xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all">
+                     Upgrade Now
+                   </button>
+                </div>
+             </div>
           </div>
         </div>
       </main>
-
-      <aside className="dashboard-right border-l border-white/5 bg-[#050811] flex flex-col p-8 overflow-y-auto">
-        <div className="glass-card p-6 rounded-[2.5rem] space-y-6">
-          <h4 className="text-[10px] font-black uppercase text-slate-500">Account Health</h4>
-          <IntegrityItem icon={ShieldCheck} label="Identity Verified" active />
-          <IntegrityItem icon={Star} label="Top Rated Seller" active />
-          <IntegrityItem icon={CreditCard} label="Payment Verified" />
-        </div>
-      </aside>
     </div>
   )
 }
 
-const SidebarLink = ({ icon: Icon, label, active, onClick, badge }: any) => (
-  <button onClick={onClick} className={`w-full flex items-center gap-4 px-6 py-4 rounded-[1.5rem] transition-all ${active ? 'bg-indigo-500 text-white shadow-2xl' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}>
-    <Icon className="w-5 h-5 shrink-0" />
-    <span className="text-xs font-black uppercase flex-1 text-left">{label}</span>
-    {badge && <span className="px-2 py-0.5 bg-indigo-400/20 text-indigo-400 text-[9px] font-black rounded-lg">{badge}</span>}
+const SidebarItem = ({ active, icon: Icon, onClick }: any) => (
+  <button 
+    onClick={onClick}
+    className={`w-full flex items-center justify-center p-4 rounded-3xl transition-all ${active ? 'bg-black text-white shadow-xl shadow-black/10 scale-105' : 'text-gray-400 hover:text-black hover:bg-black/5'}`}
+  >
+    <Icon className="w-6 h-6" />
   </button>
 )
 
-const StatCard = ({ title, value, trend, icon: Icon, color, bg }: any) => (
-  <div className="glass-card p-8 rounded-[2.5rem] space-y-4">
-    <div className={`w-12 h-12 rounded-2xl ${bg} flex items-center justify-center`}><Icon className={`w-6 h-6 ${color}`} /></div>
-    <div className="flex justify-between items-end"><p className="text-3xl font-black italic">{value}</p><span className="text-[10px] font-bold text-emerald-400">{trend}</span></div>
-    <p className="text-[10px] font-black uppercase text-slate-600">{title}</p>
+const HeaderAction = ({ icon: Icon, dot }: any) => (
+  <button className="w-10 h-10 rounded-full flex items-center justify-center text-gray-600 hover:bg-black/5 relative transition-all">
+    <Icon className="w-5 h-5" />
+    {dot && <div className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></div>}
+  </button>
+)
+
+const TimelineRow = ({ label, progress, time, color }: any) => (
+  <div className="space-y-2">
+     <div className="flex justify-between items-end">
+        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{label}</span>
+        <span className="text-[10px] font-black uppercase">{time}</span>
+     </div>
+     <div className="h-10 w-full bg-black/5 rounded-full overflow-hidden relative">
+        <div className={`h-full ${color} rounded-full transition-all duration-1000 flex items-center px-4`} style={{ width: progress }}>
+           <span className="text-[9px] text-white font-bold uppercase">{progress}</span>
+        </div>
+     </div>
   </div>
 )
 
-const JobCard = ({ job }: { job: any }) => (
-  <Link to={`/jobs/${job.id}`} className="block glass-card p-10 rounded-[3rem] hover:border-indigo-500/30 transition-all">
-    <div className="flex justify-between gap-8">
-      <div className="flex-1 space-y-4">
-        <span className="px-4 py-1.5 bg-indigo-500/10 text-indigo-400 text-[9px] font-black uppercase rounded-lg">{job.category}</span>
-        <h3 className="text-3xl font-black italic uppercase">{job.title}</h3>
-        <div className="flex gap-8 text-[10px] font-black uppercase text-slate-400">
-          <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-indigo-500" /> Remote</div>
-          <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-indigo-500" /> {job.proposalsCount} Proposals</div>
-        </div>
-      </div>
-      <div className="text-right flex flex-col justify-between items-end">
-        <p className="text-4xl font-black text-emerald-400 italic">${job.budget}</p>
-        <ChevronRight className="w-6 h-6" />
-      </div>
-    </div>
-  </Link>
-)
-
-const IntegrityItem = ({ icon: Icon, label, active }: any) => (
-  <div className={`flex items-center gap-3 text-[10px] font-bold uppercase ${active ? 'text-white' : 'text-slate-600'}`}>
-    <Icon className={`w-4 h-4 ${active ? 'text-indigo-400' : 'text-slate-700'}`} /> {label}
+const ProjectStat = ({ label, value }: any) => (
+  <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest border-b border-black/5 pb-2">
+    <span className="text-gray-400 flex items-center gap-2">
+      <div className="w-1.5 h-1.5 bg-black rounded-full"></div>
+      {label}
+    </span>
+    <span>{value}</span>
   </div>
 )

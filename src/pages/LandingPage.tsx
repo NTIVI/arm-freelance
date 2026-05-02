@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { 
   ArrowRight, 
   Sparkles, 
-  LayoutDashboard,
+  Zap, 
   ShieldCheck, 
   Globe, 
   Command
@@ -11,65 +11,98 @@ import {
 
 export const LandingPage = () => {
   return (
-    <div className="min-h-screen bg-background text-white selection:bg-indigo-500/30">
-      <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-6 border-b border-white/5 bg-background/80 backdrop-blur-2xl">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-3 group cursor-pointer">
-            <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center group-hover:bg-indigo-500/20 transition-all">
-              <Command className="w-6 h-6 text-indigo-400" />
+    <div className="min-h-screen bg-[#f3f4f6] text-[#111827] selection:bg-black/10 font-sans">
+      <nav className="fixed top-0 left-0 right-0 z-50 px-12 py-8">
+        <div className="glass-panel max-w-7xl mx-auto flex items-center justify-between px-10 py-5 rounded-full">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center">
+              <div className="w-5 h-5 border-2 border-white rounded-sm rotate-45"></div>
             </div>
-            <span className="text-xl font-black tracking-tighter uppercase italic">Armenia Freelance</span>
+            <span className="text-xl font-bold tracking-tight uppercase italic">Armenia Freelance</span>
           </div>
-          <div className="hidden md:flex items-center space-x-8">
-            <Link to="/auth" className="px-6 py-3 bg-white text-black text-xs font-black uppercase tracking-widest rounded-xl hover:bg-slate-200 transition-all">Login</Link>
+          
+          <div className="hidden md:flex items-center space-x-12">
+            <a href="#" className="text-[11px] font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors">Talent</a>
+            <a href="#" className="text-[11px] font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors">Projects</a>
+            <Link to="/auth" className="btn-capsule">Sign In</Link>
           </div>
         </div>
       </nav>
       
-      <section className="relative pt-32 pb-20 px-6 overflow-hidden">
-        <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-[120px] -z-10 animate-pulse"></div>
-        <div className="max-w-7xl mx-auto text-center space-y-12">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="space-y-6">
-            <div className="inline-flex items-center space-x-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full text-[11px] font-black tracking-[0.2em] text-indigo-400 uppercase shadow-xl">
+      <section className="relative pt-64 pb-32 px-6">
+        <div className="absolute top-0 right-1/4 w-[800px] h-[800px] bg-white rounded-full blur-[120px] -z-10 opacity-50"></div>
+        
+        <div className="max-w-5xl mx-auto text-center space-y-12">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} className="space-y-8">
+            <div className="inline-flex items-center space-x-2 px-6 py-2 bg-white/40 border border-white/60 rounded-full text-[10px] font-black tracking-[0.2em] text-gray-400 uppercase shadow-sm">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Armenia Freelance Platform v2.0</span>
+              <span>Future of Armenian Work</span>
             </div>
-            <h1 className="text-6xl md:text-8xl font-black leading-[1.1] tracking-tight text-white italic">
-              Empower your <br className="hidden md:block" />
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">vision with talent.</span>
+            
+            <h1 className="text-7xl md:text-9xl font-black leading-[0.95] tracking-tighter text-black">
+              Evolve with <br />
+              <span className="text-gray-300">elite talent.</span>
             </h1>
-            <p className="max-w-2xl mx-auto text-lg text-slate-400 leading-relaxed font-medium">
-              The premium marketplace for top-tier Armenian professionals. Build your team, scale your business, and master the future of work.
+            
+            <p className="max-w-2xl mx-auto text-xl text-gray-500 font-medium leading-relaxed">
+              The premium glassmorphic ecosystem for Armenian professionals. Connect, build, and scale with the finest specialists.
             </p>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, duration: 0.8 }} className="flex flex-col sm:flex-row justify-center items-center gap-6">
-            <Link to="/auth" className="px-10 py-5 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-2xl transition-all active:scale-[0.98] shadow-2xl shadow-indigo-500/40 uppercase tracking-widest flex items-center gap-2">
-              Get Started <ArrowRight className="w-4 h-4" />
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3, duration: 0.8 }} className="flex flex-col sm:flex-row justify-center items-center gap-6">
+            <Link to="/auth" className="btn-capsule px-12 py-5 text-sm uppercase tracking-widest shadow-2xl shadow-black/20">
+              Launch Platform <ArrowRight className="w-5 h-5 ml-2" />
+            </Link>
+            <Link to="/auth" className="btn-ghost px-12 py-5 text-sm uppercase tracking-widest">
+              Browse Feed
             </Link>
           </motion.div>
-        </div>
-      </section>
 
-      <section className="py-32 px-6 bg-[#050811]">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <FeatureCard icon={LayoutDashboard} title="Smart Dashboard" desc="Real-time tracking of projects, earnings, and applications." />
-            <FeatureCard icon={ShieldCheck} title="Secure Payments" desc="Milestone-based payment system ensures safety." />
-            <FeatureCard icon={Globe} title="Global Network" desc="Connect with companies worldwide while staying rooted in Armenia." />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 pt-32 max-w-4xl mx-auto">
+            <StatItem label="Talent" value="12k+" />
+            <StatItem label="Projects" value="45k+" />
+            <StatItem label="Payouts" value="$15M+" />
+            <StatItem label="Rating" value="4.9/5" />
           </div>
         </div>
       </section>
+
+      <section className="py-40 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <FeatureCard icon={Zap} title="Instant Connect" desc="Proprietary matching algorithms for rapid team assembly." />
+            <FeatureCard icon={ShieldCheck} title="Escrow Security" desc="High-tier financial protection for every milestone." />
+            <FeatureCard icon={Globe} title="Armenian DNA" desc="Built by the community, for the community." />
+          </div>
+        </div>
+      </section>
+
+      <footer className="py-20 px-12 border-t border-black/5">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex items-center gap-3">
+             <Command className="w-5 h-5" />
+             <span className="text-sm font-bold uppercase italic tracking-tighter">Armenia Freelance</span>
+          </div>
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">© 2026 AF Ecosystem. Minimalist Core.</p>
+        </div>
+      </footer>
     </div>
   )
 }
 
+const StatItem = ({ label, value }: any) => (
+  <div className="space-y-1">
+    <p className="text-4xl font-black tracking-tighter">{value}</p>
+    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">{label}</p>
+  </div>
+)
+
 const FeatureCard = ({ icon: Icon, title, desc }: any) => (
-  <div className="bg-[#0f172a]/50 backdrop-blur-xl border border-white/5 shadow-2xl p-10 rounded-[2.5rem] hover:border-indigo-500/30 transition-all group">
-    <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center mb-8 group-hover:bg-indigo-500 group-hover:text-white transition-all">
-      <Icon className="w-7 h-7 text-indigo-400 group-hover:text-white" />
+  <div className="glass-panel p-12 rounded-[3rem] space-y-8 hover:scale-[1.02] transition-all cursor-default">
+    <div className="w-16 h-16 rounded-3xl bg-black flex items-center justify-center text-white">
+      <Icon className="w-8 h-8" />
     </div>
-    <h3 className="text-xl font-black uppercase italic mb-4">{title}</h3>
-    <p className="text-slate-400 text-sm leading-relaxed font-medium">{desc}</p>
+    <h3 className="text-2xl font-black uppercase italic">{title}</h3>
+    <p className="text-gray-500 text-sm leading-relaxed font-medium">{desc}</p>
   </div>
 )

@@ -2,90 +2,79 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --primary-glow: rgba(99, 102, 241, 0.3);
-  --secondary: #ec4899;
-  --background: #030712;
-  --surface: #0f172a;
-  --surface-hover: #1e293b;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --border: rgba(255, 255, 255, 0.05);
+  --primary: #000000;
+  --secondary: #6b7280;
+  --background: #f3f4f6;
+  --glass-bg: rgba(255, 255, 255, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --radius: 2rem;
 }
 
 body {
   margin: 0;
-  font-family: 'Outfit', sans-serif;
-  background-color: var(--background);
+  font-family: 'Inter', sans-serif;
+  background: radial-gradient(circle at top left, #ffffff, #e5e7eb);
   color: var(--text-main);
+  min-height: 100vh;
   overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
 }
 
 @layer components {
-  .btn-primary {
-    @apply px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-2xl transition-all active:scale-[0.98] shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2;
-  }
-  
-  .btn-secondary {
-    @apply px-6 py-3 bg-white/5 border border-white/10 text-white font-bold rounded-2xl transition-all hover:bg-white/10 active:scale-[0.98] flex items-center justify-center gap-2;
+  .glass-panel {
+    @apply bg-white/40 backdrop-blur-2xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.05)];
   }
 
-  .glass-card {
-    @apply bg-[#0f172a]/50 backdrop-blur-xl border border-white/5 shadow-2xl;
+  .btn-capsule {
+    @apply px-6 py-2 bg-black text-white rounded-full font-semibold transition-all active:scale-95 hover:bg-black/80 flex items-center gap-2;
   }
 
-  .input-field {
-    @apply w-full bg-white/[0.03] border border-white/5 rounded-2xl p-4 text-white focus:border-indigo-500/50 outline-none transition-all placeholder:text-white/10 text-sm font-medium;
+  .btn-ghost {
+    @apply px-6 py-2 bg-white/40 border border-white/60 rounded-full font-semibold transition-all hover:bg-white/60 flex items-center gap-2;
+  }
+
+  .input-capsule {
+    @apply bg-white/40 border border-white/60 rounded-full px-6 py-3 outline-none focus:bg-white/60 transition-all placeholder:text-gray-400 text-sm;
   }
 }
 
 /* Custom Scrollbar */
-::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { 
-  background: rgba(255, 255, 255, 0.05); 
+  background: rgba(0, 0, 0, 0.1); 
   border-radius: 10px; 
 }
-::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.1); }
 
-/* Animations */
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
-}
-
-.animate-float {
-  animation: float 4s ease-in-out infinite;
-}
-
-.text-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400;
-}
-
-/* Dashboard Grid Layout */
-.dashboard-grid {
+/* Layout */
+.app-container {
   display: grid;
-  grid-template-columns: 280px 1fr 340px;
+  grid-template-columns: 280px 1fr;
   height: 100vh;
+  padding: 1.5rem;
+  gap: 1.5rem;
+}
+
+.main-content {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 1.5rem;
   overflow: hidden;
 }
 
-@media (max-width: 1280px) {
-  .dashboard-grid {
-    grid-template-columns: 240px 1fr;
-  }
-  .dashboard-right { display: none; }
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 1.5rem;
+  overflow-y: auto;
+  padding-right: 0.5rem;
 }
 
 @media (max-width: 1024px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-  .dashboard-sidebar { display: none; }
+  .app-container { grid-template-columns: 1fr; }
+  .dashboard-grid { grid-template-columns: 1fr; }
 }

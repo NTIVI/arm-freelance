@@ -8,8 +8,7 @@ import {
   ArrowRight, 
   Briefcase, 
   Users, 
-  CheckCircle2, 
-  Command
+  CheckCircle2
 } from 'lucide-react'
 import { useAppContext } from '../context/AppContext'
 
@@ -41,46 +40,57 @@ export const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-6">
-      <div className="w-full max-w-md">
-        <div className="flex flex-col items-center mb-10 space-y-4">
-          <div className="w-16 h-16 rounded-[1.5rem] bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center shadow-2xl">
-            <Command className="w-8 h-8 text-indigo-400" />
+    <div className="min-h-screen bg-[#f3f4f6] flex items-center justify-center p-6 font-sans">
+      <div className="w-full max-w-lg">
+        <div className="flex flex-col items-center mb-16 space-y-4">
+          <div className="w-14 h-14 rounded-2xl bg-black flex items-center justify-center shadow-xl">
+            <div className="w-7 h-7 border-2 border-white rounded rotate-45"></div>
           </div>
-          <h2 className="text-3xl font-black uppercase italic tracking-tighter">Armenia Freelance</h2>
+          <h2 className="text-2xl font-black uppercase italic tracking-tighter">Armenia Freelance</h2>
         </div>
 
         <AnimatePresence mode="wait">
           {step === 1 ? (
-            <motion.div key="auth-form" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -20 }} className="bg-[#0f172a]/50 backdrop-blur-xl border border-white/5 shadow-2xl p-10 rounded-[2.5rem] space-y-8">
+            <motion.div key="auth-form" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, y: -20 }} className="glass-panel p-12 rounded-[3.5rem] space-y-10">
+              <div className="text-center space-y-2">
+                <h3 className="text-3xl font-black uppercase italic">{isLogin ? 'Hello Again' : 'Join AF'}</h3>
+                <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Premium Professional Network</p>
+              </div>
+
               <form onSubmit={handleAuth} className="space-y-4">
                 {!isLogin && (
                   <div className="relative group">
-                    <User className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
-                    <input required type="text" placeholder="Full Name" className="w-full bg-white/[0.03] border border-white/5 rounded-2xl p-4 pl-14 text-white focus:border-indigo-500/50 outline-none" value={formData.fullName} onChange={e => setFormData({...formData, fullName: e.target.value})} />
+                    <User className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300" />
+                    <input required type="text" placeholder="Full Name" className="input-capsule pl-14 w-full" value={formData.fullName} onChange={e => setFormData({...formData, fullName: e.target.value})} />
                   </div>
                 )}
                 <div className="relative group">
-                  <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
-                  <input required type="email" placeholder="Email Address" className="w-full bg-white/[0.03] border border-white/5 rounded-2xl p-4 pl-14 text-white focus:border-indigo-500/50 outline-none" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+                  <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300" />
+                  <input required type="email" placeholder="Email Address" className="input-capsule pl-14 w-full" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
                 </div>
                 <div className="relative group">
-                  <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
-                  <input required type="password" placeholder="Password" className="w-full bg-white/[0.03] border border-white/5 rounded-2xl p-4 pl-14 text-white focus:border-indigo-500/50 outline-none" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} />
+                  <Lock className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300" />
+                  <input required type="password" placeholder="Password" className="input-capsule pl-14 w-full" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} />
                 </div>
-                <button type="submit" className="w-full py-5 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-2xl flex items-center justify-center gap-2 uppercase tracking-widest text-xs">
-                  {isLogin ? 'Sign In' : 'Continue'} <ArrowRight className="w-4 h-4" />
+                
+                <button type="submit" className="btn-capsule w-full py-5 justify-center shadow-2xl shadow-black/10 mt-6">
+                  {isLogin ? 'Enter Workspace' : 'Continue'} <ArrowRight className="w-5 h-5" />
                 </button>
               </form>
-              <button onClick={() => setIsLogin(!isLogin)} className="w-full text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-colors">
-                {isLogin ? "Don't have an account? Sign Up" : "Already have an account? Login"}
+
+              <button onClick={() => setIsLogin(!isLogin)} className="w-full text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors">
+                {isLogin ? "Create an Elite Account" : "Access Existing Workspace"}
               </button>
             </motion.div>
           ) : (
-            <motion.div key="role-selection" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
-               <RoleOption selected={role === 'freelancer'} onClick={() => setRole('freelancer')} icon={Briefcase} title="Freelancer" desc="I want to find projects" />
-               <RoleOption selected={role === 'client'} onClick={() => setRole('client')} icon={Users} title="Client" desc="I want to hire talent" />
-               {role && <button onClick={handleFinalize} className="w-full py-5 bg-indigo-500 text-white font-bold rounded-2xl uppercase tracking-widest text-xs">Finalize & Enter</button>}
+            <motion.div key="role-selection" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
+               <RoleOption selected={role === 'freelancer'} onClick={() => setRole('freelancer')} icon={Briefcase} title="Elite Specialist" desc="I provide professional services" />
+               <RoleOption selected={role === 'client'} onClick={() => setRole('client')} icon={Users} title="Marketplace Client" desc="I hire top-tier talent" />
+               {role && (
+                 <button onClick={handleFinalize} className="btn-capsule w-full py-5 justify-center animate-bounce mt-8">
+                   Initialize Profile <ArrowRight className="w-5 h-5" />
+                 </button>
+               )}
             </motion.div>
           )}
         </AnimatePresence>
@@ -90,14 +100,14 @@ export const Auth = () => {
 }
 
 const RoleOption = ({ selected, onClick, icon: Icon, title, desc }: any) => (
-  <div onClick={onClick} className={`p-8 rounded-[2rem] border-2 cursor-pointer transition-all ${selected ? 'border-indigo-500 bg-indigo-500/5' : 'border-white/5 hover:border-white/10'} flex items-start gap-6`}>
-    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${selected ? 'bg-indigo-500 text-white' : 'bg-white/5 text-indigo-400'}`}>
-      <Icon className="w-6 h-6" />
+  <div onClick={onClick} className={`glass-panel p-10 rounded-[3rem] border-2 cursor-pointer transition-all ${selected ? 'border-black bg-white shadow-2xl scale-105' : 'border-white/60 hover:border-black/10'} flex items-center gap-8`}>
+    <div className={`w-16 h-16 rounded-3xl flex items-center justify-center transition-all ${selected ? 'bg-black text-white' : 'bg-black/5 text-black'}`}>
+      <Icon className="w-8 h-8" />
     </div>
     <div className="flex-1">
-      <h4 className="text-sm font-black uppercase italic">{title}</h4>
-      <p className="text-[11px] text-slate-500">{desc}</p>
+      <h4 className="text-lg font-black uppercase italic">{title}</h4>
+      <p className="text-[11px] text-gray-400 font-medium">{desc}</p>
     </div>
-    {selected && <CheckCircle2 className="w-5 h-5 text-indigo-500" />}
+    {selected && <CheckCircle2 className="w-6 h-6 text-black" />}
   </div>
 )
