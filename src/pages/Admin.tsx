@@ -43,7 +43,7 @@ export const Admin = () => {
                <ArrowLeft className="w-4 h-4" />
                Exit Admin Panel
              </button>
-             <h1 className="text-4xl font-black italic uppercase tracking-tighter">Admin <span className="text-gray-300">Workspace</span></h1>
+             <h1 className="text-4xl font-black italic uppercase tracking-tighter text-black">Admin <span className="text-black">Workspace</span></h1>
           </div>
           
           <div className="flex items-center gap-6">
@@ -68,7 +68,7 @@ export const Admin = () => {
 
         <div className="glass-panel rounded-[3.5rem] p-10 space-y-8">
            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-black uppercase italic">User Management</h2>
+              <h2 className="text-xl font-black uppercase italic text-black">User Management</h2>
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input 
@@ -84,7 +84,7 @@ export const Admin = () => {
            <div className="overflow-x-auto">
               <table className="w-full">
                  <thead>
-                    <tr className="text-[10px] font-black uppercase text-gray-400 tracking-[0.2em] border-b border-black/5">
+                    <tr className="text-[10px] font-black uppercase text-gray-500 tracking-[0.2em] border-b border-black/5">
                        <th className="text-left pb-6 pl-4">User</th>
                        <th className="text-left pb-6">Role</th>
                        <th className="text-left pb-6">Status</th>
@@ -101,8 +101,8 @@ export const Admin = () => {
                                   {u.name[0]}
                                 </div>
                                 <div>
-                                   <p className="text-sm font-bold">{u.name}</p>
-                                   <p className="text-[10px] text-gray-400">{u.email}</p>
+                                   <p className="text-sm font-bold text-black">{u.name}</p>
+                                   <p className="text-[10px] text-gray-500 font-medium">{u.email}</p>
                                 </div>
                              </div>
                           </td>
@@ -117,7 +117,7 @@ export const Admin = () => {
                                 <span className="text-[10px] font-bold uppercase">{u.status}</span>
                              </div>
                           </td>
-                          <td className="py-6 text-xs text-gray-400 font-medium">{u.joined}</td>
+                          <td className="py-6 text-xs text-gray-600 font-bold">{u.joined}</td>
                           <td className="py-6 pr-4">
                              <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
                                 <button className="p-2 hover:bg-black/5 rounded-xl text-gray-400 hover:text-black transition-colors">
@@ -148,11 +148,11 @@ const AdminStat = ({ icon: Icon, label, value, trend }: any) => (
         <div className="w-12 h-12 rounded-2xl bg-black flex items-center justify-center text-white shadow-lg shadow-black/10">
            <Icon className="w-6 h-6" />
         </div>
-        {trend && <span className="text-[10px] font-black text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded-lg">{trend}</span>}
+        {trend && <span className="text-xs font-black text-emerald-600 bg-emerald-500/10 px-3 py-1.5 rounded-lg shadow-sm">{trend}</span>}
      </div>
      <div className="space-y-1">
-        <p className="text-3xl font-black italic tracking-tighter">{value}</p>
-        <p className="text-[9px] font-black uppercase text-gray-400 tracking-widest">{label}</p>
+        <p className="text-3xl font-black italic tracking-tighter text-black">{value}</p>
+        <p className="text-[9px] font-black uppercase text-gray-500 tracking-widest">{label}</p>
      </div>
   </div>
 )
