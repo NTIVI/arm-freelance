@@ -4,92 +4,71 @@
 
 :root {
   color-scheme: dark;
-  --primary: #6366F1;
-  --primary-glow: rgba(99, 102, 241, 0.5);
-  --secondary: #A855F7;
-  --accent: #F59E0B;
-  --bg-deep: #050506;
+  --primary: #818CF8; /* Muted Indigo */
+  --primary-glow: rgba(129, 140, 248, 0.2);
+  --secondary: #C084FC;
+  --accent: #FBBF24;
+  --bg-deep: #0B0B0F;
+  --card-bg: #14141A;
+  --border-subtle: rgba(255, 255, 255, 0.06);
 }
 
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
   background-color: var(--bg-deep);
+  color: #E2E8F0;
   overflow-x: hidden;
 }
 
 h1, h2, h3, h4, .font-display {
   font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.02em;
 }
 
 @layer base {
   .glass-card {
-    @apply bg-white/[0.02] backdrop-blur-3xl border border-white/[0.05] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)];
+    @apply bg-[#14141A] border border-white/[0.04] shadow-2xl;
+    border-radius: 20px; /* More professional radius */
   }
   
   .glass-panel {
-    @apply bg-white/[0.01] backdrop-blur-xl border border-white/[0.03];
+    @apply bg-white/[0.02] backdrop-blur-md border border-white/[0.03];
+    border-radius: 16px;
   }
 
   .btn-primary {
-    @apply px-8 py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-2xl transition-all active:scale-95 shadow-[0_0_40px_rgba(99,102,241,0.3)] relative overflow-hidden;
+    @apply px-6 py-3.5 bg-primary hover:bg-[#6366F1] text-white font-semibold rounded-xl transition-all active:scale-[0.98] shadow-lg shadow-primary/10;
   }
   
-  .btn-primary::after {
-    content: '';
-    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full hover:animate-[shimmer_2s_infinite];
-  }
-
   .btn-secondary {
-    @apply px-8 py-4 bg-white/[0.03] hover:bg-white/[0.08] text-white font-bold rounded-2xl border border-white/[0.05] transition-all active:scale-95;
+    @apply px-6 py-3.5 bg-white/[0.03] hover:bg-white/[0.06] text-white font-semibold rounded-xl border border-white/[0.05] transition-all;
   }
-}
-
-@keyframes shimmer {
-  100% { transform: translateX(100%); }
-}
-
-.text-glow {
-  text-shadow: 0 0 30px var(--primary-glow);
 }
 
 .mesh-gradient {
   background: 
-    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.1) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(245, 158, 11, 0.05) 0px, transparent 50%),
-    radial-gradient(at 0% 100%, rgba(99, 102, 241, 0.1) 0px, transparent 50%);
+    radial-gradient(at 0% 0%, rgba(129, 140, 248, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(192, 132, 252, 0.05) 0px, transparent 50%);
 }
 
-.card-hover-effect {
-  @apply transition-all duration-500 ease-out;
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { @apply bg-white/[0.05] rounded-full hover:bg-white/[0.1]; }
+
+/* Professional Sidebar Item */
+.nav-item {
+  @apply flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 font-medium text-sm;
+}
+.nav-item.active {
+  @apply bg-primary/10 text-primary border border-primary/20 shadow-sm shadow-primary/5;
+}
+.nav-item:not(.active) {
+  @apply text-white/40 hover:text-white hover:bg-white/[0.02];
 }
 
-.card-hover-effect:hover {
-  @apply -translate-y-2 border-white/20 bg-white/[0.05] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)];
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  @apply bg-white/10 rounded-full hover:bg-white/20 transition-colors;
-}
-
-/* Animations */
-.reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: reveal 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-@keyframes reveal {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* Typography Overrides */
+.title-xl { @apply text-5xl font-bold tracking-tight text-white; }
+.title-lg { @apply text-3xl font-bold tracking-tight text-white; }
+.text-muted { @apply text-white/40; }

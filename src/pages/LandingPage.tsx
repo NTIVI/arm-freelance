@@ -37,11 +37,11 @@ export const Hero = ({ onStart }: { onStart: () => void }) => {
           transition={{ delay: 0.3, duration: 0.8 }}
           className="flex flex-col sm:flex-row justify-center items-center gap-6"
         >
-          <button onClick={onStart} className="btn-primary text-xl h-20 px-16 flex items-center space-x-4 group shadow-2xl">
+          <button onClick={onStart} className="btn-primary text-lg h-16 px-12 flex items-center space-x-4 group shadow-2xl">
             <span className="tracking-tight">{t('get_started')}</span>
-            <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-500" />
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-500" />
           </button>
-          <button className="btn-secondary text-xl h-20 px-12">
+          <button className="btn-secondary text-lg h-16 px-10">
             Explore Marketplace
           </button>
         </motion.div>
