@@ -30,25 +30,7 @@ const Logo = () => (
   </div>
 )
 
-const BackgroundAnimation = () => (
-  <div className="bg-mesh">
-    {[...Array(15)].map((_, i) => (
-      <div 
-        key={i}
-        className="floating-circle"
-        style={{
-          width: Math.random() * 300 + 100 + 'px',
-          height: Math.random() * 300 + 100 + 'px',
-          left: Math.random() * 100 + '%',
-          top: Math.random() * 100 + '%',
-          animationDelay: Math.random() * 15 + 's',
-          animationDuration: Math.random() * 20 + 20 + 's',
-          opacity: Math.random() * 0.05 + 0.05
-        }}
-      />
-    ))}
-  </div>
-)
+
 
 export const LandingPage = () => {
   const { lang, setLang, t } = useLanguage();
@@ -61,8 +43,8 @@ export const LandingPage = () => {
   ].slice(0, 3);
 
   return (
-    <div className="min-h-screen text-black selection:bg-black/5 font-sans relative">
-      <BackgroundAnimation />
+    <div className="min-h-screen text-black bg-[#fcfcfc] selection:bg-black/5 font-sans relative">
+      
       
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 px-4 pt-6">

@@ -36,7 +36,6 @@ export const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-[#f3f4f6] flex p-4 gap-4 font-sans text-black">
-      <BackgroundAnimation />
       
       {/* Sidebar */}
       <aside className="w-24 bg-white rounded-[3.5rem] border border-black/5 flex flex-col items-center py-10 shadow-sm shrink-0">
@@ -222,9 +221,4 @@ const JobCard = ({ job, t, user, applyToJob }: any) => (
   </div>
 )
 
-const BackgroundAnimation = () => (
-  <div className="fixed inset-0 pointer-events-none -z-10 bg-[#f3f4f6] overflow-hidden">
-    <div className="absolute top-0 left-0 w-[800px] h-[800px] bg-blue-50 rounded-full blur-[120px] opacity-50 -translate-x-1/2 -translate-y-1/2"></div>
-    <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-50 rounded-full blur-[120px] opacity-50 translate-x-1/3 translate-y-1/3"></div>
-  </div>
-)
+

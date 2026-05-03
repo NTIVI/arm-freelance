@@ -51,28 +51,7 @@ body {
   }
 }
 
-.bg-mesh {
-  position: fixed;
-  inset: 0;
-  z-index: -10;
-  background: radial-gradient(circle at 50% -20%, #f3f4f6 0%, #ffffff 100%);
-  overflow: hidden;
-}
 
-.floating-circle {
-  position: absolute;
-  background: black;
-  border-radius: 50%;
-  pointer-events: none;
-  animation: float 25s infinite linear;
-}
-
-@keyframes float {
-  0% { transform: translate(0, 110vh) scale(1); }
-  33% { transform: translate(30px, 60vh) scale(1.1); }
-  66% { transform: translate(-30px, 20vh) scale(0.9); }
-  100% { transform: translate(0, -20vh) scale(1); }
-}
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
