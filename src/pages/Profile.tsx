@@ -37,7 +37,7 @@ export const Profile = () => {
             <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white shadow-lg group-hover:bg-indigo-600 transition-all">
               <ArrowLeft className="w-5 h-5" />
             </div>
-            <span className="font-black italic uppercase tracking-tighter text-[10px] text-gray-400">Back to Dashboard</span>
+            <span className="font-black italic uppercase tracking-tighter text-[10px] text-gray-400">{t('back_to_dashboard')}</span>
           </Link>
 
           <button 
@@ -69,7 +69,7 @@ export const Profile = () => {
                 <div className="flex items-center justify-center gap-1.5 text-indigo-600 mt-1">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span className="text-[10px] font-black uppercase tracking-widest">
-                    {user.role === 'freelancer' ? 'Elite Specialist' : 'Marketplace Client'}
+                    {user.role === 'freelancer' ? t('elite_specialist') : t('marketplace_client')}
                   </span>
                 </div>
                 {user.role === 'freelancer' && (
@@ -86,7 +86,7 @@ export const Profile = () => {
                   
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-xs font-bold text-gray-600 uppercase tracking-widest">Language</span>
+                      <span className="text-xs font-bold text-gray-600 uppercase tracking-widest">{t('nav_language')}</span>
                       <div className="flex gap-1 bg-black/5 p-1 rounded-full">
                         {['en', 'ru', 'hy'].map((l) => (
                           <button 
@@ -103,12 +103,12 @@ export const Profile = () => {
                     {user.role === 'freelancer' && (
                       <>
                         <div className="flex justify-between items-center py-3 border-t border-black/5">
-                          <span className="text-xs font-bold text-gray-600 uppercase tracking-widest">Category</span>
+                          <span className="text-xs font-bold text-gray-600 uppercase tracking-widest">{t('nav_category')}</span>
                           <span className="text-[11px] font-black uppercase text-indigo-600">{user.category}</span>
                         </div>
                         <div className="flex justify-between items-center py-3 border-t border-black/5">
-                          <span className="text-xs font-bold text-gray-600 uppercase tracking-widest">Experience</span>
-                          <span className="text-[11px] font-bold text-black">{user.experienceYears} Years</span>
+                          <span className="text-xs font-bold text-gray-600 uppercase tracking-widest">{t('nav_experience')}</span>
+                          <span className="text-[11px] font-bold text-black">{user.experienceYears} {t('years')}</span>
                         </div>
                       </>
                     )}
@@ -122,21 +122,21 @@ export const Profile = () => {
           <div className="lg:col-span-2 space-y-6">
             <div className="glass-panel p-10 rounded-[3.5rem] space-y-8">
               <div className="space-y-4">
-                <h3 className="text-xl font-black uppercase italic tracking-tighter">About</h3>
-                <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-wrap">{user.bio || "No description provided."}</p>
+                <h3 className="text-xl font-black uppercase italic tracking-tighter">{t('about_me')}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-wrap">{user.bio || t('no_description')}</p>
               </div>
             </div>
 
             <div className="glass-panel p-10 rounded-[3.5rem] space-y-8">
               <div className="flex items-center justify-between">
-                <h3 className="text-xl font-black uppercase italic tracking-tighter">Completed Orders</h3>
-                <span className="px-4 py-1.5 bg-black/5 rounded-full text-[10px] font-black uppercase">{completedOrders.length} projects</span>
+                <h3 className="text-xl font-black uppercase italic tracking-tighter">{t('completed_orders')}</h3>
+                <span className="px-4 py-1.5 bg-black/5 rounded-full text-[10px] font-black uppercase">{completedOrders.length} {t('projects_count')}</span>
               </div>
 
               <div className="space-y-4">
                 {completedOrders.length === 0 ? (
                   <div className="p-12 border-2 border-dashed border-black/5 rounded-[2rem] text-center text-gray-400 text-sm font-medium">
-                    No completed projects yet.
+                    {t('no_completed_projects')}
                   </div>
                 ) : (
                   completedOrders.map((order) => (

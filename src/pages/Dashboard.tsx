@@ -19,6 +19,7 @@ import { useAppContext } from '../context/AppContext'
 import { useLanguage } from '../context/LanguageContext'
 
 export const Dashboard = () => {
+  const { t } = useLanguage();
   const { user, logout, jobs, proposals, specialists } = useAppContext();
   const [activeTab, setActiveTab] = useState<'browse' | 'my-work' | 'settings'>('browse');
   const [search, setSearch] = useState('');
@@ -107,8 +108,8 @@ export const Dashboard = () => {
           <div className="space-y-6 overflow-y-auto pr-4 pb-12">
             {activeTab === 'browse' && user?.role === 'client' && (
               <div className="flex gap-4 p-1 bg-black/5 rounded-full w-fit mb-8">
-                 <button onClick={() => setFilterType('specialists')} className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${filterType === 'specialists' ? 'bg-black text-white shadow-lg' : 'text-gray-400 hover:text-black'}`}>Specialists</button>
-                 <button onClick={() => setFilterType('jobs')} className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${filterType === 'jobs' ? 'bg-black text-white shadow-lg' : 'text-gray-400 hover:text-black'}`}>My Postings</button>
+                 <button onClick={() => setFilterType('specialists')} className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${filterType === 'specialists' ? 'bg-black text-white shadow-lg' : 'text-gray-400 hover:text-black'}`}>{t('tab_specialists')}</button>
+                 <button onClick={() => setFilterType('jobs')} className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${filterType === 'jobs' ? 'bg-black text-white shadow-lg' : 'text-gray-400 hover:text-black'}`}>{t('tab_my_postings')}</button>
               </div>
             )}
 
@@ -139,7 +140,7 @@ export const Dashboard = () => {
                 <motion.div key="work" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
                   {user?.role === 'freelancer' ? (
                     <div className="space-y-6">
-                      <h3 className="text-xl font-black italic uppercase">My Applications</h3>
+                      <h3 className="text-xl font-black italic uppercase">{t('tab_my_applications')}</h3>
                       {myProposals.length === 0 ? (
                         <EmptyState message="You haven't applied to any IT projects yet." />
                       ) : (
@@ -150,7 +151,7 @@ export const Dashboard = () => {
                     </div>
                   ) : (
                     <div className="space-y-6">
-                      <h3 className="text-xl font-black italic uppercase">Project Proposals</h3>
+                      <h3 className="text-xl font-black italic uppercase">{t('tab_project_proposals')}</h3>
                       {proposals.filter(p => jobs.find(j => j.id === p.jobId)?.clientId === user.id).map(p => (
                         <ClientProposalCard key={p.id} proposal={p} job={jobs.find(j => j.id === p.jobId)!} />
                       ))}
@@ -172,7 +173,7 @@ export const Dashboard = () => {
                   <h3 className="font-black uppercase italic">{user?.fullName}</h3>
                   <div className="flex items-center gap-1 text-emerald-500">
                     <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span className="text-[10px] font-black uppercase tracking-widest">Verified {user?.role}</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest">{t('verified_user')} {user?.role}</span>
                   </div>
                 </div>
               </div>
@@ -183,10 +184,10 @@ export const Dashboard = () => {
               </div>
 
               <div className="pt-6 border-t border-black/5 space-y-4">
-                <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest">Platform Activity</p>
+                <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest">{t('platform_activity')}</p>
                 <div className="space-y-4">
                    <div className="flex justify-between items-center text-[11px] font-bold">
-                     <span className="text-gray-400 uppercase">Response Rate</span>
+                     <span className="text-gray-400 uppercase">{t('response_rate')}</span>
                      <span className="text-black">98%</span>
                    </div>
                    <div className="h-1.5 w-full bg-black/5 rounded-full overflow-hidden">
@@ -201,8 +202,8 @@ export const Dashboard = () => {
                   <Star className="w-5 h-5 fill-current" />
                </div>
                <div className="space-y-2">
-                 <h4 className="text-lg font-black uppercase tracking-tighter italic">Help Me Choose</h4>
-                 <p className="text-xs text-white/70 leading-relaxed font-medium">Unsure which specialist fits your IT project? Get a free 15-min consultation with our technical manager.</p>
+                 <h4 className="text-lg font-black uppercase tracking-tighter italic">{t('help_me_choose_title')}</h4>
+                 <p className="text-xs text-white/70 leading-relaxed font-medium">{t('help_me_choose_desc')}</p>
                </div>
                <button className="w-full py-4 bg-white text-indigo-600 rounded-3xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-100 transition-all">
                  Request Consultation
@@ -215,7 +216,8 @@ export const Dashboard = () => {
   )
 }
 
-const SidebarItem = ({ active, icon: Icon, onClick, label }: any) => (
+const SidebarItem = ({ active, icon: Icon, onClick, label }: any) => {
+  return (
   <button 
     onClick={onClick}
     className={`w-full flex flex-col items-center gap-1 p-4 rounded-3xl transition-all ${active ? 'bg-black text-white shadow-xl shadow-black/20 scale-105' : 'text-gray-400 hover:text-black hover:bg-black/5'}`}
@@ -223,9 +225,12 @@ const SidebarItem = ({ active, icon: Icon, onClick, label }: any) => (
     <Icon className="w-6 h-6" />
     <span className="text-[8px] font-black uppercase tracking-widest">{label}</span>
   </button>
-)
+  );
+}
 
-const JobCard = ({ job }: any) => (
+const JobCard = ({ job }: any) => {
+  const { t } = useLanguage();
+  return (
   <Link to={`/jobs/${job.id}`} className="block glass-panel p-8 rounded-[3rem] hover:scale-[1.01] transition-all group border border-white">
     <div className="flex justify-between items-start mb-6">
       <div className="space-y-2">
@@ -249,9 +254,12 @@ const JobCard = ({ job }: any) => (
       </div>
     </div>
   </Link>
-)
+  );
+}
 
-const SpecialistCard = ({ spec }: any) => (
+const SpecialistCard = ({ spec }: any) => {
+  const { t } = useLanguage();
+  return (
   <div className="glass-panel p-8 rounded-[3rem] space-y-6 hover:scale-[1.01] transition-all border border-white">
     <div className="flex justify-between items-start">
       <div className="flex gap-6">
@@ -268,7 +276,7 @@ const SpecialistCard = ({ spec }: any) => (
            </div>
            <p className="text-indigo-600 text-xs font-black uppercase tracking-widest">{spec.title}</p>
            <div className="flex flex-wrap gap-2 pt-2">
-             {spec.skills.map(s => <span key={s} className="px-3 py-1 bg-black/5 rounded-full text-[9px] font-bold uppercase">{s}</span>)}
+             {spec.skills.map((s: string) => <span key={s} className="px-3 py-1 bg-black/5 rounded-full text-[9px] font-bold uppercase">{s}</span>)}
            </div>
         </div>
       </div>
@@ -278,14 +286,17 @@ const SpecialistCard = ({ spec }: any) => (
       </div>
     </div>
     <div className="flex gap-3 pt-4">
-       <button className="btn-capsule flex-1 justify-center">Hire Specialist</button>
-       <button className="btn-ghost flex-1 justify-center bg-white border border-black/10">View Portfolio</button>
+       <button className="btn-capsule flex-1 justify-center">{t('hire_specialist')}</button>
+       <button className="btn-ghost flex-1 justify-center bg-white border border-black/10">{t('view_portfolio')}</button>
        <button className="w-12 h-12 rounded-full bg-black/5 flex items-center justify-center hover:bg-black transition-all hover:text-white group"><Github className="w-5 h-5" /></button>
     </div>
   </div>
-)
+  );
+}
 
-const MyJobCard = ({ job }: any) => (
+const MyJobCard = ({ job }: any) => {
+  const { t } = useLanguage();
+  return (
   <div className="glass-panel p-8 rounded-[3rem] space-y-6 border border-white">
     <div className="flex justify-between items-center">
       <h3 className="text-xl font-black uppercase italic">{job.title}</h3>
@@ -296,28 +307,34 @@ const MyJobCard = ({ job }: any) => (
       <StatBox label="Budget" value={`$${job.budget}`} />
     </div>
     <div className="flex gap-4">
-      <button className="btn-capsule flex-1 justify-center">Review Bids ({job.proposalsCount})</button>
+      <button className="btn-capsule flex-1 justify-center">{t('review_bids')} ({job.proposalsCount})</button>
       <button className="w-12 h-12 rounded-full border border-black/10 flex items-center justify-center hover:bg-black/5 transition-all"><MoreVertical className="w-5 h-5" /></button>
     </div>
   </div>
-)
+  );
+}
 
-const ProposalCard = ({ proposal, job }: any) => (
+const ProposalCard = ({ proposal, job }: any) => {
+  const { t } = useLanguage();
+  return (
   <div className="glass-panel p-8 rounded-[3rem] space-y-4 border-l-4 border-black">
     <div className="flex justify-between items-start">
       <div>
-        <p className="text-[10px] font-black uppercase text-gray-400 mb-1">Applied for IT Project</p>
+        <p className="text-[10px] font-black uppercase text-gray-400 mb-1">{t('applied_for_project')}</p>
         <h4 className="text-lg font-black uppercase italic">{job?.title}</h4>
       </div>
       <div className="text-right">
         <p className="text-xl font-black italic">${proposal.bid}</p>
-        <span className="text-[9px] font-bold text-indigo-500 uppercase">Awaiting Client Review</span>
+        <span className="text-[9px] font-bold text-indigo-500 uppercase">{t('awaiting_client_review')}</span>
       </div>
     </div>
   </div>
-)
+  );
+}
 
-const ClientProposalCard = ({ proposal, job }: any) => (
+const ClientProposalCard = ({ proposal, job }: any) => {
+  const { t } = useLanguage();
+  return (
   <div className="glass-panel p-8 rounded-[3rem] space-y-6 hover:border-black transition-all border border-transparent">
     <div className="flex justify-between items-start">
       <div className="flex gap-4">
@@ -333,11 +350,12 @@ const ClientProposalCard = ({ proposal, job }: any) => (
     </div>
     <p className="text-gray-500 text-xs font-medium leading-relaxed italic line-clamp-3">"{proposal.coverLetter}"</p>
     <div className="flex gap-4 pt-4">
-       <button className="btn-capsule flex-1 justify-center bg-emerald-600 hover:bg-emerald-700">Approve & Hire</button>
+       <button className="btn-capsule flex-1 justify-center bg-emerald-600 hover:bg-emerald-700">{t('approve_and_hire')}</button>
        <button className="btn-ghost flex-1 justify-center bg-white border border-black/10">Message</button>
     </div>
   </div>
-)
+  );
+}
 
 const StatBox = ({ label, value }: any) => (
   <div>
