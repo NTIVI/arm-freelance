@@ -9,7 +9,8 @@ import {
   Globe,
   Camera,
   LogOut,
-  ChevronRight
+  ChevronRight,
+  Edit3
 } from 'lucide-react'
 import { useAppContext } from '../context/AppContext'
 import { useLanguage } from '../context/LanguageContext'
@@ -28,17 +29,17 @@ export const Profile = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] font-sans text-black">
-      <div className="bg-mesh"></div>
+    <div className="min-h-screen bg-white font-sans text-black relative overflow-hidden">
+      <BackgroundAnimation />
       <div className="max-w-6xl mx-auto p-6 md:p-12 space-y-8 relative z-10">
         
         {/* Header */}
         <header className="flex items-center justify-between mb-12">
           <Link to="/dashboard" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white shadow-lg group-hover:bg-indigo-600 transition-all">
+            <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-all">
               <ArrowLeft className="w-5 h-5" />
             </div>
-            <span className="font-black italic uppercase tracking-tighter text-[10px] text-gray-400 group-hover:text-black transition-colors">{t('back_to_dashboard')}</span>
+            <span className="font-black italic uppercase tracking-tighter text-[10px] text-gray-400 group-hover:text-black transition-colors">Back to Workspace</span>
           </Link>
 
           <button 
@@ -53,11 +54,11 @@ export const Profile = () => {
           
           {/* Profile Sidebar */}
           <div className="lg:col-span-1 space-y-6">
-            <div className="glass-panel p-8 rounded-[3rem] text-center space-y-6 relative overflow-hidden bg-white border border-black/5 shadow-xl">
-              <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-br from-black to-zinc-800 -z-10"></div>
+            <div className="glass-panel p-8 rounded-[3rem] text-center space-y-6 relative overflow-hidden bg-white border border-black/5 shadow-2xl">
+              <div className="absolute top-0 left-0 w-full h-24 bg-black -z-10"></div>
               
               <div className="relative mt-8 group cursor-pointer inline-block">
-                <div className="w-32 h-32 rounded-[2.5rem] bg-black border-4 border-white flex items-center justify-center text-white text-5xl font-black shadow-2xl overflow-hidden">
+                <div className="w-32 h-32 rounded-[2.5rem] bg-white border-4 border-white flex items-center justify-center text-black text-5xl font-black shadow-2xl overflow-hidden">
                   {user.fullName[0]}
                 </div>
                 <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-[2.5rem]">
@@ -70,7 +71,7 @@ export const Profile = () => {
                 <div className="flex items-center justify-center gap-1.5 text-indigo-600 mt-1">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span className="text-[10px] font-black uppercase tracking-widest">
-                    {user.role === 'freelancer' ? t('elite_specialist') : t('marketplace_client')}
+                    {user.role === 'freelancer' ? 'Elite IT Professional' : 'Premium Client'}
                   </span>
                 </div>
                 {user.role === 'freelancer' && (
@@ -80,17 +81,17 @@ export const Profile = () => {
                   </div>
                 )}
                 <button className="mt-6 w-full btn-capsule py-3 text-xs justify-center">
-                  {t('edit_profile')}
+                  {t('edit_profile')} <Edit3 className="w-3 h-3 ml-2" />
                 </button>
               </div>
 
               <div className="pt-6 border-t border-black/5 space-y-6">
                 <div className="text-left space-y-4">
-                  <p className="text-[10px] font-black uppercase text-gray-400 tracking-[0.2em]">{t('nav_settings')}</p>
+                  <p className="text-[10px] font-black uppercase text-gray-400 tracking-[0.2em]">Settings</p>
                   
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">{t('nav_language')}</span>
+                      <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Language</span>
                       <div className="flex gap-1 bg-black/5 p-1 rounded-full">
                         {['en', 'ru', 'hy'].map((l) => (
                           <button 
@@ -107,12 +108,12 @@ export const Profile = () => {
                     {user.role === 'freelancer' && (
                       <>
                         <div className="flex justify-between items-center py-3 border-t border-black/5">
-                          <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">{t('nav_category')}</span>
-                          <span className="text-[11px] font-black uppercase text-indigo-600">{user.category}</span>
+                          <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Sphere</span>
+                          <span className="text-[11px] font-black uppercase text-indigo-600">{user.category || 'Development'}</span>
                         </div>
                         <div className="flex justify-between items-center py-3 border-t border-black/5">
-                          <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">{t('nav_experience')}</span>
-                          <span className="text-[11px] font-bold text-black">{user.experienceYears} {t('years')}</span>
+                          <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Exp.</span>
+                          <span className="text-[11px] font-bold text-black">{user.experienceYears || 0} Years</span>
                         </div>
                       </>
                     )}
@@ -124,23 +125,23 @@ export const Profile = () => {
 
           {/* Activity Section */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="glass-panel p-10 rounded-[3.5rem] space-y-8 bg-white border border-black/5 shadow-xl">
+            <div className="glass-panel p-10 rounded-[3.5rem] space-y-8 bg-white border border-black/5 shadow-2xl">
               <div className="space-y-4">
-                <h3 className="text-xl font-black uppercase italic tracking-tighter text-black">{t('about_me')}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed font-medium whitespace-pre-wrap">{user.bio || t('no_description')}</p>
+                <h3 className="text-xl font-black uppercase italic tracking-tighter text-black">{t('bio')}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed font-medium whitespace-pre-wrap">{user.bio || 'No description provided.'}</p>
               </div>
             </div>
 
-            <div className="glass-panel p-10 rounded-[3.5rem] space-y-8 bg-white border border-black/5 shadow-xl">
+            <div className="glass-panel p-10 rounded-[3.5rem] space-y-8 bg-white border border-black/5 shadow-2xl">
               <div className="flex items-center justify-between">
-                <h3 className="text-xl font-black uppercase italic tracking-tighter text-black">{t('completed_orders')}</h3>
-                <span className="px-4 py-1.5 bg-black/5 rounded-full text-[10px] font-black uppercase text-gray-400">{completedOrders.length} {t('projects_count')}</span>
+                <h3 className="text-xl font-black uppercase italic tracking-tighter text-black">Deals History</h3>
+                <span className="px-4 py-1.5 bg-black/5 rounded-full text-[10px] font-black uppercase text-gray-400">{completedOrders.length} Deals</span>
               </div>
 
               <div className="space-y-4">
                 {completedOrders.length === 0 ? (
                   <div className="p-12 border-2 border-dashed border-black/5 rounded-[2rem] text-center text-gray-400 text-sm font-medium">
-                    {t('no_completed_projects')}
+                    No completed deals yet.
                   </div>
                 ) : (
                   completedOrders.map((order) => (
@@ -172,3 +173,22 @@ export const Profile = () => {
     </div>
   )
 }
+
+const BackgroundAnimation = () => (
+  <div className="bg-mesh">
+    {[...Array(15)].map((_, i) => (
+      <div 
+        key={i}
+        className="floating-circle"
+        style={{
+          width: Math.random() * 200 + 50 + 'px',
+          height: Math.random() * 200 + 50 + 'px',
+          left: Math.random() * 100 + '%',
+          animationDelay: Math.random() * 20 + 's',
+          animationDuration: Math.random() * 20 + 10 + 's',
+          opacity: Math.random() * 0.03
+        }}
+      />
+    ))}
+  </div>
+);

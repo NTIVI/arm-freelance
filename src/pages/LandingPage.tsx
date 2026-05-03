@@ -1,4 +1,4 @@
-import { motion, useScroll } from 'framer-motion'
+import { motion, useScroll, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { 
   ArrowRight, 
@@ -19,11 +19,33 @@ import {
   Send,
   HelpCircle,
   Briefcase,
-  Users
+  Users,
+  Camera
 } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 import { useAppContext } from '../context/AppContext'
 import { useState } from 'react'
+
+const BackgroundAnimation = () => {
+  return (
+    <div className="bg-mesh">
+      {[...Array(15)].map((_, i) => (
+        <div 
+          key={i}
+          className="floating-circle"
+          style={{
+            width: Math.random() * 200 + 50 + 'px',
+            height: Math.random() * 200 + 50 + 'px',
+            left: Math.random() * 100 + '%',
+            animationDelay: Math.random() * 20 + 's',
+            animationDuration: Math.random() * 20 + 10 + 's',
+            opacity: Math.random() * 0.05
+          }}
+        />
+      ))}
+    </div>
+  );
+};
 
 export const LandingPage = () => {
   const { lang, setLang, t } = useLanguage();
@@ -41,26 +63,12 @@ export const LandingPage = () => {
   ).slice(0, 3); // Show top 3 for the landing page grid
 
   return (
-    <div className="min-h-screen text-black selection:bg-black/10 font-sans overflow-x-hidden relative">
-      <div className="bg-mesh"></div>
+    <div className="min-h-screen text-black bg-white selection:bg-black/10 font-sans overflow-x-hidden relative">
+      <BackgroundAnimation />
       <motion.div 
         className="fixed top-0 left-0 right-0 h-1 bg-black z-[100] origin-left"
         style={{ scaleX: useScroll().scrollXProgress }}
       />
-      {/* Animated Background Elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-        <motion.div 
-          animate={{ scale: [1, 1.2, 1], x: [0, 50, 0], y: [0, 30, 0] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-[10%] -right-[10%] w-[60vw] h-[60vw] bg-indigo-200/20 rounded-full blur-[120px]"
-        />
-        <motion.div 
-          animate={{ scale: [1.2, 1, 1.2], x: [0, -40, 0], y: [0, -50, 0] }}
-          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-          className="absolute top-[20%] -left-[10%] w-[40vw] h-[40vw] bg-pink-100/30 rounded-full blur-[100px]"
-        />
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03]"></div>
-      </div>
 
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 px-4 md:px-12 py-6">
