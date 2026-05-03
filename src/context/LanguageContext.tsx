@@ -304,10 +304,8 @@ const translations: Record<Language, Record<string, string>> = {
     completed_orders: 'Ավարտված պատվերներ',
     activity_role: 'Գործունեության տեսակ',
     profile_photo: 'Պրոֆիլի նկար',
-    language_choice: 'Լեզվի ընտրություն'
-  }
-ist: 'Կապ հաստատել',
-    price_from: 'սկսած',
+    language_choice: 'Լեզվի ընտրություն',
+    contact_specialist: 'Կապ հաստատել',
     per_hour: '/ժամ',
     testimonials_title: 'Հաջողության ձայներ',
     testimonials_subtitle: 'Մեր IT-պատվիրատուների հաջողության պատմությունները',
