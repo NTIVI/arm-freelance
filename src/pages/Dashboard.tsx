@@ -44,7 +44,7 @@ export const Dashboard = () => {
           <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center">
             <div className="w-4 h-4 border-2 border-white rounded-sm rotate-45"></div>
           </div>
-          <span className="font-black text-xl tracking-tighter uppercase italic">AF</span>
+          <span className="font-black text-xl tracking-tighter uppercase italic">ARM Freelance</span>
         </Link>
 
         <nav className="flex-1 space-y-3">

@@ -26,7 +26,7 @@ const Logo = () => (
     <div className="w-8 h-8 md:w-10 md:h-10 bg-blue-600 rounded-[10px] flex items-center justify-center rotate-45 group-hover:rotate-90 transition-transform duration-500 shadow-lg shadow-blue-500/20">
       <div className="w-3 h-3 md:w-4 md:h-4 bg-white rounded-[4px] -rotate-45"></div>
     </div>
-    <span className="text-base md:text-lg font-black tracking-tight uppercase text-black">Armenia Freelance</span>
+    <span className="text-base md:text-lg font-black tracking-tight uppercase text-black">ARM Freelance</span>
   </div>
 )
 
@@ -251,7 +251,7 @@ export const LandingPage = () => {
             </div>
           </div>
           <div className="pt-10 border-t border-black/5 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">© 2026 ARMENIA FREELANCE. ВСЕ ПРАВА ЗАЩИЩЕНЫ.</p>
+            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">© 2026 ARM Freelance. ВСЕ ПРАВА ЗАЩИЩЕНЫ.</p>
             <div className="flex items-center gap-4">
               <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Сделано командой Agile Business</span>
               <div className="px-4 py-1.5 bg-gray-50 border border-black/5 rounded-full text-[9px] font-black uppercase">Agile Business</div>
