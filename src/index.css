@@ -61,15 +61,17 @@ body {
 
 .floating-circle {
   position: absolute;
-  background: rgba(0, 0, 0, 0.01);
+  background: black;
   border-radius: 50%;
   pointer-events: none;
   animation: float 25s infinite linear;
 }
 
 @keyframes float {
-  from { transform: translateY(110vh) rotate(0deg); }
-  to { transform: translateY(-20vh) rotate(360deg); }
+  0% { transform: translate(0, 110vh) scale(1); }
+  33% { transform: translate(30px, 60vh) scale(1.1); }
+  66% { transform: translate(-30px, 20vh) scale(0.9); }
+  100% { transform: translate(0, -20vh) scale(1); }
 }
 
 /* Custom Scrollbar */
