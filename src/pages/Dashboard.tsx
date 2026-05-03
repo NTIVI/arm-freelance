@@ -37,8 +37,26 @@ export const Dashboard = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] flex p-6 gap-8 font-sans text-black overflow-hidden h-screen selection:bg-black selection:text-white">
+    <div className="min-h-screen bg-[#f3f4f6] flex p-6 gap-8 font-sans text-black overflow-hidden h-screen selection:bg-black selection:text-white relative">
       
+      {/* Floating Circles Background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        {[...Array(10)].map((_, i) => (
+          <div 
+            key={i}
+            className="absolute rounded-full bg-black/5 animate-float"
+            style={{
+              width: Math.random() * 300 + 100 + 'px',
+              height: Math.random() * 300 + 100 + 'px',
+              left: Math.random() * 100 + '%',
+              top: Math.random() * 100 + '%',
+              animationDelay: Math.random() * 10 + 's',
+              animationDuration: Math.random() * 20 + 10 + 's',
+            }}
+          />
+        ))}
+      </div>
+
       {/* Sidebar */}
       <aside className="w-[120px] bg-white rounded-[2.5rem] border-[1.5px] border-black flex flex-col items-center py-10 shadow-[10px_10px_0_0_rgba(0,0,0,1)] shrink-0 z-20">
         <Link to="/" className="mb-14 flex items-center gap-2">

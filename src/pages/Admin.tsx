@@ -34,10 +34,28 @@ export const Admin = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] p-12 font-sans text-black selection:bg-black selection:text-white">
+    <div className="min-h-screen bg-[#f3f4f6] p-12 font-sans text-black selection:bg-black selection:text-white relative overflow-x-hidden">
       
+      {/* Floating Circles Background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        {[...Array(12)].map((_, i) => (
+          <div 
+            key={i}
+            className="absolute rounded-full bg-black/5 animate-float"
+            style={{
+              width: Math.random() * 300 + 100 + 'px',
+              height: Math.random() * 300 + 100 + 'px',
+              left: Math.random() * 100 + '%',
+              top: Math.random() * 100 + '%',
+              animationDelay: Math.random() * 10 + 's',
+              animationDuration: Math.random() * 20 + 10 + 's',
+            }}
+          />
+        ))}
+      </div>
+
       {/* Header */}
-      <header className="flex items-center justify-between mb-16 max-w-[1600px] mx-auto">
+      <header className="flex items-center justify-between mb-16 max-w-[1600px] mx-auto relative z-10">
         <div className="space-y-4">
            <button onClick={() => navigate('/dashboard')} className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-black/40 hover:text-black transition-all">
              <ArrowLeft className="w-3.5 h-3.5" /> EXIT ADMIN PANEL
@@ -57,7 +75,7 @@ export const Admin = () => {
       </header>
 
       {/* Tabs */}
-      <div className="flex gap-3 mb-16 max-w-[1600px] mx-auto">
+      <div className="flex gap-3 mb-16 max-w-[1600px] mx-auto relative z-10">
          <button 
            onClick={() => setActiveTab('users')} 
            className={`px-9 py-4 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'users' ? 'bg-black text-white' : 'bg-black/5 text-black/40 hover:text-black'}`}
@@ -72,7 +90,7 @@ export const Admin = () => {
          </button>
       </div>
 
-      <div className="max-w-[1600px] mx-auto">
+      <div className="max-w-[1600px] mx-auto relative z-10">
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
            <StatCard icon={Users} label="TOTAL USERS" value="1,240" trend="+12" />

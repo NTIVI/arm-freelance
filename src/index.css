@@ -70,3 +70,19 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #999;
 }
+
+/* Floating Animation */
+@keyframes float {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(30px, -50px) rotate(5deg); }
+  66% { transform: translate(-20px, 20px) rotate(-5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.animate-float {
+  animation: float 20s ease-in-out infinite;
+}
+
+.bg-mesh-circles {
+  @apply fixed inset-0 pointer-events-none overflow-hidden z-0 bg-[#f3f4f6];
+}

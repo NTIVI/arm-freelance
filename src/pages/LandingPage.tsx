@@ -43,9 +43,25 @@ export const LandingPage = () => {
   ].slice(0, 3);
 
   return (
-    <div className="min-h-screen text-black bg-[#fcfcfc] selection:bg-black/5 font-sans relative">
+    <div className="min-h-screen text-black bg-[#f3f4f6] selection:bg-black/5 font-sans relative">
       
-      
+      {/* Floating Circles Background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        {[...Array(15)].map((_, i) => (
+          <div 
+            key={i}
+            className="absolute rounded-full bg-black/5 animate-float"
+            style={{
+              width: Math.random() * 400 + 100 + 'px',
+              height: Math.random() * 400 + 100 + 'px',
+              left: Math.random() * 100 + '%',
+              top: Math.random() * 100 + '%',
+              animationDelay: Math.random() * 10 + 's',
+              animationDuration: Math.random() * 20 + 10 + 's',
+            }}
+          />
+        ))}
+      </div>
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 px-4 pt-6">
         <div className="nav-pill max-w-7xl mx-auto flex items-center justify-between px-4 md:px-8 py-3">
