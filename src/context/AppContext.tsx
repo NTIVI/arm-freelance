@@ -22,15 +22,28 @@ interface Job {
   clientName: string;
   createdAt: string;
   proposalsCount: number;
+  status: 'open' | 'closed';
+}
+
+interface Proposal {
+  id: string;
+  jobId: string;
+  freelancerId: string;
+  freelancerName: string;
+  bid: string;
+  coverLetter: string;
+  createdAt: string;
 }
 
 interface AppContextType {
   user: User | null;
   jobs: Job[];
+  proposals: Proposal[];
   login: (user: User) => void;
   logout: () => void;
-  addJob: (job: Omit<Job, 'id' | 'createdAt' | 'proposalsCount'>) => void;
-  applyToJob: (jobId: string) => void;
+  addJob: (job: Omit<Job, 'id' | 'createdAt' | 'proposalsCount' | 'status'>) => void;
+  applyToJob: (proposal: Omit<Proposal, 'id' | 'createdAt'>) => void;
+  updateProfile: (data: Partial<User>) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -38,20 +51,21 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [proposals, setProposals] = useState<Proposal[]>([]);
 
   useEffect(() => {
-    // Load state from localStorage
     const savedUser = localStorage.getItem('af_user');
     const savedJobs = localStorage.getItem('af_jobs');
+    const savedProposals = localStorage.getItem('af_proposals');
     
     if (savedUser) setUser(JSON.parse(savedUser));
-    if (savedJobs) {
-      setJobs(JSON.parse(savedJobs));
-    } else {
-      // Mock Initial Jobs
+    if (savedJobs) setJobs(JSON.parse(savedJobs));
+    if (savedProposals) setProposals(JSON.parse(savedProposals));
+
+    if (!savedJobs) {
       const initialJobs: Job[] = [
-        { id: '1', title: 'React Expert Needed for Fintech App', description: 'We are building a large scale fintech application and need a React specialist.', budget: '5000', type: 'fixed', category: 'Web Development', clientId: 'c1', clientName: 'Armen Tech', createdAt: new Date().toISOString(), proposalsCount: 12 },
-        { id: '2', title: 'Mobile UI/UX Designer', description: 'Design a modern delivery app interface for the local market.', budget: '40/hr', type: 'hourly', category: 'Design', clientId: 'c2', clientName: 'FastExpress', createdAt: new Date().toISOString(), proposalsCount: 8 },
+        { id: '1', title: 'React Expert Needed for Fintech App', description: 'We are building a large scale fintech application and need a React specialist.', budget: '5000', type: 'fixed', category: 'Web Development', clientId: 'c1', clientName: 'Armen Tech', createdAt: new Date().toISOString(), proposalsCount: 1, status: 'open' },
+        { id: '2', title: 'Mobile UI/UX Designer', description: 'Design a modern delivery app interface for the local market.', budget: '40/hr', type: 'hourly', category: 'Design', clientId: 'c2', clientName: 'FastExpress', createdAt: new Date().toISOString(), proposalsCount: 0, status: 'open' },
       ];
       setJobs(initialJobs);
       localStorage.setItem('af_jobs', JSON.stringify(initialJobs));
@@ -68,28 +82,45 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.removeItem('af_user');
   };
 
-  const addJob = (jobData: Omit<Job, 'id' | 'createdAt' | 'proposalsCount'>) => {
+  const addJob = (jobData: Omit<Job, 'id' | 'createdAt' | 'proposalsCount' | 'status'>) => {
     const newJob: Job = {
       ...jobData,
       id: Math.random().toString(36).substr(2, 9),
       createdAt: new Date().toISOString(),
-      proposalsCount: 0
+      proposalsCount: 0,
+      status: 'open'
     };
     const updatedJobs = [newJob, ...jobs];
     setJobs(updatedJobs);
     localStorage.setItem('af_jobs', JSON.stringify(updatedJobs));
   };
 
-  const applyToJob = (jobId: string) => {
+  const applyToJob = (proposalData: Omit<Proposal, 'id' | 'createdAt'>) => {
+    const newProposal: Proposal = {
+      ...proposalData,
+      id: Math.random().toString(36).substr(2, 9),
+      createdAt: new Date().toISOString()
+    };
+    const updatedProposals = [newProposal, ...proposals];
+    setProposals(updatedProposals);
+    localStorage.setItem('af_proposals', JSON.stringify(updatedProposals));
+
     const updatedJobs = jobs.map(j => 
-      j.id === jobId ? { ...j, proposalsCount: j.proposalsCount + 1 } : j
+      j.id === proposalData.jobId ? { ...j, proposalsCount: j.proposalsCount + 1 } : j
     );
     setJobs(updatedJobs);
     localStorage.setItem('af_jobs', JSON.stringify(updatedJobs));
   };
 
+  const updateProfile = (data: Partial<User>) => {
+    if (!user) return;
+    const updatedUser = { ...user, ...data };
+    setUser(updatedUser);
+    localStorage.setItem('af_user', JSON.stringify(updatedUser));
+  };
+
   return (
-    <AppContext.Provider value={{ user, jobs, login, logout, addJob, applyToJob }}>
+    <AppContext.Provider value={{ user, jobs, proposals, login, logout, addJob, applyToJob, updateProfile }}>
       {children}
     </AppContext.Provider>
   );

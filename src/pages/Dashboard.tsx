@@ -1,26 +1,33 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import { 
   Search, 
   LayoutGrid, 
-  Calendar, 
-  Users, 
+  Briefcase, 
+  Send, 
   Settings, 
-  Bell, 
-  Video, 
-  Sun, 
-  MoreHorizontal,
-  ChevronRight,
   LogOut,
   Plus,
-  Briefcase
+  Clock,
+  MoreVertical,
+  Star
 } from 'lucide-react'
 import { useAppContext } from '../context/AppContext'
 import { useLanguage } from '../context/LanguageContext'
 
 export const Dashboard = () => {
-  const { user, logout } = useAppContext();
-  const [activeTab, setActiveTab] = useState('projects');
+  const { user, logout, jobs, proposals } = useAppContext();
+  const [activeTab, setActiveTab] = useState<'browse' | 'my-work' | 'settings'>('browse');
+  const [search, setSearch] = useState('');
+
+  const filteredJobs = jobs.filter(j => 
+    j.title.toLowerCase().includes(search.toLowerCase()) || 
+    j.category.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const myProposals = proposals.filter(p => p.freelancerId === user?.id);
+  const myJobs = jobs.filter(j => j.clientId === user?.id);
 
   return (
     <div className="app-container">
@@ -30,155 +37,139 @@ export const Dashboard = () => {
           <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
             <div className="w-4 h-4 border-2 border-white rounded-sm rotate-45"></div>
           </div>
-          <span className="font-bold text-lg tracking-tight">Armenia Freelance</span>
+          <span className="font-bold text-lg tracking-tight">AF</span>
         </div>
 
-        <nav className="flex-1 w-full space-y-2">
-          <SidebarItem active={activeTab === 'home'} icon={LayoutGrid} onClick={() => setActiveTab('home')} />
-          <SidebarItem active={activeTab === 'schedule'} icon={Calendar} onClick={() => setActiveTab('schedule')} />
-          <SidebarItem active={activeTab === 'projects'} icon={Users} onClick={() => setActiveTab('projects')} />
-          <SidebarItem active={activeTab === 'settings'} icon={Settings} onClick={() => setActiveTab('settings')} />
+        <nav className="flex-1 w-full space-y-4">
+          <SidebarItem active={activeTab === 'browse'} icon={LayoutGrid} onClick={() => setActiveTab('browse')} label="Feed" />
+          <SidebarItem active={activeTab === 'my-work'} icon={Briefcase} onClick={() => setActiveTab('my-work')} label="Work" />
+          <SidebarItem active={activeTab === 'settings'} icon={Settings} onClick={() => setActiveTab('settings')} label="Settings" />
         </nav>
 
         <div className="mt-auto pt-8 border-t border-black/5 w-full flex flex-col items-center gap-6">
-          <div className="relative group cursor-pointer">
-            <div className="w-14 h-14 rounded-3xl bg-black/5 p-1 transition-all group-hover:scale-105">
-              <div className="w-full h-full rounded-2xl bg-gradient-to-tr from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold text-xl">
-                {user?.fullName?.[0]}
-              </div>
-            </div>
-          </div>
+          <Link to="/profile" className="w-14 h-14 rounded-2xl bg-black flex items-center justify-center text-white font-bold text-xl shadow-xl shadow-black/10">
+            {user?.fullName?.[0]}
+          </Link>
           <button onClick={logout} className="p-3 text-gray-400 hover:text-red-500 transition-colors">
             <LogOut className="w-5 h-5" />
           </button>
         </div>
       </aside>
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <main className="main-content">
-        {/* Top Header Bar */}
         <header className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-             <h1 className="text-4xl font-bold tracking-tight">Management</h1>
-             <div className="flex items-center gap-2 px-4 py-1.5 bg-white/40 border border-white/60 rounded-full text-[10px] font-bold text-gray-500">
-               <Calendar className="w-3 h-3" />
-               JUNE 1, 2023
-             </div>
+          <div className="space-y-1">
+            <h1 className="text-4xl font-black italic uppercase tracking-tighter">
+              {activeTab === 'browse' ? 'Marketplace' : activeTab === 'my-work' ? 'My Workspace' : 'Settings'}
+            </h1>
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+              {user?.role === 'client' ? 'Hiring Mode' : 'Freelancing Mode'} • {new Date().toLocaleDateString()}
+            </p>
           </div>
 
           <div className="flex items-center gap-4">
             <LanguageSwitcher />
-
-            <div className="flex items-center gap-2 bg-white/40 border border-white/60 p-1.5 rounded-full">
-               <HeaderAction icon={Video} />
-              <HeaderAction icon={Bell} dot />
-              <div className="h-6 w-px bg-black/10 mx-1"></div>
-              <div className="flex items-center gap-3 px-3">
-                <Sun className="w-4 h-4 text-orange-400" />
-                <span className="text-[11px] font-bold">23° Sunny</span>
-              </div>
-            </div>
-
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input type="text" placeholder="Type searching..." className="input-capsule pl-11 w-64 shadow-sm" />
+              <input 
+                type="text" 
+                placeholder="Search projects..." 
+                className="input-capsule pl-11 w-64 shadow-sm"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+              />
             </div>
+            {user?.role === 'client' && (
+              <Link to="/post-job" className="btn-capsule">
+                <Plus className="w-4 h-4" /> Post Project
+              </Link>
+            )}
           </div>
         </header>
 
-        {/* Dashboard Grid */}
-        <div className="dashboard-grid">
-          {/* Center Content */}
-          <div className="space-y-6 overflow-hidden">
-            <div className="glass-panel rounded-[2.5rem] p-10 h-[480px] relative overflow-hidden">
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-4">
-                  <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Active Timeline</span>
-                  <div className="flex gap-2 bg-black/5 p-1 rounded-full">
-                    <button className="px-4 py-1 rounded-full bg-white text-[10px] font-bold shadow-sm">Day</button>
-                    <button className="px-4 py-1 rounded-full text-[10px] font-bold text-gray-400">Week</button>
-                  </div>
-                </div>
-                <MoreHorizontal className="w-5 h-5 text-gray-400" />
-              </div>
+        <div className="dashboard-grid overflow-hidden">
+          <div className="space-y-6 overflow-y-auto pr-4 pb-12">
+            <AnimatePresence mode="wait">
+              {activeTab === 'browse' && (
+                <motion.div key="browse" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+                  {filteredJobs.map(job => (
+                    <JobCard key={job.id} job={job} />
+                  ))}
+                </motion.div>
+              )}
 
-              {/* Timeline Mockup */}
-              <div className="space-y-8">
-                 <TimelineRow label="Design" progress="25%" time="2 hours" color="bg-black" />
-                 <TimelineRow label="Mobile Apps" progress="45%" time="5 hours" color="bg-indigo-500" />
-                 <TimelineRow label="Infography" progress="15%" time="1 hour" color="bg-pink-500" />
-                 <TimelineRow label="Team Management" progress="70%" time="3 hours" color="bg-emerald-500" />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-6">
-              <div className="glass-panel rounded-[2.5rem] p-8 space-y-6">
-                 <h3 className="font-bold text-lg">My Team</h3>
-                 <div className="flex -space-x-4">
-                    {[1,2,3,4].map(i => (
-                      <div key={i} className="w-12 h-12 rounded-full border-4 border-white bg-gray-200 overflow-hidden">
-                        <img src={`https://i.pravatar.cc/100?u=${i}`} alt="avatar" />
-                      </div>
-                    ))}
-                    <div className="w-12 h-12 rounded-full border-4 border-white bg-black text-white flex items-center justify-center text-xs font-bold">
-                      +5
+              {activeTab === 'my-work' && (
+                <motion.div key="work" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+                  {user?.role === 'freelancer' ? (
+                    <div className="space-y-6">
+                      <h3 className="text-xl font-black italic uppercase">My Applications</h3>
+                      {myProposals.length === 0 ? (
+                        <EmptyState message="You haven't applied to any jobs yet." />
+                      ) : (
+                        myProposals.map(p => (
+                          <ProposalCard key={p.id} proposal={p} job={jobs.find(j => j.id === p.jobId)!} />
+                        ))
+                      )}
                     </div>
-                 </div>
-                 <button className="w-full py-4 bg-black/5 hover:bg-black/10 rounded-3xl text-xs font-bold flex items-center justify-center gap-2 transition-all">
-                    View All Members <ChevronRight className="w-4 h-4" />
-                 </button>
-              </div>
-
-              <div className="glass-panel rounded-[2.5rem] p-8 flex flex-col justify-between">
-                 <div className="flex justify-between items-start">
-                    <h3 className="font-bold text-lg">Quick Post</h3>
-                    <Plus className="w-5 h-5" />
-                 </div>
-                 <p className="text-xs text-gray-400">Need to hire someone quickly? Start a new project draft here.</p>
-                 <button className="btn-capsule w-full justify-center">Start Drafting</button>
-              </div>
-            </div>
+                  ) : (
+                    <div className="space-y-6">
+                      <h3 className="text-xl font-black italic uppercase">My Postings</h3>
+                      {myJobs.map(job => (
+                        <MyJobCard key={job.id} job={job} />
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
-          {/* Right Column */}
+          {/* Right Column: Profile & Stats */}
           <div className="space-y-6">
-             <div className="glass-panel rounded-[2.5rem] p-8 space-y-8">
-                <div className="flex justify-between items-center">
-                  <h3 className="font-bold">Ongoing Projects</h3>
-                  <LayoutGrid className="w-4 h-4 text-gray-400" />
+            <div className="glass-panel rounded-[2.5rem] p-8 space-y-8">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-3xl bg-black/5 flex items-center justify-center font-black text-2xl">
+                  {user?.fullName?.[0]}
                 </div>
-                <div className="text-center space-y-1">
-                   <p className="text-4xl font-black">68,5%</p>
-                   <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Sales trend vs last month</p>
+                <div>
+                  <h3 className="font-black uppercase italic">{user?.fullName}</h3>
+                  <div className="flex items-center gap-1 text-orange-400">
+                    <Star className="w-3 h-3 fill-current" />
+                    <Star className="w-3 h-3 fill-current" />
+                    <Star className="w-3 h-3 fill-current" />
+                    <Star className="w-3 h-3 fill-current" />
+                    <Star className="w-3 h-3 fill-current" />
+                    <span className="text-[10px] font-bold text-gray-500 ml-1">5.0</span>
+                  </div>
                 </div>
-                {/* Mini Chart Mockup */}
-                <div className="h-20 flex items-end gap-1 px-4">
-                   {[40,70,45,90,65,80,50].map((h, i) => (
-                     <div key={i} className="flex-1 bg-black/5 rounded-t-lg transition-all hover:bg-black" style={{ height: `${h}%` }}></div>
-                   ))}
-                </div>
-                <div className="space-y-4">
-                   <ProjectStat label="Finance" value="48,800" />
-                   <ProjectStat label="Design Reviews" value="15,200" />
-                   <ProjectStat label="Other" value="09,400" />
-                </div>
-             </div>
+              </div>
 
-             <div className="glass-panel rounded-[2.5rem] p-6 bg-black text-white relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl group-hover:scale-150 transition-all"></div>
-                <div className="relative z-10 space-y-6">
-                   <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center">
-                     <Briefcase className="w-6 h-6 text-white" />
-                   </div>
-                   <div>
-                     <h4 className="text-lg font-bold italic">Armenia Elite</h4>
-                     <p className="text-[10px] text-white/50 uppercase font-bold tracking-widest mt-1">Premium Membership</p>
-                   </div>
-                   <button className="w-full py-4 bg-white text-black rounded-3xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all">
-                     Upgrade Now
-                   </button>
+              <div className="grid grid-cols-2 gap-4">
+                <StatBox label="Earned" value="$12.4k" />
+                <StatBox label="Success" value="100%" />
+              </div>
+
+              <div className="pt-6 border-t border-black/5 space-y-4">
+                <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest">Recommended Skills</p>
+                <div className="flex flex-wrap gap-2">
+                  {['React', 'UI Design', 'Node.js', 'Web3'].map(s => (
+                    <span key={s} className="px-3 py-1 bg-black/5 rounded-full text-[9px] font-bold uppercase">{s}</span>
+                  ))}
                 </div>
-             </div>
+              </div>
+            </div>
+
+            <div className="glass-panel rounded-[2.5rem] p-8 bg-black text-white space-y-6">
+              <h4 className="text-sm font-black uppercase tracking-widest italic">Upcoming Deadlines</h4>
+              <div className="space-y-4">
+                <DeadlineItem title="Fintech UI Review" date="Tomorrow" />
+                <DeadlineItem title="API Integration" date="In 3 days" />
+              </div>
+              <button className="w-full py-4 bg-white text-black rounded-3xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all">
+                Open Schedule
+              </button>
+            </div>
           </div>
         </div>
       </main>
@@ -186,69 +177,106 @@ export const Dashboard = () => {
   )
 }
 
-const SidebarItem = ({ active, icon: Icon, onClick }: any) => (
+const SidebarItem = ({ active, icon: Icon, onClick, label }: any) => (
   <button 
     onClick={onClick}
-    className={`w-full flex items-center justify-center p-4 rounded-3xl transition-all ${active ? 'bg-black text-white shadow-xl shadow-black/20 scale-105' : 'text-gray-400 hover:text-black hover:bg-black/5'}`}
+    className={`w-full flex flex-col items-center gap-1 p-4 rounded-3xl transition-all ${active ? 'bg-black text-white shadow-xl shadow-black/20 scale-105' : 'text-gray-400 hover:text-black hover:bg-black/5'}`}
   >
     <Icon className="w-6 h-6" />
+    <span className="text-[8px] font-black uppercase tracking-widest">{label}</span>
   </button>
 )
 
-const HeaderAction = ({ icon: Icon, dot }: any) => (
-  <button className="w-10 h-10 rounded-full flex items-center justify-center text-gray-600 hover:bg-black/5 relative transition-all">
-    <Icon className="w-5 h-5" />
-    {dot && <div className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></div>}
-  </button>
+const JobCard = ({ job }: any) => (
+  <Link to={`/jobs/${job.id}`} className="block glass-panel p-8 rounded-[3rem] hover:scale-[1.01] transition-all group">
+    <div className="flex justify-between items-start mb-6">
+      <div className="space-y-2">
+        <span className="px-3 py-1 bg-indigo-500/10 text-indigo-600 rounded-full text-[9px] font-black uppercase tracking-widest">{job.category}</span>
+        <h3 className="text-2xl font-black uppercase italic text-black group-hover:text-indigo-600 transition-colors">{job.title}</h3>
+      </div>
+      <div className="text-right">
+        <p className="text-2xl font-black italic tracking-tighter">${job.budget}</p>
+        <p className="text-[9px] font-bold text-gray-400 uppercase">{job.type}</p>
+      </div>
+    </div>
+    <p className="text-gray-500 text-sm line-clamp-2 mb-8">{job.description}</p>
+    <div className="flex items-center justify-between pt-6 border-t border-black/5">
+      <div className="flex items-center gap-3">
+        <div className="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center font-bold text-xs">{job.clientName[0]}</div>
+        <span className="text-[10px] font-black uppercase italic">{job.clientName}</span>
+      </div>
+      <div className="flex items-center gap-4 text-gray-400">
+        <div className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /><span className="text-[10px] font-bold">2h ago</span></div>
+        <div className="flex items-center gap-1.5"><Send className="w-3.5 h-3.5" /><span className="text-[10px] font-bold">{job.proposalsCount} bids</span></div>
+      </div>
+    </div>
+  </Link>
 )
 
-const TimelineRow = ({ label, progress, time, color }: any) => (
-  <div className="space-y-2">
-     <div className="flex justify-between items-end">
-        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{label}</span>
-        <span className="text-[10px] font-black uppercase">{time}</span>
-     </div>
-     <div className="h-10 w-full bg-black/5 rounded-full overflow-hidden relative">
-        <div className={`h-full ${color} rounded-full transition-all duration-1000 flex items-center px-4`} style={{ width: progress }}>
-           <span className="text-[9px] text-white font-bold uppercase">{progress}</span>
-        </div>
-     </div>
+const MyJobCard = ({ job }: any) => (
+  <div className="glass-panel p-8 rounded-[3rem] space-y-6">
+    <div className="flex justify-between items-center">
+      <h3 className="text-xl font-black uppercase italic">{job.title}</h3>
+      <span className="px-4 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-full text-[10px] font-black uppercase">{job.status}</span>
+    </div>
+    <div className="flex items-center gap-8">
+      <StatBox label="Proposals" value={job.proposalsCount} />
+      <StatBox label="Budget" value={`$${job.budget}`} />
+    </div>
+    <div className="flex gap-4">
+      <button className="btn-capsule flex-1 justify-center">View Proposals</button>
+      <button className="w-12 h-12 rounded-full border border-black/10 flex items-center justify-center hover:bg-black/5 transition-all"><MoreVertical className="w-5 h-5" /></button>
+    </div>
   </div>
 )
 
-const ProjectStat = ({ label, value }: any) => (
-  <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest border-b border-black/5 pb-2">
-    <span className="text-gray-400 flex items-center gap-2">
-      <div className="w-1.5 h-1.5 bg-black rounded-full"></div>
-      {label}
-    </span>
-    <span>{value}</span>
+const ProposalCard = ({ proposal, job }: any) => (
+  <div className="glass-panel p-8 rounded-[3rem] space-y-4 border-l-4 border-black">
+    <div className="flex justify-between items-start">
+      <div>
+        <p className="text-[10px] font-black uppercase text-gray-400 mb-1">Applied for</p>
+        <h4 className="text-lg font-black uppercase italic">{job?.title}</h4>
+      </div>
+      <div className="text-right">
+        <p className="text-xl font-black italic">${proposal.bid}</p>
+        <span className="text-[9px] font-bold text-indigo-500 uppercase">Pending Review</span>
+      </div>
+    </div>
   </div>
 )
 
-const languages = [
-  { id: 'en', label: 'EN' },
-  { id: 'ru', label: 'RU' },
-  { id: 'hy', label: 'HY' },
-];
+const StatBox = ({ label, value }: any) => (
+  <div>
+    <p className="text-2xl font-black tracking-tighter italic">{value}</p>
+    <p className="text-[9px] font-bold uppercase text-gray-400 tracking-widest">{label}</p>
+  </div>
+)
+
+const EmptyState = ({ message }: any) => (
+  <div className="p-12 text-center space-y-4">
+    <div className="w-16 h-16 bg-black/5 rounded-full flex items-center justify-center mx-auto text-gray-300">
+      <Briefcase className="w-8 h-8" />
+    </div>
+    <p className="text-sm font-medium text-gray-400">{message}</p>
+  </div>
+)
+
+const DeadlineItem = ({ title, date }: any) => (
+  <div className="flex justify-between items-center text-xs">
+    <span className="font-medium text-white/80">{title}</span>
+    <span className="text-[10px] font-black uppercase text-orange-400">{date}</span>
+  </div>
+)
+
+const languages = [{ id: 'en', label: 'EN' }, { id: 'ru', label: 'RU' }, { id: 'hy', label: 'HY' }];
 
 const LanguageSwitcher = () => {
   const { lang, setLang } = useLanguage();
   return (
     <div className="flex items-center gap-2 bg-white/40 border border-white/60 p-1.5 rounded-full shadow-sm">
       {languages.map((l) => (
-        <button 
-          key={l.id}
-          onClick={() => setLang(l.id as any)}
-          className={`relative px-6 py-2 rounded-full text-xs font-black uppercase transition-all z-10 ${lang === l.id ? 'text-white' : 'text-gray-500 hover:text-black'}`}
-        >
-          {lang === l.id && (
-            <motion.div
-              layoutId="activeLangDashboard"
-              className="absolute inset-0 bg-black rounded-full -z-10 shadow-lg"
-              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-            />
-          )}
+        <button key={l.id} onClick={() => setLang(l.id as any)} className={`relative px-6 py-2 rounded-full text-xs font-black uppercase transition-all z-10 ${lang === l.id ? 'text-white' : 'text-gray-500 hover:text-black'}`}>
+          {lang === l.id && <motion.div layoutId="activeLangDashboard" className="absolute inset-0 bg-black rounded-full -z-10 shadow-lg" transition={{ type: "spring", bounce: 0.2, duration: 0.6 }} />}
           {l.label}
         </button>
       ))}
