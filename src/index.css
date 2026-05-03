@@ -24,12 +24,12 @@ body {
   overflow-x: hidden;
 }
 
-/* Map bright tailwind colors and grays to black */
-[class*="text-indigo-"], [class*="text-emerald-"], [class*="text-orange-"], [class*="text-pink-"], [class*="text-blue-"], [class*="text-gray-"] {
+/* Map all text tailwind colors to black except white */
+[class*="text-"]:not(.text-white):not([class*="text-white"]) {
   color: #000000 !important;
 }
 
-.text-white {
+.text-white, .group-hover\:text-white:hover, .hover\:text-white:hover {
   color: #ffffff !important;
 }
 
@@ -37,7 +37,7 @@ body {
   color: #000000 !important;
 }
 
-h1, h2, h3, h4, h5, h6, p, span, label, a {
+h1, h2, h3, h4, h5, h6, p, span, label, a, div, li, ul, ol, strong, em, i, b, td, th, dt, dd, button, input, textarea, select, main, section, article, nav, header, footer {
   color: #000000;
 }
 
