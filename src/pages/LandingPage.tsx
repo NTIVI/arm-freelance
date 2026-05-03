@@ -53,7 +53,7 @@ export const LandingPage = () => {
             <LanguageSwitcher lang={lang} setLang={setLang} />
             <div className="flex items-center gap-2">
               {user ? (
-                <Link to="/profile" className="btn-capsule px-4 md:px-6 py-2 text-[9px] md:text-[10px] uppercase tracking-widest bg-black text-white hover:bg-indigo-600 transition-all flex items-center gap-2">
+                <Link to="/dashboard" className="btn-capsule px-4 md:px-6 py-2 text-[9px] md:text-[10px] uppercase tracking-widest bg-black text-white hover:bg-indigo-600 transition-all flex items-center gap-2">
                   <div className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center font-bold">{user.fullName[0]}</div>
                   {t('personal_account')}
                 </Link>
