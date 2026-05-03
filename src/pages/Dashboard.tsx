@@ -39,7 +39,7 @@ export const Dashboard = () => {
       <BackgroundAnimation />
       
       {/* Sidebar */}
-      <aside className="w-64 bg-white rounded-[3.5rem] border border-black/5 flex flex-col p-6 py-10 shadow-sm shrink-0">
+      <aside className="w-64 bg-white rounded-[3.5rem] border border-black/5 flex flex-col p-6 py-10 shadow-sm shrink-0 h-fit sticky top-4">
         <Link to="/" className="mb-16 px-4 flex items-center gap-3">
           <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center">
             <div className="w-4 h-4 border-2 border-white rounded-sm rotate-45"></div>
@@ -47,13 +47,13 @@ export const Dashboard = () => {
           <span className="font-black text-xl tracking-tighter uppercase italic">ARM Freelance</span>
         </Link>
 
-        <nav className="flex-1 space-y-3">
+        <nav className="space-y-3 mb-20">
           <SidebarItem active={activeTab === 'browse'} icon={LayoutGrid} onClick={() => setActiveTab('browse')} label="БИРЖА" />
           <SidebarItem active={activeTab === 'my-work'} icon={Briefcase} onClick={() => setActiveTab('my-work')} label="МОЯ РАБОТА" />
           <SidebarItem active={activeTab === 'settings'} icon={Settings} onClick={() => setActiveTab('settings')} label="НАСТРОЙКИ" />
         </nav>
 
-        <div className="mt-auto flex flex-col gap-4">
+        <div className="flex flex-col gap-4">
           <div className="p-4 bg-black/5 rounded-[2rem] flex items-center gap-4">
             <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white font-black text-sm">
               {user.fullName[0]}
