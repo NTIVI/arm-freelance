@@ -39,25 +39,33 @@ export const Dashboard = () => {
       <BackgroundAnimation />
       
       {/* Sidebar */}
-      <aside className="w-24 bg-white rounded-[3.5rem] border border-black/5 flex flex-col items-center py-10 shadow-sm shrink-0">
-        <Link to="/" className="mb-16">
+      <aside className="w-64 bg-white rounded-[3.5rem] border border-black/5 flex flex-col p-6 py-10 shadow-sm shrink-0">
+        <Link to="/" className="mb-16 px-4 flex items-center gap-3">
           <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center">
             <div className="w-4 h-4 border-2 border-white rounded-sm rotate-45"></div>
           </div>
+          <span className="font-black text-xl tracking-tighter uppercase italic">AF</span>
         </Link>
 
-        <nav className="flex-1 space-y-8">
-          <SidebarIcon active={activeTab === 'browse'} icon={LayoutGrid} onClick={() => setActiveTab('browse')} />
-          <SidebarIcon active={activeTab === 'my-work'} icon={Briefcase} onClick={() => setActiveTab('my-work')} />
-          <SidebarIcon active={activeTab === 'settings'} icon={Settings} onClick={() => setActiveTab('settings')} />
+        <nav className="flex-1 space-y-3">
+          <SidebarItem active={activeTab === 'browse'} icon={LayoutGrid} onClick={() => setActiveTab('browse')} label="БИРЖА" />
+          <SidebarItem active={activeTab === 'my-work'} icon={Briefcase} onClick={() => setActiveTab('my-work')} label="МОЯ РАБОТА" />
+          <SidebarItem active={activeTab === 'settings'} icon={Settings} onClick={() => setActiveTab('settings')} label="НАСТРОЙКИ" />
         </nav>
 
-        <div className="mt-auto flex flex-col items-center gap-6">
-          <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center text-white font-black text-lg">
-            {user.fullName[0]}
+        <div className="mt-auto flex flex-col gap-4">
+          <div className="p-4 bg-black/5 rounded-[2rem] flex items-center gap-4">
+            <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white font-black text-sm">
+              {user.fullName[0]}
+            </div>
+            <div className="overflow-hidden">
+               <p className="text-[10px] font-black uppercase italic truncate">{user.fullName}</p>
+               <p className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">{user.role}</p>
+            </div>
           </div>
-          <button onClick={logout} className="p-2 text-gray-400 hover:text-black transition-colors">
+          <button onClick={logout} className="w-full flex items-center gap-4 px-6 py-4 text-gray-400 hover:text-black transition-colors rounded-2xl hover:bg-black/5">
             <LogOut className="w-5 h-5" />
+            <span className="text-[10px] font-black uppercase tracking-widest">ВЫХОД</span>
           </button>
         </div>
       </aside>
@@ -173,12 +181,13 @@ export const Dashboard = () => {
   );
 }
 
-const SidebarIcon = ({ active, icon: Icon, onClick }: any) => (
+const SidebarItem = ({ active, icon: Icon, onClick, label }: any) => (
   <button 
     onClick={onClick}
-    className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${active ? 'bg-black text-white shadow-xl scale-110' : 'text-gray-400 hover:text-black hover:bg-black/5'}`}
+    className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all ${active ? 'bg-black text-white shadow-xl scale-[1.02]' : 'text-gray-400 hover:text-black hover:bg-black/5'}`}
   >
-    <Icon className="w-6 h-6" />
+    <Icon className="w-5 h-5" />
+    <span className="text-[10px] font-black uppercase tracking-widest">{label}</span>
   </button>
 )
 
