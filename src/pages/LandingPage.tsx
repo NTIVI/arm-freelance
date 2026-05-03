@@ -28,7 +28,17 @@ import { useState } from 'react'
 export const LandingPage = () => {
   const { lang, setLang, t } = useLanguage();
   const { user } = useAppContext();
+  const { specialists, users } = useAppContext();
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Combine static specialists with real registered freelancers
+  const allFreelancers = [
+    ...specialists,
+    ...users.filter(u => u.role === 'freelancer' && !specialists.find(s => s.id === u.id))
+  ].filter(f => 
+    f.fullName.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    (f.title || f.category || '').toLowerCase().includes(searchQuery.toLowerCase())
+  ).slice(0, 3); // Show top 3 for the landing page grid
 
   return (
     <div className="min-h-screen text-black selection:bg-black/10 font-sans overflow-x-hidden relative">
@@ -166,38 +176,25 @@ export const LandingPage = () => {
         <div className="max-w-7xl mx-auto space-y-12 md:space-y-16">
           <div className="flex flex-col md:flex-row justify-between items-end gap-6">
             <div className="space-y-4">
-              <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter text-white">{t('specialists_title')}</h2>
-              <p className="text-indigo-400/60 text-[10px] md:text-xs font-black uppercase tracking-[0.3em]">{t('specialists_subtitle')}</p>
+              <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter text-black">{t('specialists_title')}</h2>
+              <p className="text-gray-400 text-[10px] md:text-xs font-black uppercase tracking-[0.3em]">{t('specialists_subtitle')}</p>
             </div>
             <Link to="/auth" className="text-xs font-black uppercase tracking-widest text-indigo-600 hover:text-black transition-colors flex items-center gap-2">
               {t('view_marketplace')} <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <SpecialistCard 
-              name="Armen Vardanyan" 
-              role="Senior Python / DevOps" 
-              rating="5.0" 
-              price="45" 
-              tags={['Python', 'Kubernetes', 'AWS']} 
-              t={t}
-            />
-            <SpecialistCard 
-              name="Ani Sargsyan" 
-              role="Middle React Developer" 
-              rating="4.9" 
-              price="30" 
-              tags={['React', 'TypeScript', 'Tailwind']} 
-              t={t}
-            />
-            <SpecialistCard 
-              name="Karen Mkrtchyan" 
-              role="Fullstack Node.js / Vue" 
-              rating="4.8" 
-              price="35" 
-              tags={['Node.js', 'Vue.js', 'PostgreSQL']} 
-              t={t}
-            />
+            {allFreelancers.map((spec) => (
+              <SpecialistCard 
+                key={spec.id}
+                name={spec.fullName} 
+                role={spec.title || spec.category || 'Freelance Professional'} 
+                rating={spec.rating || 5.0} 
+                price={spec.price ? spec.price.replace('/hr', '') : '30'} 
+                tags={spec.skills || ['IT', 'Development']} 
+                t={t}
+              />
+            ))}
           </div>
         </div>
       </section>
