@@ -135,7 +135,7 @@ export const LandingPage = () => {
             <CategoryItem icon={Cloud} title={t('cat_devops')} desc="Docker, K8s, AWS, CI/CD" />
             <CategoryItem icon={Database} title={t('cat_db')} desc="PostgreSQL, ML, Big Data" />
             <CategoryItem icon={ShieldCheck} title={t('cat_testing')} desc="Auto-tests, Manual QA" />
-            <CategoryItem icon={Layers} title={t('cat_outsourcing')} desc="IT-аутсорсинг / консалтинг" />
+            <CategoryItem icon={Layers} title={t('cat_outsourcing')} desc={t('cat_outsourcing')} />
             <CategoryItem icon={Zap} title={t('cat_automation')} desc="Chatbots, AI Integrations" />
           </div>
         </div>
@@ -248,7 +248,7 @@ export const LandingPage = () => {
             </div>
             <div className="flex items-center gap-2 px-6 py-2 bg-white/10 rounded-full text-[10px] font-black uppercase">
                <Star className="w-3.5 h-3.5 text-orange-400 fill-current" />
-               <span>4.9/5 Average Rating</span>
+               <span>{t('average_rating')}</span>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -291,7 +291,7 @@ export const LandingPage = () => {
             </div>
           </div>
           <div className="space-y-6">
-            <h4 className="font-black uppercase italic text-xs tracking-widest text-gray-400">Platform</h4>
+            <h4 className="font-black uppercase italic tracking-tighter mb-6">{t('platform')}</h4>
             <div className="flex flex-col gap-4 text-sm font-bold uppercase text-gray-500">
               <a href="#specialists" className="hover:text-black transition-colors">{t('find_talent')}</a>
               <a href="#post-project" className="hover:text-black transition-colors">{t('find_work')}</a>
@@ -299,14 +299,14 @@ export const LandingPage = () => {
             </div>
           </div>
           <div className="space-y-6">
-            <h4 className="font-black uppercase italic text-xs tracking-widest text-gray-400">Support</h4>
+            <h4 className="font-black uppercase italic tracking-tighter mb-6">{t('support')}</h4>
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1">
-                <span className="text-[10px] font-black uppercase text-gray-400">Email</span>
+                <span className="text-[10px] font-black uppercase text-gray-400">{t('email')}</span>
                 <a href="mailto:support@armfreelance.com" className="text-sm font-bold hover:text-indigo-600 transition-colors">support@armfreelance.com</a>
               </div>
               <div className="flex flex-col gap-1">
-                <span className="text-[10px] font-black uppercase text-gray-400">Telegram</span>
+                <span className="text-[10px] font-black uppercase text-gray-400">{t('telegram')}</span>
                 <a href="https://t.me/armfreelance" className="text-sm font-bold hover:text-indigo-600 transition-colors">@armfreelance_support</a>
               </div>
               <button className="btn-capsule py-4 text-[10px] uppercase tracking-[0.2em] w-full mt-4 bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all flex items-center justify-center gap-2">

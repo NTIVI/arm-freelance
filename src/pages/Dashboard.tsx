@@ -71,10 +71,10 @@ export const Dashboard = () => {
         <header className="flex items-center justify-between">
           <div className="space-y-1">
             <h1 className="text-4xl font-black italic uppercase tracking-tighter">
-              {activeTab === 'browse' ? (user?.role === 'client' ? 'Find IT Talent' : 'Browse IT Projects') : activeTab === 'my-work' ? 'My Workspace' : 'Settings'}
+              {activeTab === 'browse' ? (user?.role === 'client' ? t('find_it_talent') : t('browse_it_projects')) : activeTab === 'my-work' ? t('my_workspace') : t('settings')}
             </h1>
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-              {user?.role === 'client' ? 'Client Dashboard' : 'Freelancer Dashboard'} • {new Date().toLocaleDateString()}
+              {user?.role === 'client' ? t('client_dashboard') : t('freelancer_dashboard')} • {new Date().toLocaleDateString()}
             </p>
           </div>
 
@@ -84,13 +84,13 @@ export const Dashboard = () => {
               to="/" 
               className="px-6 py-2 bg-black/5 border border-black/10 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-black/10 transition-all flex items-center gap-2"
             >
-              Main Page
+              {t('main_page')}
             </Link>
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input 
                 type="text" 
-                placeholder={filterType === 'jobs' ? "Search IT projects..." : "Search developers, DevOps, designers..."} 
+                placeholder={filterType === 'jobs' ? t('search_projects_placeholder') : t('search_talent_placeholder')} 
                 className="input-capsule pl-11 w-64 shadow-sm"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
@@ -98,7 +98,7 @@ export const Dashboard = () => {
             </div>
             {user?.role === 'client' && (
               <Link to="/post-job" className="btn-capsule">
-                <Plus className="w-4 h-4" /> Post IT Project
+                <Plus className="w-4 h-4" /> {t('post_it_project')}
               </Link>
             )}
           </div>
@@ -179,8 +179,8 @@ export const Dashboard = () => {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <StatBox label={user?.role === 'client' ? "Spent" : "Earned"} value={user?.role === 'client' ? "$45.2k" : "$12.4k"} />
-                <StatBox label="Success" value="100%" />
+                <StatBox label={user?.role === 'client' ? t('spent') : t('earned')} value={user?.role === 'client' ? "$45.2k" : "$12.4k"} />
+                <StatBox label={t('success')} value="100%" />
               </div>
 
               <div className="pt-6 border-t border-black/5 space-y-4">
@@ -206,7 +206,7 @@ export const Dashboard = () => {
                  <p className="text-xs text-white/70 leading-relaxed font-medium">{t('help_me_choose_desc')}</p>
                </div>
                <button className="w-full py-4 bg-white text-indigo-600 rounded-3xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-100 transition-all">
-                 Request Consultation
+                 {t('request_consultation')}
                </button>
             </div>
           </div>
@@ -303,8 +303,8 @@ const MyJobCard = ({ job }: any) => {
       <span className="px-4 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-full text-[10px] font-black uppercase">{job.status}</span>
     </div>
     <div className="flex items-center gap-8">
-      <StatBox label="Proposals" value={job.proposalsCount} />
-      <StatBox label="Budget" value={`$${job.budget}`} />
+      <StatBox label={t('proposals_count')} value={job.proposalsCount} />
+      <StatBox label={t('budget')} value={`$${job.budget}`} />
     </div>
     <div className="flex gap-4">
       <button className="btn-capsule flex-1 justify-center">{t('review_bids')} ({job.proposalsCount})</button>
@@ -351,7 +351,7 @@ const ClientProposalCard = ({ proposal, job }: any) => {
     <p className="text-gray-500 text-xs font-medium leading-relaxed italic line-clamp-3">"{proposal.coverLetter}"</p>
     <div className="flex gap-4 pt-4">
        <button className="btn-capsule flex-1 justify-center bg-emerald-600 hover:bg-emerald-700">{t('approve_and_hire')}</button>
-       <button className="btn-ghost flex-1 justify-center bg-white border border-black/10">Message</button>
+       <button className="btn-ghost flex-1 justify-center bg-white border border-black/10">{t('message')}</button>
     </div>
   </div>
   );
