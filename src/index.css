@@ -89,30 +89,30 @@ input, textarea, select {
 /* Layout */
 .app-container {
   display: grid;
-  grid-template-columns: 350px 1fr;
+  grid-template-columns: 280px 1fr;
   height: 100vh;
-  padding: 3rem;
-  gap: 3rem;
+  padding: 2rem;
+  gap: 2rem;
 }
 
 .main-content {
   display: grid;
   grid-template-rows: auto 1fr;
-  gap: 3rem;
+  gap: 2rem;
   overflow: hidden;
 }
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 1fr 450px;
-  gap: 3rem;
+  grid-template-columns: 1fr 380px;
+  gap: 2rem;
   overflow-y: auto;
   padding-right: 1rem;
 }
 
 @media (min-width: 1536px) {
   html {
-    font-size: 20px;
+    font-size: 18px;
   }
 }
 

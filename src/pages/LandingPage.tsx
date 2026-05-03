@@ -84,7 +84,7 @@ export const LandingPage = () => {
               <span>Premium IT Ecosystem in Armenia</span>
             </div>
             
-            <h1 className="text-5xl md:text-9xl lg:text-[10rem] font-black leading-[0.85] tracking-tighter text-black">
+            <h1 className="text-5xl md:text-8xl lg:text-[7rem] font-black leading-[0.85] tracking-tighter text-black">
               {t('hero_title').split(' ').slice(0, -1).join(' ')} <br />
               <span className="text-gray-400">{t('hero_title').split(' ').slice(-1)}</span>
             </h1>

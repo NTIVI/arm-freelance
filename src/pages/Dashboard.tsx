@@ -72,7 +72,7 @@ export const Dashboard = () => {
       <main className="main-content">
         <header className="flex items-center justify-between">
           <div className="space-y-1">
-            <h1 className="text-6xl font-black italic uppercase tracking-tighter">
+            <h1 className="text-5xl font-black italic uppercase tracking-tighter">
               {activeTab === 'browse' ? (user?.role === 'client' ? t('find_it_talent') : t('browse_it_projects')) : activeTab === 'my-work' ? t('my_workspace') : t('settings')}
             </h1>
             <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
@@ -224,7 +224,7 @@ const SidebarItem = ({ active, icon: Icon, onClick, label }: any) => {
     onClick={onClick}
     className={`w-full flex flex-col items-center gap-1 p-4 rounded-3xl transition-all ${active ? 'bg-black text-white shadow-xl shadow-black/20 scale-105' : 'text-gray-400 hover:text-black hover:bg-black/5'}`}
   >
-    <Icon className="w-8 h-8" />
+    <Icon className="w-7 h-7" />
     <span className="text-[10px] font-black uppercase tracking-widest">{label}</span>
   </button>
   );
@@ -361,7 +361,7 @@ const ClientProposalCard = ({ proposal, job }: any) => {
 
 const StatBox = ({ label, value }: any) => (
   <div>
-    <p className="text-3xl font-black tracking-tighter italic">{value}</p>
+    <p className="text-2xl font-black tracking-tighter italic">{value}</p>
     <p className="text-[11px] font-bold uppercase text-gray-400 tracking-widest">{label}</p>
   </div>
 )
