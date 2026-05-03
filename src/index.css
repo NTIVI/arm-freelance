@@ -6,12 +6,12 @@
 
 :root {
   --primary: #000000;
-  --secondary: #374151;
+  --secondary: #000000;
   --background: #f3f4f6;
   --glass-bg: rgba(255, 255, 255, 0.4);
   --glass-border: rgba(255, 255, 255, 0.5);
   --text-main: #000000;
-  --text-muted: #4b5563;
+  --text-muted: #000000;
   --radius: 2rem;
 }
 
@@ -19,19 +19,14 @@ body {
   margin: 0;
   font-family: 'Inter', sans-serif;
   background: radial-gradient(circle at top left, #ffffff, #e5e7eb);
-  color: #374151;
+  color: #000000;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
-/* Map bright tailwind colors to black */
-[class*="text-indigo-"], [class*="text-emerald-"], [class*="text-orange-"], [class*="text-pink-"], [class*="text-blue-"] {
+/* Map bright tailwind colors and grays to black */
+[class*="text-indigo-"], [class*="text-emerald-"], [class*="text-orange-"], [class*="text-pink-"], [class*="text-blue-"], [class*="text-gray-"] {
   color: #000000 !important;
-}
-
-/* Ensure grays are dark gray */
-[class*="text-gray-"] {
-  color: #4b5563 !important;
 }
 
 .text-white {
@@ -42,24 +37,16 @@ body {
   color: #000000 !important;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6, p, span, label, a {
   color: #000000;
-}
-
-p, span, label {
-  color: #374151;
 }
 
 h1 span, h2 span, h3 span, h4 span, h5 span, h6 span {
   color: inherit;
 }
 
-a {
-  color: #000000;
-}
-
 a:hover {
-  color: #4b5563;
+  color: #000000;
 }
 
 @layer components {
@@ -69,11 +56,11 @@ a:hover {
 
   /* Dark Glassmorphism for Buttons as requested */
   .btn-capsule {
-    @apply px-6 py-2 bg-black/90 backdrop-blur-md border border-white/10 text-white rounded-full font-bold transition-all active:scale-95 hover:bg-black flex items-center gap-2 shadow-xl shadow-black/10;
+    @apply px-6 py-2 bg-black border border-black text-white rounded-full font-bold transition-all active:scale-95 hover:bg-gray-900 flex items-center gap-2 shadow-xl shadow-black/20;
   }
 
   .btn-ghost {
-    @apply px-6 py-2 bg-black/5 border border-black/10 rounded-full font-semibold transition-all hover:bg-black/10 flex items-center gap-2;
+    @apply px-6 py-2 bg-black border border-black text-white rounded-full font-semibold transition-all hover:bg-gray-900 flex items-center gap-2 shadow-xl shadow-black/20;
   }
 
   .input-capsule {
