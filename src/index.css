@@ -6,12 +6,12 @@
 
 :root {
   --primary: #000000;
-  --secondary: #000000;
+  --secondary: #374151;
   --background: #f3f4f6;
   --glass-bg: rgba(255, 255, 255, 0.4);
   --glass-border: rgba(255, 255, 255, 0.5);
   --text-main: #000000;
-  --text-muted: #000000;
+  --text-muted: #4b5563;
   --radius: 2rem;
 }
 
@@ -19,26 +19,47 @@ body {
   margin: 0;
   font-family: 'Inter', sans-serif;
   background: radial-gradient(circle at top left, #ffffff, #e5e7eb);
-  color: #000000;
+  color: #374151;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
-/* Force all utility text colors to black unless explicitly white */
-[class*="text-gray-"], [class*="text-indigo-"], [class*="text-indigo-"], [class*="text-emerald-"], [class*="text-orange-"], [class*="text-pink-"] {
+/* Map bright tailwind colors to black */
+[class*="text-indigo-"], [class*="text-emerald-"], [class*="text-orange-"], [class*="text-pink-"], [class*="text-blue-"] {
   color: #000000 !important;
+}
+
+/* Ensure grays are dark gray */
+[class*="text-gray-"] {
+  color: #4b5563 !important;
 }
 
 .text-white {
   color: #ffffff !important;
 }
 
-h1, h2, h3, h4, h5, h6, p, span, a, label {
+.text-black {
+  color: #000000 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #000000;
+}
+
+p, span, label {
+  color: #374151;
+}
+
+h1 span, h2 span, h3 span, h4 span, h5 span, h6 span {
+  color: inherit;
+}
+
+a {
   color: #000000;
 }
 
 a:hover {
-  color: #000000;
+  color: #4b5563;
 }
 
 @layer components {
