@@ -51,7 +51,26 @@ body {
   }
 }
 
+.bg-mesh {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  background: radial-gradient(circle at 50% -20%, #f3f4f6 0%, #ffffff 100%);
+  overflow: hidden;
+}
 
+.floating-circle {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.01);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: float 25s infinite linear;
+}
+
+@keyframes float {
+  from { transform: translateY(110vh) rotate(0deg); }
+  to { transform: translateY(-20vh) rotate(360deg); }
+}
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
@@ -69,20 +88,4 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #999;
-}
-
-/* Floating Animation */
-@keyframes float {
-  0% { transform: translate(0, 0) rotate(0deg); }
-  33% { transform: translate(30px, -50px) rotate(5deg); }
-  66% { transform: translate(-20px, 20px) rotate(-5deg); }
-  100% { transform: translate(0, 0) rotate(0deg); }
-}
-
-.animate-float {
-  animation: float 20s ease-in-out infinite;
-}
-
-.bg-mesh-circles {
-  @apply fixed inset-0 pointer-events-none overflow-hidden z-0 bg-[#f3f4f6];
 }
