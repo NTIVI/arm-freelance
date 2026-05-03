@@ -198,7 +198,7 @@ const SupportWidget = () => {
 
             <div className="space-y-4 relative z-10">
               <h3 className="font-black uppercase italic text-xl leading-tight">ПОМОЧЬ С ВЫБОРОМ</h3>
-              <p className="text-[11px] font-medium text-white/70 leading-relaxed">
+              <p className="text-[11px] font-medium text-white leading-relaxed">
                 Не уверены, какой специалист нужен? Получите бесплатную 15-минутную консультацию с нашим тех. менеджером.
               </p>
               
