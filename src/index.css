@@ -51,7 +51,11 @@ a:hover {
 
 @layer components {
   .glass-panel {
-    @apply bg-white border-4 border-black rounded-[2rem] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)];
+    @apply bg-white/70 backdrop-blur-xl border-2 border-white/50 rounded-[2.5rem] shadow-[20px_20px_60px_-15px_rgba(0,0,0,0.05)];
+  }
+
+  .glass-panel-dark {
+    @apply bg-black/90 backdrop-blur-xl border border-white/10 rounded-[2.5rem] shadow-2xl;
   }
 
   /* Dark Glassmorphism for Buttons as requested */
