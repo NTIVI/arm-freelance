@@ -12,10 +12,51 @@ interface Translations {
 
 const translations: Translations = {
   // Hero
-  hero_title: { en: 'Top-tier IT Talent for Your Vision', ru: 'IT-таланты высшего уровня для ваших идей', hy: 'Բարձրակարգ ՏՏ տաղանդներ ձեր գաղափարների համար' },
-  hero_subtitle: { en: 'Elite Armenian tech marketplace connecting visionaries with world-class engineers.', ru: 'Элитный маркетплейс Армении, соединяющий визионеров с инженерами мирового уровня.', hy: 'Հայաստանի էլիտար տեխնոլոգիական հարթակ, որը միացնում է տեսլական ունեցողներին աշխարհակարգ ինժեներների հետ:' },
-  find_talent: { en: 'Find Talent', ru: 'Найти талант', hy: 'Գտնել տաղանդ' },
-  post_job: { en: 'Post a Project', ru: 'Разместить проект', hy: 'Տեղադրել նախագիծ' },
+  hero_title: { en: 'High-qualified IT Specialists on Demand.', ru: 'Высококвалифицированные IT-специалисты по запросу.', hy: 'Բարձրորակ ՏՏ մասնագետներ ըստ պահանջի:' },
+  hero_subtitle: { en: 'EVOLVE TOGETHER WITH THE BEST SPECIALISTS IN ARMENIA', ru: 'РАЗВИВАЙТЕСЬ ВМЕСТЕ С ЛУЧШИМИ СПЕЦИАЛИСТАМИ АРМЕНИИ', hy: 'ԶԱՐԳԱՑԵՔ ՀԱՅԱՍՏԱՆԻ ԼԱՎԱԳՈՒՅՆ ՄԱՍՆԱԳԵՏՆԵՐԻ ՀԵՏ' },
+  become_performer: { en: 'Become a Performer', ru: 'СТАТЬ ИСПОЛНИТЕЛЕМ', hy: 'ԴԱՌՆԱԼ ԿԱՏԱՐՈՂ' },
+  become_client_btn: { en: 'Become a Client', ru: 'СТАТЬ ЗАКАЗЧИКОМ', hy: 'ԴԱՌՆԱԼ ՊԱՏՎԻՐԱՏՈՒ' },
+  
+  // Categories
+  categories_title: { en: 'CORE IT DIRECTIONS', ru: 'ОСНОВНЫЕ IT-НАПРАВЛЕНИЯ', hy: 'ՏՏ ՀԻՄՆԱԿԱՆ ՈՒՂՂՈՒԹՅՈՒՆՆԵՐԸ' },
+  categories_subtitle: { en: 'SPECIALIZED SOLUTIONS FOR ANY STACK', ru: 'СПЕЦИАЛИЗИРОВАННЫЕ РЕШЕНИЯ ДЛЯ ЛЮБОГО СТЕКА', hy: 'ՄԱՍՆԱԳԻՏԱՑՎԱԾ ԼՈՒԾՈՒՄՆԵՐ ՑԱՆԿԱՑԱԾ ՍՏԵԿԻ ՀԱՄԱՐ' },
+  cat_web: { en: 'Web Development', ru: 'ВЕБ-РАЗРАБОТКА', hy: 'ՎԵԲ ՄՇԱԿՈՒՄ' },
+  cat_mobile: { en: 'Mobile Apps', ru: 'МОБИЛЬНЫЕ ПРИЛОЖЕНИЯ', hy: 'ՄՈԲԱՅԼ ՀԱՎԵԼՎԱԾՆԵՐ' },
+  cat_backend: { en: 'Backend / API', ru: 'BACKEND / API', hy: 'BACKEND / API' },
+  cat_devops: { en: 'DevOps / Infrastructure', ru: 'DEVOPS / ИНФРАСТРУКТУРА', hy: 'DEVOPS / ԵՆԹԱԿԱՌՈՒՑՎԱԾՔ' },
+  cat_db: { en: 'Databases', ru: 'БАЗЫ ДАННЫХ', hy: 'ՏՎՅԱԼՆԵՐԻ ԲԱԶԱՆԵՐ' },
+  cat_testing: { en: 'Testing / QA', ru: 'ТЕСТИРОВАНИЕ / QA', hy: 'ԹԵՍՏԱՎՈՐՈՒՄ / QA' },
+  cat_outsourcing: { en: 'IT Outsourcing', ru: 'IT-АУТСОРСИНГ', hy: 'ՏՏ ԱՈՒԹՍՈՐՍԻՆԳ' },
+  cat_automation: { en: 'Automation / Chatbots', ru: 'АВТОМАТИЗАЦИЯ / ЧАТ-БОТЫ', hy: 'ԱՎՏՈՄԱՏԱՑՈՒՄ / ՉԱԹ-ԲՈՏԵՐ' },
+
+  // Specialists
+  specialists_title: { en: 'VERIFIED IT SPECIALISTS', ru: 'ПРОВЕРЕННЫЕ IT-СПЕЦИАЛИСТЫ', hy: 'ՍՏՈՒԳՎԱԾ ՏՏ ՄԱՍՆԱԳԵՏՆԵՐ' },
+  specialists_subtitle: { en: 'TOP DEVELOPERS READY TO WORK', ru: 'ТОП-РАЗРАБОТЧИКИ, ГОТОВЫЕ К РАБОТЕ', hy: 'ԼԱՎԱԳՈՒՅՆ ՄՇԱԿՈՂՆԵՐԸ ՊԱՏՐԱՍՏ ԵՆ ԱՇԽԱՏԱՆՔԻ' },
+  view_marketplace: { en: 'VIEW MARKETPLACE', ru: 'СМОТРЕТЬ БИРЖУ', hy: 'ԴԻՏԵԼ ԲՈՐՍԱՆ' },
+  price_from: { en: 'from', ru: 'ОТ', hy: 'ՍԿՍԱԾ' },
+  per_hour: { en: '/hr', ru: '/ЧАС', hy: '/Ժ' },
+  contact_specialist: { en: 'CONTACT', ru: 'СВЯЗАТЬСЯ', hy: 'ԿԱՊՆՎԵԼ' },
+
+  // Order Form
+  post_project_form_title: { en: 'PUBLISH IT ORDER', ru: 'ОПУБЛИКОВАТЬ IT-ЗАКАЗ', hy: 'ՀՐԱՊԱՐԱԿԵԼ ՏՏ ՊԱՏՎԵՐ' },
+  get_started: { en: 'START NOW', ru: 'НАЧАТЬ СЕЙЧАС', hy: 'ՍԿՍԵԼ ՀԻՄԱ' },
+  project_name: { en: 'PROJECT NAME', ru: 'НАЗВАНИЕ ПРОЕКТА', hy: 'ՆԱԽԱԳԾԻ ԱՆՎԱՆՈՒՄԸ' },
+  project_category: { en: 'CATEGORY', ru: 'КАТЕГОРИЯ', hy: 'ԿԱՏԵԳՈՐԻԱ' },
+  project_budget: { en: 'BUDGET (OR "NEGOTIABLE")', ru: 'БЮДЖЕТ (ИЛИ "ДОГОВОРНОЙ")', hy: 'ԲՅՈՒՋԵ (ԿԱՄ «ՊԱՅՄԱՆԱԳՐԱՅԻՆ»)' },
+  project_desc: { en: 'DESCRIPTION (STACK, DEADLINES, REQUIREMENTS)', ru: 'ОПИСАНИЕ (СТЕК, СРОКИ, ТРЕБОВАНИЯ)', hy: 'ՆԿԱՐԱԳՐՈՒԹՅՈՒՆ (ՍՏԵԿ, ԺԱՄԿԵՏՆԵՐ, ՊԱՀԱՆՋՆԵՐ)' },
+  submit_project: { en: 'PUBLISH PROJECT', ru: 'ОПУБЛИКОВАТЬ ПРОЕКТ', hy: 'ՀՐԱՊԱՐԱԿԵԼ ՆԱԽԱԳԻԾԸ' },
+
+  // Testimonials
+  testimonials_title: { en: 'VOICES OF SUCCESS', ru: 'ГОЛОСА УСПЕХА', hy: 'ՀԱՋՈՂՈՒԹՅԱՆ ՁԱՅՆԵՐԸ' },
+  testimonials_subtitle: { en: 'CLIENT REVIEWS ABOUT SPECIALISTS WORK', ru: 'ОТЗЫВЫ ЗАКАЗЧИКОВ О РАБОТЕ СПЕЦИАЛИСТОВ', hy: 'ՊԱՏՎԻՐԱՏՈՒՆԵՐԻ ԿԱՐԾԻՔՆԵՐԸ ՄԱՍՆԱԳԵՏՆԵՐԻ ԱՇԽԱՏԱՆՔԻ ՄԱՍԻՆ' },
+  average_rating: { en: 'AVERAGE RATING 4.9/5', ru: 'СРЕДНИЙ РЕЙТИНГ 4.9/5', hy: 'ՄԻՋԻՆ ՎԱՐԿԱՆԻՇԸ 4.9/5' },
+
+  // Footer
+  platform: { en: 'PLATFORM', ru: 'ПЛАТФОРМА', hy: 'ՀԱՐԹԱԿ' },
+  support: { en: 'SUPPORT', ru: 'САППОРТ', hy: 'ԱՋԱԿՑՈՒԹՅՈՒՆ' },
+  feedback: { en: 'FEEDBACK', ru: 'ОБРАТНАЯ СВЯЗЬ', hy: 'ՀԵՏԱԴԱՐՁ ԿԱՊ' },
+  all_rights: { en: 'All rights reserved.', ru: 'Все права защищены.', hy: 'Բոլոր իրավունքները պաշտպանված են:' },
+  made_by: { en: 'Made by', ru: 'Сделано командой', hy: 'Պատրաստված է' },
   
   // Auth
   login: { en: 'Login', ru: 'Вход', hy: 'Մուտք' },
@@ -34,6 +75,8 @@ const translations: Translations = {
   responses: { en: 'Responses', ru: 'Отклики', hy: 'Արձագանքներ' },
   chats: { en: 'Chats', ru: 'Чаты', hy: 'Չաթեր' },
   create_ad: { en: 'Create Project', ru: 'Создать объявление', hy: 'Ստեղծել հայտարարություն' },
+  find_work: { en: 'Find Work', ru: 'Найти работу', hy: 'Գտնել աշխատանք' },
+  personal_account: { en: 'Dashboard', ru: 'Личный кабинет', hy: 'Անձնական էջ' },
   
   // Profile
   edit_profile: { en: 'Edit Profile', ru: 'Редактировать профиль', hy: 'Խմբագրել պրոֆիլը' },

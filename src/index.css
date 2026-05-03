@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,93 +6,86 @@
 
 :root {
   --primary: #000000;
-  --accent: #6366f1;
-  --bg-deep: #f9fafb;
+  --accent: #3b82f6;
+  --bg-deep: #fcfcfc;
   --bg-surface: #ffffff;
   --text-main: #000000;
   --text-muted: #6b7280;
-  --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(0, 0, 0, 0.05);
 }
 
 body {
   background-color: var(--bg-deep);
   color: var(--text-main);
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Inter', sans-serif;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 @layer components {
   .glass-panel {
-    @apply bg-white border border-black/5 rounded-[2.5rem] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)];
+    @apply bg-white border border-white/80 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.04)] backdrop-blur-xl;
   }
 
-  .btn-capsule {
-    @apply flex items-center gap-2 px-8 py-4 bg-black text-white rounded-full font-black uppercase tracking-widest hover:bg-zinc-800 hover:scale-[1.02] active:scale-95 transition-all duration-300 shadow-xl shadow-black/10;
+  .nav-pill {
+    @apply bg-white/80 border border-white/60 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.06)] backdrop-blur-2xl;
   }
 
-  .btn-ghost {
-    @apply flex items-center gap-2 px-8 py-4 bg-transparent border border-black/10 text-black rounded-full font-black uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300;
+  .btn-black {
+    @apply flex items-center gap-2 px-10 py-5 bg-black text-white rounded-full font-black uppercase tracking-widest hover:bg-zinc-800 hover:scale-[1.02] active:scale-95 transition-all duration-300 shadow-xl shadow-black/10;
   }
 
-  .input-capsule {
-    @apply bg-zinc-50 border border-black/5 rounded-full px-8 py-5 outline-none focus:border-black focus:bg-white transition-all text-black placeholder:text-gray-400;
+  .btn-white {
+    @apply flex items-center gap-2 px-10 py-5 bg-white border border-black/10 text-black rounded-full font-black uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300;
   }
 
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-black via-black to-zinc-400;
+  .input-premium {
+    @apply bg-[#f8f9fa] border border-transparent rounded-2xl px-6 py-4 outline-none focus:bg-white focus:border-black/10 transition-all text-black font-medium placeholder:text-gray-400 placeholder:font-medium;
   }
-}
 
-/* Layout */
-.app-container {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  height: 100vh;
-  padding: 1.5rem;
-  gap: 1.5rem;
-  background-color: #f3f4f6;
-}
+  .heading-hero {
+    @apply text-5xl md:text-7xl lg:text-8xl font-black italic tracking-tighter leading-[0.9] text-black;
+  }
 
-.main-content {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  gap: 1.5rem;
-  overflow: hidden;
-}
-
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 1.5rem;
-  overflow-y: auto;
-  padding-right: 0.5rem;
+  .subheading-premium {
+    @apply text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-gray-400;
+  }
 }
 
 .bg-mesh {
   position: fixed;
   inset: 0;
   z-index: -10;
-  background-color: #ffffff;
+  background: radial-gradient(circle at 50% -20%, #f3f4f6 0%, #ffffff 100%);
   overflow: hidden;
 }
 
 .floating-circle {
   position: absolute;
-  background: rgba(0, 0, 0, 0.03);
+  background: rgba(0, 0, 0, 0.01);
   border-radius: 50%;
   pointer-events: none;
-  animation: float 20s infinite linear;
+  animation: float 25s infinite linear;
 }
 
 @keyframes float {
-  from { transform: translateY(100vh) rotate(0deg); }
-  to { transform: translateY(-100px) rotate(360deg); }
+  from { transform: translateY(110vh) rotate(0deg); }
+  to { transform: translateY(-20vh) rotate(360deg); }
 }
 
-@layer components {
-  .glass-panel {
-    @apply bg-white border border-black/5 rounded-[2.5rem] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] backdrop-blur-md;
-  }
-  /* ... rest of components ... */
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #999;
 }
