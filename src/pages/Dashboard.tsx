@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { 
   Search, 
   LayoutGrid, 
@@ -23,6 +23,7 @@ import { useAppContext } from '../context/AppContext'
 import { useLanguage } from '../context/LanguageContext'
 
 export const Dashboard = () => {
+  const navigate = useNavigate();
   const { t } = useLanguage();
   const { user, logout, jobs, proposals, specialists, applyToJob, hireSpecialist, completeJob, addJob } = useAppContext();
   const [activeTab, setActiveTab] = useState<'browse' | 'my-work' | 'settings'>('browse');
@@ -116,70 +117,53 @@ export const Dashboard = () => {
                 onChange={e => setSearch(e.target.value)}
               />
             </div>
-            {user?.role === 'client' && (
-              <Link to="/post-job" className="btn-capsule">
-                <Plus className="w-4 h-4" /> {t('post_it_project')}
-              </Link>
-            )}
           </div>
         </header>
 
-        <div className="dashboard-grid overflow-hidden">
-          <div className="space-y-6 overflow-y-auto pr-4 pb-12">
-            {activeTab === 'browse' && user?.role === 'client' && (
-              <div className="flex gap-4 p-1 bg-black/5 rounded-full w-fit mb-8">
-                 <button onClick={() => setFilterType('specialists')} className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${filterType === 'specialists' ? 'bg-black text-white shadow-lg' : 'text-gray-400 hover:text-black'}`}>{t('tab_specialists')}</button>
-                 <button onClick={() => setFilterType('jobs')} className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${filterType === 'jobs' ? 'bg-black text-white shadow-lg' : 'text-gray-400 hover:text-black'}`}>{t('tab_my_postings')}</button>
+        <div className="dashboard-grid">
+          <div className="space-y-8">
+            {activeTab === 'browse' && (
+              <div className="space-y-8">
+                <div className="flex gap-4 p-1 bg-black/5 rounded-full w-fit">
+                   <button onClick={() => setFilterType('specialists')} className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${filterType === 'specialists' ? 'bg-black text-white shadow-xl' : 'text-gray-400 hover:text-black'}`}>{t('talents')}</button>
+                   <button onClick={() => setFilterType('jobs')} className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${filterType === 'jobs' ? 'bg-black text-white shadow-xl' : 'text-gray-400 hover:text-black'}`}>{t('projects')}</button>
+                </div>
+
+                <div className="grid grid-cols-1 gap-6">
+                  {filterType === 'jobs' ? (
+                    filteredJobs.map(job => <JobCard key={job.id} job={job} />)
+                  ) : (
+                    filteredSpecialists.map(spec => <SpecialistCard key={spec.id} spec={spec} />)
+                  )}
+                </div>
               </div>
             )}
 
-            <AnimatePresence mode="wait">
-              {activeTab === 'browse' && (
-                <motion.div key="browse" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-                  {user?.role === 'freelancer' ? (
-                    filteredJobs.map(job => (
-                      <JobCard key={job.id} job={job} />
-                    ))
-                  ) : (
-                    filterType === 'specialists' ? (
-                      <div className="grid grid-cols-1 gap-6">
-                        {filteredSpecialists.map(spec => (
-                          <SpecialistCard key={spec.id} spec={spec} />
-                        ))}
-                      </div>
-                    ) : (
-                      myJobs.map(job => (
-                        <MyJobCard key={job.id} job={job} />
-                      ))
-                    )
-                  )}
-                </motion.div>
-              )}
+            {activeTab === 'my-work' && (
+              <div className="space-y-12">
+                <div className="space-y-6">
+                   <h2 className="text-2xl font-black uppercase italic tracking-tighter">{user.role === 'client' ? t('my_posted_jobs') : t('active_applications')}</h2>
+                   <div className="grid grid-cols-1 gap-6">
+                     {user.role === 'client' ? (
+                       myJobs.length > 0 ? myJobs.map(job => <MyJobCard key={job.id} job={job} />) : <EmptyState message={t('no_jobs_posted')} />
+                     ) : (
+                       myProposals.length > 0 ? myProposals.map(prop => <ProposalCard key={prop.id} proposal={prop} job={jobs.find(j => j.id === prop.jobId)} />) : <EmptyState message={t('no_applications')} />
+                     )}
+                   </div>
+                </div>
 
-              {activeTab === 'my-work' && (
-                <motion.div key="work" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-                  {user?.role === 'freelancer' ? (
-                    <div className="space-y-6">
-                      <h3 className="text-xl font-black italic uppercase">{t('tab_my_applications')}</h3>
-                      {myProposals.length === 0 ? (
-                        <EmptyState message="You haven't applied to any IT projects yet." />
-                      ) : (
-                        myProposals.map(p => (
-                          <ProposalCard key={p.id} proposal={p} job={jobs.find(j => j.id === p.jobId)!} />
-                        ))
-                      )}
-                    </div>
-                  ) : (
-                    <div className="space-y-6">
-                      <h3 className="text-xl font-black italic uppercase">{t('tab_project_proposals')}</h3>
-                      {proposals.filter(p => jobs.find(j => j.id === p.jobId)?.clientId === user.id).map(p => (
-                        <ClientProposalCard key={p.id} proposal={p} job={jobs.find(j => j.id === p.jobId)!} />
-                      ))}
-                    </div>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
+                {user.role === 'client' && (
+                  <div className="space-y-6">
+                     <h2 className="text-2xl font-black uppercase italic tracking-tighter">{t('recent_proposals')}</h2>
+                     <div className="grid grid-cols-1 gap-6">
+                       {proposals.filter(p => myJobs.some(j => j.id === p.jobId)).map(p => (
+                         <ClientProposalCard key={p.id} proposal={p} job={jobs.find(j => j.id === p.jobId)} navigate={navigate} />
+                       ))}
+                     </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Right Column: Profile & Stats */}
@@ -232,184 +216,7 @@ export const Dashboard = () => {
           </div>
         </div>
       </main>
-    </div>
-  )
-}
 
-const SidebarItem = ({ active, icon: Icon, onClick, label }: any) => {
-  return (
-  <button 
-    onClick={onClick}
-    className={`w-full flex flex-col items-center gap-1 p-4 rounded-3xl transition-all ${active ? 'bg-black text-white shadow-xl shadow-black/20 scale-105' : 'text-gray-400 hover:text-black hover:bg-black/5'}`}
-  >
-    <Icon className="w-7 h-7" />
-    <span className="text-[10px] font-black uppercase tracking-widest">{label}</span>
-  </button>
-  );
-}
-
-const JobCard = ({ job }: any) => {
-  const { t } = useLanguage();
-  return (
-  <Link to={`/jobs/${job.id}`} className="block glass-panel p-8 rounded-[3rem] hover:scale-[1.01] transition-all group border border-white shadow-sm">
-    <div className="flex justify-between items-start mb-6">
-      <div className="space-y-2">
-        <span className="px-4 py-1.5 bg-indigo-50 text-indigo-600 rounded-full text-[11px] font-black uppercase tracking-widest">{job.category}</span>
-        <h3 className="text-3xl font-black uppercase italic text-black group-hover:text-indigo-600 transition-colors">{job.title}</h3>
-      </div>
-      <div className="text-right">
-        <p className="text-3xl font-black italic tracking-tighter">${job.budget}</p>
-        <p className="text-[11px] font-bold text-gray-400 uppercase">{job.type}</p>
-      </div>
-    </div>
-    <p className="text-gray-500 text-base line-clamp-2 mb-8">{job.description}</p>
-    <div className="flex items-center justify-between pt-6 border-t border-black/5">
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center font-bold text-xs">{job.clientName[0]}</div>
-        <span className="text-[10px] font-black uppercase italic">{job.clientName}</span>
-      </div>
-      <div className="flex items-center gap-4 text-gray-400">
-        <div className="flex items-center gap-1.5"><Clock className="w-4 h-4" /><span className="text-xs font-bold">New</span></div>
-        <div className="flex items-center gap-1.5"><Send className="w-4 h-4" /><span className="text-xs font-bold">{job.proposalsCount} bids</span></div>
-      </div>
-    </div>
-  </Link>
-  );
-}
-
-const SpecialistCard = ({ spec }: any) => {
-  const { t } = useLanguage();
-  return (
-  <div className="glass-panel p-8 rounded-[3rem] space-y-6 hover:scale-[1.01] transition-all border border-white shadow-sm">
-    <div className="flex justify-between items-start">
-      <div className="flex gap-6">
-        <div className="w-20 h-20 bg-black rounded-[2rem] flex items-center justify-center text-white text-3xl font-black shadow-xl">
-          {spec.avatar}
-        </div>
-        <div className="space-y-2">
-           <div className="flex items-center gap-2">
-              <h3 className="text-2xl font-black uppercase italic text-black">{spec.fullName}</h3>
-              <div className="flex items-center gap-1 text-orange-400">
-                <Star className="w-4 h-4 fill-current" />
-                <span className="text-xs font-black text-black">{spec.rating}</span>
-              </div>
-           </div>
-           <p className="text-indigo-600 text-xs font-black uppercase tracking-widest">{spec.title}</p>
-           <div className="flex flex-wrap gap-2 pt-2">
-             {spec.skills.map((s: string) => <span key={s} className="px-3 py-1 bg-black/5 rounded-full text-[9px] font-bold uppercase">{s}</span>)}
-           </div>
-        </div>
-      </div>
-      <div className="text-right">
-        <p className="text-3xl font-black italic tracking-tighter text-black">${spec.price}</p>
-        <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Starting from</p>
-      </div>
-    </div>
-    <div className="flex gap-3 pt-4">
-       <button className="btn-capsule flex-1 justify-center">{t('hire_specialist')}</button>
-       <button className="btn-ghost flex-1 justify-center bg-white border border-black/10">{t('view_portfolio')}</button>
-       <button className="w-12 h-12 rounded-full bg-black/5 flex items-center justify-center hover:bg-black transition-all hover:text-white group"><Github className="w-5 h-5" /></button>
-    </div>
-  </div>
-  );
-}
-
-const MyJobCard = ({ job }: any) => {
-  const { t } = useLanguage();
-  return (
-  <div className="glass-panel p-8 rounded-[3rem] space-y-6 border border-white">
-    <div className="flex justify-between items-center">
-      <h3 className="text-xl font-black uppercase italic">{job.title}</h3>
-      <span className="px-5 py-2 bg-emerald-500/10 text-emerald-600 rounded-full text-xs font-black uppercase">{job.status}</span>
-    </div>
-    <div className="flex items-center gap-8">
-      <StatBox label={t('proposals_count')} value={job.proposalsCount} />
-      <StatBox label={t('budget')} value={`$${job.budget}`} />
-    </div>
-    <div className="flex gap-4">
-      <button className="btn-capsule flex-1 justify-center">{t('review_bids')} ({job.proposalsCount})</button>
-      <button className="w-12 h-12 rounded-full border border-black/10 flex items-center justify-center hover:bg-black/5 transition-all"><MoreVertical className="w-5 h-5" /></button>
-    </div>
-  </div>
-  );
-}
-
-const ProposalCard = ({ proposal, job }: any) => {
-  const { t } = useLanguage();
-  return (
-  <div className="glass-panel p-8 rounded-[3rem] space-y-4 border-l-4 border-black">
-    <div className="flex justify-between items-start">
-      <div>
-        <p className="text-[10px] font-black uppercase text-gray-400 mb-1">{t('applied_for_project')}</p>
-        <h4 className="text-lg font-black uppercase italic">{job?.title}</h4>
-      </div>
-      <div className="text-right">
-        <p className="text-xl font-black italic">${proposal.bid}</p>
-        <span className="text-[9px] font-bold text-indigo-500 uppercase">{t('awaiting_client_review')}</span>
-      </div>
-    </div>
-  </div>
-  );
-}
-
-const ClientProposalCard = ({ proposal, job }: any) => {
-  const { t } = useLanguage();
-  return (
-  <div className="glass-panel p-8 rounded-[3rem] space-y-6 hover:border-black transition-all border border-transparent">
-    <div className="flex justify-between items-start">
-      <div className="flex gap-4">
-        <div className="w-12 h-12 bg-black rounded-2xl flex items-center justify-center text-white font-black text-xl">{proposal.freelancerName[0]}</div>
-        <div>
-           <h4 className="text-lg font-black uppercase italic">{proposal.freelancerName}</h4>
-           <p className="text-[10px] font-bold text-gray-400 uppercase">Bid for: {job?.title}</p>
-        </div>
-      </div>
-      <div className="text-right">
-         <p className="text-2xl font-black italic tracking-tighter">${proposal.bid}</p>
-      </div>
-    </div>
-    <p className="text-gray-500 text-xs font-medium leading-relaxed italic line-clamp-3">"{proposal.coverLetter}"</p>
-    <div className="flex gap-4 pt-4">
-       <button 
-         onClick={() => navigate(`/jobs/${job.id}`)}
-         className="btn-capsule flex-1 justify-center bg-emerald-600 hover:bg-emerald-700"
-       >
-         {t('approve_and_hire')}
-       </button>
-       <button className="btn-ghost flex-1 justify-center bg-white border border-black/10">{t('message')}</button>
-    </div>
-  </div>
-  );
-}
-
-const StatBox = ({ label, value }: any) => (
-  <div>
-    <p className="text-2xl font-black tracking-tighter italic">{value}</p>
-    <p className="text-[11px] font-bold uppercase text-gray-400 tracking-widest">{label}</p>
-  </div>
-)
-
-const EmptyState = ({ message }: any) => (
-  <div className="p-12 text-center space-y-4">
-    <div className="w-16 h-16 bg-black/5 rounded-full flex items-center justify-center mx-auto text-gray-300">
-      <Briefcase className="w-8 h-8" />
-    </div>
-    <p className="text-sm font-medium text-gray-400">{message}</p>
-  </div>
-)
-
-const languages = [{ id: 'en', label: 'EN' }, { id: 'ru', label: 'RU' }, { id: 'hy', label: 'HY' }];
-
-const LanguageSwitcher = () => {
-  const { lang, setLang } = useLanguage();
-  return (
-    <div className="flex items-center gap-1 bg-black/5 p-1 rounded-full">
-      {languages.map((l) => (
-        <button key={l.id} onClick={() => setLang(l.id as any)} className={`relative px-4 py-1.5 rounded-full text-[10px] font-black uppercase transition-all z-10 ${lang === l.id ? 'text-white' : 'text-gray-400 hover:text-black'}`}>
-          {lang === l.id && <motion.div layoutId="activeLangDashboard" className="absolute inset-0 bg-black rounded-full -z-10 shadow-lg" transition={{ type: "spring", bounce: 0.2, duration: 0.6 }} />}
-          {l.label}
-        </button>
-      ))}
       {/* Post Job Modal */}
       <AnimatePresence>
         {showPostModal && (
@@ -511,6 +318,189 @@ const LanguageSwitcher = () => {
           </div>
         )}
       </AnimatePresence>
+    </div>
+  );
+}
+
+const SidebarItem = ({ active, icon: Icon, onClick, label }: any) => (
+  <button 
+    onClick={onClick}
+    className={`w-full flex flex-col items-center gap-1 p-4 rounded-3xl transition-all ${active ? 'bg-black text-white shadow-xl shadow-black/20 scale-105' : 'text-gray-400 hover:text-black hover:bg-black/5'}`}
+  >
+    <Icon className="w-7 h-7" />
+    <span className="text-[10px] font-black uppercase tracking-widest">{label}</span>
+  </button>
+);
+
+const JobCard = ({ job }: any) => (
+  <Link to={`/jobs/${job.id}`} className="block glass-panel p-8 rounded-[3rem] hover:scale-[1.01] transition-all group border border-white shadow-sm">
+    <div className="flex justify-between items-start mb-6">
+      <div className="space-y-2">
+        <span className="px-4 py-1.5 bg-indigo-50 text-indigo-600 rounded-full text-[11px] font-black uppercase tracking-widest">{job.category}</span>
+        <h3 className="text-3xl font-black uppercase italic text-black group-hover:text-indigo-600 transition-colors">{job.title}</h3>
+      </div>
+      <div className="text-right">
+        <p className="text-3xl font-black italic tracking-tighter">${job.budget}</p>
+        <p className="text-[11px] font-bold text-gray-400 uppercase">{job.type}</p>
+      </div>
+    </div>
+    <p className="text-gray-500 text-base line-clamp-2 mb-8">{job.description}</p>
+    <div className="flex items-center justify-between pt-6 border-t border-black/5">
+      <div className="flex items-center gap-3">
+        <div className="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center font-bold text-xs">{job.clientName[0]}</div>
+        <span className="text-[10px] font-black uppercase italic">{job.clientName}</span>
+      </div>
+      <div className="flex items-center gap-4 text-gray-400">
+        <div className="flex items-center gap-1.5"><Clock className="w-4 h-4" /><span className="text-xs font-bold">New</span></div>
+        <div className="flex items-center gap-1.5"><Send className="w-4 h-4" /><span className="text-xs font-bold">{job.proposalsCount} bids</span></div>
+      </div>
+    </div>
+  </Link>
+);
+
+const SpecialistCard = ({ spec }: any) => {
+  const { t } = useLanguage();
+  return (
+    <div className="glass-panel p-8 rounded-[3rem] space-y-6 hover:scale-[1.01] transition-all border border-white shadow-sm">
+      <div className="flex justify-between items-start">
+        <div className="flex gap-6">
+          <div className="w-20 h-20 bg-black rounded-[2rem] flex items-center justify-center text-white text-3xl font-black shadow-xl">
+            {spec.avatar}
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <h3 className="text-2xl font-black uppercase italic text-black">{spec.fullName}</h3>
+              <div className="flex items-center gap-1 text-orange-400">
+                <Star className="w-4 h-4 fill-current" />
+                <span className="text-xs font-black text-black">{spec.rating}</span>
+              </div>
+            </div>
+            <p className="text-indigo-600 text-xs font-black uppercase tracking-widest">{spec.title}</p>
+            <div className="flex flex-wrap gap-2 pt-2">
+              {spec.skills.map((s: string) => <span key={s} className="px-3 py-1 bg-black/5 rounded-full text-[9px] font-bold uppercase">{s}</span>)}
+            </div>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-3xl font-black italic tracking-tighter text-black">${spec.price}</p>
+          <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Starting from</p>
+        </div>
+      </div>
+      <div className="flex gap-3 pt-4">
+        <button className="btn-capsule flex-1 justify-center">{t('hire_specialist')}</button>
+        <button className="btn-ghost flex-1 justify-center bg-white border border-black/10">{t('view_portfolio')}</button>
+        <button className="w-12 h-12 rounded-full bg-black/5 flex items-center justify-center hover:bg-black transition-all hover:text-white group"><Github className="w-5 h-5" /></button>
+      </div>
+    </div>
+  );
+};
+
+const MyJobCard = ({ job }: any) => {
+  const { t } = useLanguage();
+  return (
+    <div className="glass-panel p-8 rounded-[3rem] space-y-6 border border-white shadow-sm">
+      <div className="flex justify-between items-center">
+        <h3 className="text-xl font-black uppercase italic">{job.title}</h3>
+        <span className="px-5 py-2 bg-emerald-500/10 text-emerald-600 rounded-full text-xs font-black uppercase">{job.status}</span>
+      </div>
+      <div className="flex items-center gap-8">
+        <StatBox label={t('proposals_count')} value={job.proposalsCount} />
+        <StatBox label={t('budget')} value={`$${job.budget}`} />
+      </div>
+      <div className="flex gap-4">
+        <button className="btn-capsule flex-1 justify-center">{t('review_bids')} ({job.proposalsCount})</button>
+        <button className="w-12 h-12 rounded-full border border-black/10 flex items-center justify-center hover:bg-black/5 transition-all"><MoreVertical className="w-5 h-5" /></button>
+      </div>
+    </div>
+  );
+};
+
+const ProposalCard = ({ proposal, job }: any) => {
+  const { t } = useLanguage();
+  return (
+    <div className="glass-panel p-8 rounded-[3rem] space-y-4 border-l-4 border-black shadow-sm">
+      <div className="flex justify-between items-start">
+        <div>
+          <p className="text-[10px] font-black uppercase text-gray-400 mb-1">{t('applied_for_project')}</p>
+          <h4 className="text-lg font-black uppercase italic">{job?.title}</h4>
+        </div>
+        <div className="text-right">
+          <p className="text-xl font-black italic">${proposal.bid}</p>
+          <span className="text-[9px] font-bold text-indigo-500 uppercase">{t('awaiting_client_review')}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ClientProposalCard = ({ proposal, job, navigate }: any) => {
+  const { t } = useLanguage();
+  return (
+    <div className="glass-panel p-8 rounded-[3rem] space-y-6 hover:border-black transition-all border border-transparent shadow-sm">
+      <div className="flex justify-between items-start">
+        <div className="flex gap-4">
+          <div className="w-12 h-12 bg-black rounded-2xl flex items-center justify-center text-white font-black text-xl">{proposal.freelancerName[0]}</div>
+          <div>
+            <h4 className="text-lg font-black uppercase italic">{proposal.freelancerName}</h4>
+            <p className="text-[10px] font-bold text-gray-400 uppercase">Bid for: {job?.title}</p>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-2xl font-black italic tracking-tighter">${proposal.bid}</p>
+        </div>
+      </div>
+      <p className="text-gray-500 text-xs font-medium leading-relaxed italic line-clamp-3">"{proposal.coverLetter}"</p>
+      <div className="flex gap-4 pt-4">
+        <button 
+          onClick={() => navigate(`/jobs/${job.id}`)}
+          className="btn-capsule flex-1 justify-center bg-emerald-600 hover:bg-emerald-700"
+        >
+          {t('approve_and_hire')}
+        </button>
+        <button className="btn-ghost flex-1 justify-center bg-white border border-black/10">{t('message')}</button>
+      </div>
+    </div>
+  );
+};
+
+const StatBox = ({ label, value }: any) => (
+  <div>
+    <p className="text-2xl font-black tracking-tighter italic">{value}</p>
+    <p className="text-[11px] font-bold uppercase text-gray-400 tracking-widest">{label}</p>
+  </div>
+);
+
+const EmptyState = ({ message }: any) => (
+  <div className="p-12 text-center space-y-4">
+    <div className="w-16 h-16 bg-black/5 rounded-full flex items-center justify-center mx-auto text-gray-300">
+      <Briefcase className="w-8 h-8" />
+    </div>
+    <p className="text-sm font-medium text-gray-400">{message}</p>
+  </div>
+);
+
+const languages = [{ id: 'en', label: 'EN' }, { id: 'ru', label: 'RU' }, { id: 'hy', label: 'HY' }];
+
+const LanguageSwitcher = () => {
+  const { lang, setLang } = useLanguage();
+  return (
+    <div className="flex items-center gap-1 bg-black/5 p-1 rounded-full border border-black/5">
+      {languages.map((l) => (
+        <button 
+          key={l.id}
+          onClick={() => setLang(l.id as any)}
+          className={`relative px-4 py-1.5 rounded-full text-[10px] font-black uppercase transition-all z-10 ${lang === l.id ? 'text-white' : 'text-gray-400 hover:text-black'}`}
+        >
+          {lang === l.id && (
+            <motion.div
+              layoutId="activeLangDashboard"
+              className="absolute inset-0 bg-black rounded-full -z-10 shadow-lg"
+              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+            />
+          )}
+          {l.label}
+        </button>
+      ))}
     </div>
   );
 };
