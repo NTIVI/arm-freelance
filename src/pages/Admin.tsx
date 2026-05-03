@@ -34,187 +34,189 @@ export const Admin = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] p-10 font-sans text-black overflow-x-hidden">
+    <div className="min-h-screen bg-[#f3f4f6] p-12 font-sans text-black selection:bg-black selection:text-white">
       
       {/* Header */}
-      <header className="flex items-center justify-between mb-16">
+      <header className="flex items-center justify-between mb-16 max-w-[1600px] mx-auto">
         <div className="space-y-4">
-           <button onClick={() => navigate('/dashboard')} className="flex items-center gap-2 text-[10px] font-black uppercase text-gray-400 hover:text-black transition-all">
-             <ArrowLeft className="w-4 h-4" /> EXIT ADMIN PANEL
+           <button onClick={() => navigate('/dashboard')} className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-black/40 hover:text-black transition-all">
+             <ArrowLeft className="w-3.5 h-3.5" /> EXIT ADMIN PANEL
            </button>
-           <h1 className="text-5xl font-black italic uppercase tracking-tighter leading-none">ADMIN WORKSPACE</h1>
+           <h1 className="text-5xl font-black italic uppercase tracking-[-0.05em] leading-none">ADMIN WORKSPACE</h1>
         </div>
         
-        <div className="bg-white border-2 border-black px-6 py-4 rounded-[1.5rem] flex items-center gap-4 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
-           <div className="w-12 h-12 rounded-xl bg-black flex items-center justify-center text-white">
-             <ShieldCheck className="w-6 h-6" />
+        <div className="bg-white border-[1.5px] border-black px-6 py-4 rounded-[1.2rem] flex items-center gap-4 shadow-[5px_5px_0_0_rgba(0,0,0,1)]">
+           <div className="w-11 h-11 rounded-xl bg-black flex items-center justify-center text-white">
+             <ShieldCheck className="w-5.5 h-5.5" />
            </div>
            <div>
-              <p className="text-xs font-black uppercase italic leading-none">{user?.fullName || 'Super Admin'}</p>
-              <p className="text-[9px] font-black uppercase text-gray-400 tracking-widest mt-1">GLOBAL MODERATOR</p>
+              <p className="text-[11px] font-black uppercase italic leading-none">{user?.fullName || 'Super Admin'}</p>
+              <p className="text-[8px] font-black uppercase text-black/40 tracking-wider mt-1.5">GLOBAL MODERATOR</p>
            </div>
         </div>
       </header>
 
       {/* Tabs */}
-      <div className="flex gap-4 mb-16">
+      <div className="flex gap-3 mb-16 max-w-[1600px] mx-auto">
          <button 
            onClick={() => setActiveTab('users')} 
-           className={`px-10 py-5 rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'users' ? 'bg-black text-white shadow-xl scale-105' : 'bg-black/5 text-gray-400 hover:text-black'}`}
+           className={`px-9 py-4 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'users' ? 'bg-black text-white' : 'bg-black/5 text-black/40 hover:text-black'}`}
          >
            USER MANAGEMENT
          </button>
          <button 
            onClick={() => setActiveTab('stats')} 
-           className={`px-10 py-5 rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'stats' ? 'bg-black text-white shadow-xl scale-105' : 'bg-black/5 text-gray-400 hover:text-black'}`}
+           className={`px-9 py-4 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'stats' ? 'bg-black text-white' : 'bg-black/5 text-black/40 hover:text-black'}`}
          >
            PLATFORM STATISTICS
          </button>
       </div>
 
-      {/* Main Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-16">
-         <StatCard icon={Users} label="TOTAL USERS" value="1,240" trend="+12" />
-         <StatCard icon={TrendingUp} label="DAILY GROWTH" value="25" trend="+5" />
-         <StatCard icon={ShieldCheck} label="VERIFIED" value="890" trend="+18" />
-         <StatCard icon={Mail} label="NEW INQUIRIES" value="12" />
-      </div>
+      <div className="max-w-[1600px] mx-auto">
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+           <StatCard icon={Users} label="TOTAL USERS" value="1,240" trend="+12" />
+           <StatCard icon={TrendingUp} label="DAILY GROWTH" value="25" trend="+5" />
+           <StatCard icon={ShieldCheck} label="VERIFIED" value="890" trend="+18" />
+           <StatCard icon={Mail} label="NEW INQUIRIES" value="12" />
+        </div>
 
-      {/* Tab Content */}
-      <div className="bg-white rounded-[3.5rem] border-2 border-black p-12 shadow-[12px_12px_0_0_rgba(0,0,0,1)] min-h-[600px] relative overflow-hidden mb-20">
-         {activeTab === 'users' ? (
-           <div className="space-y-12">
-              <div className="flex items-center justify-between">
-                 <h2 className="text-3xl font-black uppercase italic tracking-tighter">USER MANAGEMENT</h2>
-                 <div className="relative">
-                    <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <input 
-                      className="bg-[#f8f9fa] border-2 border-black/5 rounded-full pl-14 pr-8 py-4 text-xs font-bold outline-none w-96 focus:bg-white focus:border-black transition-all" 
-                      placeholder="Filter users..." 
-                      value={searchTerm}
-                      onChange={e => setSearchTerm(e.target.value)}
-                    />
-                 </div>
-              </div>
+        {/* Tab Content Container */}
+        <div className="bg-white rounded-[3rem] border-[1.5px] border-black p-12 shadow-[10px_10px_0_0_rgba(0,0,0,1)] relative overflow-hidden">
+           {activeTab === 'users' ? (
+             <div className="space-y-12">
+                <div className="flex items-center justify-between">
+                   <h2 className="text-2xl font-black uppercase italic tracking-tighter">USER MANAGEMENT</h2>
+                   <div className="relative">
+                      <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-black/20" />
+                      <input 
+                        className="bg-white border-[1.5px] border-black/10 rounded-full pl-13 pr-8 py-3.5 text-[11px] font-bold outline-none w-[320px] focus:border-black transition-all" 
+                        placeholder="Filter users..." 
+                        value={searchTerm}
+                        onChange={e => setSearchTerm(e.target.value)}
+                      />
+                   </div>
+                </div>
 
-              <div className="overflow-x-auto">
-                 <table className="w-full text-left">
-                    <thead>
-                       <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-300 border-b-2 border-black/5">
-                          <th className="pb-8">USER</th>
-                          <th className="pb-8">ROLE</th>
-                          <th className="pb-8">STATUS</th>
-                          <th className="pb-8">JOINED DATE</th>
-                          <th className="pb-8 text-right">ACTIONS</th>
-                       </tr>
-                    </thead>
-                    <tbody className="divide-y-2 divide-black/5">
-                       {filteredUsers.map(u => (
-                         <tr key={u.id} className="group hover:bg-black/[0.02] transition-all">
-                            <td className="py-10">
-                               <div className="flex items-center gap-4">
-                                  <div className="w-14 h-14 rounded-2xl bg-black/5 flex items-center justify-center font-black uppercase text-gray-400 border-2 border-transparent group-hover:border-black transition-all">{u.fullName[0]}</div>
-                                  <div>
-                                     <p className="text-sm font-black uppercase italic tracking-tight leading-none">{u.fullName}</p>
-                                     <p className="text-[10px] font-bold text-gray-400 mt-1.5">{u.email}</p>
-                                  </div>
-                               </div>
-                            </td>
-                            <td className="py-10">
-                               <span className={`px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border-2 ${u.role === 'freelancer' ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-emerald-50 text-emerald-600 border-emerald-200'}`}>
-                                 {u.role}
-                               </span>
-                            </td>
-                            <td className="py-10">
-                               <div className="flex items-center gap-2.5">
-                                  <div className={`w-2.5 h-2.5 rounded-full ${u.verified ? 'bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.5)]' : 'bg-orange-500 shadow-[0_0_12px_rgba(249,115,22,0.5)]'}`}></div>
-                                  <span className="text-[10px] font-black uppercase tracking-widest">{u.verified ? 'VERIFIED' : 'PENDING'}</span>
-                               </div>
-                            </td>
-                            <td className="py-10 text-[11px] font-bold text-gray-500 tracking-tight">2023-05-12</td>
-                            <td className="py-10 text-right">
-                               <button className="p-3.5 bg-black text-white rounded-xl transition-all opacity-0 group-hover:opacity-100 shadow-[4px_4px_0_0_rgba(0,0,0,0.2)] hover:scale-110">
-                                  <MoreHorizontal className="w-5 h-5" />
-                                </button>
-                            </td>
+                <div className="overflow-x-auto">
+                   <table className="w-full text-left">
+                      <thead>
+                         <tr className="text-[9px] font-black uppercase tracking-[0.25em] text-black/20 border-b border-black/5">
+                            <th className="pb-7 pl-4">USER</th>
+                            <th className="pb-7">ROLE</th>
+                            <th className="pb-7">STATUS</th>
+                            <th className="pb-7">JOINED DATE</th>
+                            <th className="pb-7 text-right pr-4">ACTIONS</th>
                          </tr>
-                       ))}
-                    </tbody>
-                 </table>
-              </div>
-           </div>
-         ) : (
-           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              <div className="bg-[#f8f9fa] rounded-[3rem] border-2 border-black/5 p-12 space-y-10">
-                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                       <div className="w-12 h-12 bg-black rounded-2xl flex items-center justify-center text-white shadow-lg">
-                          <Activity className="w-6 h-6" />
-                       </div>
-                       <h3 className="text-xl font-black uppercase italic tracking-tight">REAL-TIME ACTIVITY</h3>
-                    </div>
-                 </div>
-                 <div className="grid grid-cols-2 gap-10">
-                    <div>
-                       <p className="text-5xl font-black italic tracking-tighter leading-none">142</p>
-                       <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest mt-2">USERS ONLINE NOW</p>
-                    </div>
-                    <div>
-                       <p className="text-5xl font-black italic tracking-tighter leading-none">4,829</p>
-                       <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest mt-2">TOTAL REGISTRATIONS</p>
-                    </div>
-                 </div>
-                 <div className="space-y-6 pt-6">
-                    <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest">TRAFFIC INTENSITY (24H)</p>
-                    <div className="flex items-end justify-between h-40 gap-1.5 px-2">
-                       {[40, 70, 45, 90, 65, 30, 85, 50, 40, 60, 75, 45].map((h, i) => (
-                         <div key={i} className="flex-1 bg-black/10 rounded-t-xl transition-all hover:bg-black hover:scale-x-110" style={{ height: h + '%' }}></div>
-                       ))}
-                    </div>
-                 </div>
-              </div>
+                      </thead>
+                      <tbody className="divide-y divide-black/5">
+                         {filteredUsers.map(u => (
+                           <tr key={u.id} className="group hover:bg-black/[0.01] transition-all">
+                              <td className="py-8 pl-4">
+                                 <div className="flex items-center gap-4">
+                                    <div className="w-11 h-11 rounded-full bg-black/5 flex items-center justify-center font-black uppercase text-black/20 text-xs">{u.fullName[0]}</div>
+                                    <div>
+                                       <p className="text-[13px] font-black uppercase italic leading-none tracking-tight">{u.fullName}</p>
+                                       <p className="text-[10px] font-bold text-black/30 mt-1">{u.email}</p>
+                                    </div>
+                                 </div>
+                              </td>
+                              <td className="py-8">
+                                 <span className={`px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest ${u.role === 'freelancer' ? 'bg-indigo-50 text-indigo-500' : 'bg-emerald-50 text-emerald-500'}`}>
+                                   {u.role}
+                                 </span>
+                              </td>
+                              <td className="py-8">
+                                 <div className="flex items-center gap-2">
+                                    <div className={`w-1.5 h-1.5 rounded-full ${u.verified ? 'bg-emerald-500' : 'bg-orange-500'}`}></div>
+                                    <span className="text-[9px] font-black uppercase tracking-widest">{u.verified ? 'VERIFIED' : 'PENDING'}</span>
+                                 </div>
+                              </td>
+                              <td className="py-8 text-[11px] font-bold text-black/40 tracking-tight">2023-05-12</td>
+                              <td className="py-8 text-right pr-4">
+                                 <button className="p-2.5 text-black/20 hover:text-black transition-all">
+                                    <MoreHorizontal className="w-5 h-5" />
+                                  </button>
+                              </td>
+                           </tr>
+                         ))}
+                      </tbody>
+                   </table>
+                </div>
+             </div>
+           ) : (
+             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div className="bg-white rounded-[2.5rem] border-[1.5px] border-black p-10 space-y-10">
+                   <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white">
+                         <Activity className="w-5 h-5" />
+                      </div>
+                      <h3 className="text-lg font-black uppercase italic tracking-tight">REAL-TIME ACTIVITY</h3>
+                   </div>
+                   
+                   <div className="flex items-center gap-16">
+                      <div>
+                         <p className="text-5xl font-black italic tracking-tighter leading-none">142</p>
+                         <p className="text-[9px] font-black uppercase text-black/40 tracking-widest mt-2.5">USERS ONLINE NOW</p>
+                      </div>
+                      <div>
+                         <p className="text-5xl font-black italic tracking-tighter leading-none">4,829</p>
+                         <p className="text-[9px] font-black uppercase text-black/40 tracking-widest mt-2.5">TOTAL REGISTRATIONS</p>
+                      </div>
+                   </div>
 
-              <div className="bg-[#f8f9fa] rounded-[3rem] border-2 border-black/5 p-12 space-y-10">
-                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-black rounded-2xl flex items-center justify-center text-white shadow-lg">
-                       <Globe className="w-6 h-6" />
-                    </div>
-                    <h3 className="text-xl font-black uppercase italic tracking-tight">GEOGRAPHICAL BREAKDOWN</h3>
-                 </div>
-                 <div className="space-y-8">
-                    <GeoStat label="ARMENIA" value="3,158" percentage={65} />
-                    <GeoStat label="RUSSIA" value="869" percentage={18} />
-                    <GeoStat label="UNITED STATES" value="483" percentage={10} />
-                    <GeoStat label="FRANCE" value="193" percentage={4} />
-                    <GeoStat label="OTHER" value="146" percentage={3} />
-                 </div>
-                 <div className="bg-blue-50 border-2 border-blue-100 p-8 rounded-[2rem] mt-6 shadow-sm">
-                    <p className="text-[10px] font-black uppercase text-blue-600 mb-2 tracking-widest">TARGET INSIGHT</p>
-                    <p className="text-xs font-medium leading-relaxed text-blue-900/80">
-                       Your core audience is 65% Armenian-based. Diaspora engagement in Russia and US is growing by 12% monthly.
-                    </p>
-                 </div>
-              </div>
-           </div>
-         )}
+                   <div className="space-y-5 pt-4">
+                      <p className="text-[9px] font-black uppercase text-black/40 tracking-widest">TRAFFIC INTENSITY (24H)</p>
+                      <div className="flex items-end justify-between h-36 gap-1 px-1">
+                         {[35, 60, 40, 85, 70, 30, 90, 55, 45, 65, 80, 50].map((h, i) => (
+                           <div key={i} className="flex-1 bg-black/5 rounded-t-lg transition-all hover:bg-black" style={{ height: h + '%' }}></div>
+                         ))}
+                      </div>
+                   </div>
+                </div>
+
+                <div className="bg-white rounded-[2.5rem] border-[1.5px] border-black p-10 space-y-10">
+                   <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white">
+                         <Globe className="w-5 h-5" />
+                      </div>
+                      <h3 className="text-lg font-black uppercase italic tracking-tight">GEOGRAPHICAL BREAKDOWN</h3>
+                   </div>
+                   <div className="space-y-7">
+                      <GeoStat label="ARMENIA" value="3,158" percentage={65} />
+                      <GeoStat label="RUSSIA" value="869" percentage={18} />
+                      <GeoStat label="UNITED STATES" value="483" percentage={10} />
+                      <GeoStat label="FRANCE" value="193" percentage={4} />
+                      <GeoStat label="OTHER" value="146" percentage={3} />
+                   </div>
+                   <div className="bg-indigo-50/50 border border-indigo-100 p-6 rounded-2xl">
+                      <p className="text-[9px] font-black uppercase text-indigo-500 mb-1.5 tracking-wider">TARGET INSIGHT</p>
+                      <p className="text-[11px] font-medium leading-relaxed text-indigo-900/60">
+                         Your core audience is 65% Armenian-based. Diaspora engagement in Russia and US is growing by 12% monthly.
+                      </p>
+                   </div>
+                </div>
+             </div>
+           )}
+        </div>
       </div>
     </div>
   )
 }
 
 const StatCard = ({ icon: Icon, label, value, trend }: any) => (
-  <div className="bg-white border-2 border-black p-10 rounded-[2.5rem] shadow-[8px_8px_0_0_rgba(0,0,0,1)] flex justify-between items-start relative group hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[4px_4px_0_0_rgba(0,0,0,1)] transition-all">
+  <div className="bg-white border-[1.5px] border-black p-10 rounded-[2.5rem] shadow-[7px_7px_0_0_rgba(0,0,0,1)] flex justify-between items-start relative group hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[5px_5px_0_0_rgba(0,0,0,1)] transition-all">
      <div className="space-y-6">
-        <div className="w-14 h-14 bg-black/5 rounded-2xl flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all border-2 border-transparent group-hover:border-black">
-           <Icon className="w-7 h-7" />
+        <div className="w-12 h-12 bg-black/5 rounded-2xl flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all">
+           <Icon className="w-5.5 h-5.5" />
         </div>
         <div>
            <p className="text-4xl font-black italic tracking-tighter leading-none">{value}</p>
-           <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest leading-none mt-2">{label}</p>
+           <p className="text-[9px] font-black uppercase text-black/40 tracking-widest leading-none mt-2.5">{label}</p>
         </div>
      </div>
      {trend && (
-       <div className="bg-emerald-50 text-emerald-600 px-4 py-2 rounded-full text-[10px] font-black border-2 border-emerald-100 shadow-sm">
+       <div className="bg-emerald-50 text-emerald-500 px-3 py-1.5 rounded-full text-[9px] font-black border border-emerald-100/50">
          {trend}
        </div>
      )}
@@ -222,13 +224,13 @@ const StatCard = ({ icon: Icon, label, value, trend }: any) => (
 )
 
 const GeoStat = ({ label, value, percentage }: any) => (
-  <div className="space-y-3">
-     <div className="flex justify-between text-[11px] font-black uppercase tracking-widest">
+  <div className="space-y-2.5">
+     <div className="flex justify-between text-[10px] font-black uppercase tracking-widest">
         <span>{label}</span>
-        <span className="text-gray-400">{value} USERS ({percentage}%)</span>
+        <span className="text-black/30">{value} USERS ({percentage}%)</span>
      </div>
-     <div className="h-2 bg-black/5 rounded-full overflow-hidden border border-black/5">
-        <div className="h-full bg-black rounded-full shadow-[0_0_10px_rgba(0,0,0,0.1)]" style={{ width: percentage + '%' }}></div>
+     <div className="h-1.5 bg-black/5 rounded-full overflow-hidden">
+        <div className="h-full bg-black rounded-full" style={{ width: percentage + '%' }}></div>
      </div>
   </div>
 )
