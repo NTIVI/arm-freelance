@@ -31,9 +31,10 @@ export const LandingPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] text-[#111827] selection:bg-black/10 font-sans overflow-x-hidden relative">
+    <div className="min-h-screen text-white selection:bg-indigo-500/30 font-sans overflow-x-hidden relative">
+      <div className="bg-mesh"></div>
       <motion.div 
-        className="fixed top-0 left-0 right-0 h-1 bg-black z-[100] origin-left"
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-pink-500 z-[100] origin-left"
         style={{ scaleX: useScroll().scrollXProgress }}
       />
       {/* Animated Background Elements */}
@@ -56,18 +57,18 @@ export const LandingPage = () => {
         <div className="glass-panel max-w-7xl mx-auto flex items-center justify-between px-6 md:px-10 py-4 rounded-full border border-white/40 shadow-2xl backdrop-blur-2xl">
           <div className="flex items-center gap-3">
             <Link to="/" className="flex items-center gap-3 group">
-              <div className="w-8 h-8 md:w-10 md:h-10 bg-black rounded-xl flex items-center justify-center group-hover:bg-indigo-600 transition-all">
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-indigo-600 rounded-xl flex items-center justify-center group-hover:bg-indigo-500 transition-all shadow-[0_0_20px_rgba(99,102,241,0.4)]">
                 <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-white rounded-sm rotate-45"></div>
               </div>
-              <span className="text-xl md:text-2xl font-bold tracking-tight uppercase italic hidden sm:block">Armenia Freelance</span>
+              <span className="text-xl md:text-2xl font-black tracking-tight uppercase italic hidden sm:block text-white">Armenia Freelance</span>
             </Link>
           </div>
           
           <div className="flex items-center space-x-2 md:space-x-8">
             <div className="hidden lg:flex items-center space-x-12">
-              <a href="#specialists" className="text-sm md:text-base font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors">{t('find_talent')}</a>
-              <a href="#post-project" className="text-sm md:text-base font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors">{t('find_work')}</a>
-              <a href="#how-it-works" className="text-sm md:text-base font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors">{t('how_it_works_title')}</a>
+              <a href="#specialists" className="text-sm md:text-base font-black uppercase tracking-widest text-gray-400 hover:text-white transition-colors">{t('find_talent')}</a>
+              <a href="#post-project" className="text-sm md:text-base font-black uppercase tracking-widest text-gray-400 hover:text-white transition-colors">{t('find_work')}</a>
+              <a href="#how-it-works" className="text-sm md:text-base font-black uppercase tracking-widest text-gray-400 hover:text-white transition-colors">{t('how_it_works_title')}</a>
             </div>
             <LanguageSwitcher lang={lang} setLang={setLang} />
             <div className="flex items-center gap-2">
@@ -103,9 +104,9 @@ export const LandingPage = () => {
               <span>{t('premium_ecosystem')}</span>
             </div>
             
-            <h1 className="text-5xl md:text-8xl lg:text-[7rem] font-black leading-[0.85] tracking-tighter text-black">
+            <h1 className="text-5xl md:text-8xl lg:text-[7rem] font-black leading-[0.85] tracking-tighter text-white">
               {t('hero_title').split(' ').slice(0, -1).join(' ')} <br />
-              <span className="text-gray-400">{t('hero_title').split(' ').slice(-1)}</span>
+              <span className="text-indigo-400">{t('hero_title').split(' ').slice(-1)}</span>
             </h1>
             
             <p className="max-w-3xl mx-auto text-xl md:text-2xl text-gray-500 font-medium leading-relaxed px-4 opacity-80">
@@ -127,13 +128,13 @@ export const LandingPage = () => {
           {/* Quick Search */}
           <div className="max-w-2xl mx-auto pt-10 md:pt-16 px-4">
             <div className="relative group">
-               <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-black transition-colors" />
+               <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-white transition-colors" />
                <input 
                  type="text" 
                  value={searchQuery}
                  onChange={(e) => setSearchQuery(e.target.value)}
                  placeholder={t('search_placeholder')} 
-                 className="w-full bg-white border border-black/5 rounded-full px-16 py-5 md:py-6 shadow-xl shadow-black/5 outline-none focus:ring-4 ring-black/5 transition-all text-sm font-medium"
+                 className="w-full bg-white/5 border border-white/10 rounded-full px-16 py-5 md:py-6 shadow-2xl backdrop-blur-xl outline-none focus:border-indigo-500/50 transition-all text-sm font-medium text-white"
                />
             </div>
           </div>
@@ -144,8 +145,8 @@ export const LandingPage = () => {
       <section className="py-20 md:py-32 px-6 bg-white/30">
         <div className="max-w-7xl mx-auto space-y-12 md:space-y-16">
           <div className="text-center space-y-4">
-            <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter">{t('categories_title')}</h2>
-            <p className="text-gray-400 text-[10px] md:text-xs font-black uppercase tracking-[0.3em]">{t('categories_subtitle')}</p>
+            <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter text-white">{t('categories_title')}</h2>
+            <p className="text-indigo-400/60 text-[10px] md:text-xs font-black uppercase tracking-[0.3em]">{t('categories_subtitle')}</p>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             <CategoryItem icon={Code} title={t('cat_web')} desc="React, Vue, Angular, Next.js" />
@@ -165,8 +166,8 @@ export const LandingPage = () => {
         <div className="max-w-7xl mx-auto space-y-12 md:space-y-16">
           <div className="flex flex-col md:flex-row justify-between items-end gap-6">
             <div className="space-y-4">
-              <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter">{t('specialists_title')}</h2>
-              <p className="text-gray-400 text-[10px] md:text-xs font-black uppercase tracking-[0.3em]">{t('specialists_subtitle')}</p>
+              <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter text-white">{t('specialists_title')}</h2>
+              <p className="text-indigo-400/60 text-[10px] md:text-xs font-black uppercase tracking-[0.3em]">{t('specialists_subtitle')}</p>
             </div>
             <Link to="/auth" className="text-xs font-black uppercase tracking-widest text-indigo-600 hover:text-black transition-colors flex items-center gap-2">
               {t('view_marketplace')} <ArrowRight className="w-4 h-4" />
@@ -348,12 +349,12 @@ export const LandingPage = () => {
 }
 
 const CategoryItem = ({ icon: Icon, title, desc }: any) => (
-  <div className="glass-panel p-8 md:p-10 rounded-[3rem] space-y-6 hover:bg-black hover:text-white transition-all group cursor-pointer border border-white/50 shadow-sm hover:shadow-2xl hover:-translate-y-2">
-    <div className="w-12 h-12 md:w-16 md:h-16 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 group-hover:bg-white/10 group-hover:text-white transition-all shadow-inner">
+  <div className="glass-panel p-8 md:p-10 rounded-[3rem] space-y-6 hover:bg-white/10 transition-all group cursor-pointer border border-white/10 shadow-2xl hover:-translate-y-2">
+    <div className="w-12 h-12 md:w-16 md:h-16 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-all shadow-inner">
       <Icon className="w-6 md:w-8 h-6 md:h-8" />
     </div>
     <div className="space-y-2">
-      <h3 className="font-black uppercase italic text-sm md:text-base tracking-tight">{title}</h3>
+      <h3 className="font-black uppercase italic text-sm md:text-base tracking-tight text-white">{title}</h3>
       <p className="text-[10px] md:text-[11px] font-bold text-gray-400 uppercase tracking-[0.1em] leading-relaxed group-hover:text-gray-300">{desc}</p>
     </div>
   </div>
@@ -372,31 +373,31 @@ const StepItem = ({ num, title, desc, numColor }: any) => (
 )
 
 const SpecialistCard = ({ name, role, rating, price, tags, t }: any) => (
-  <div className="glass-panel p-8 md:p-10 rounded-[3.5rem] space-y-8 hover:shadow-2xl transition-all border border-white/50 group">
+  <div className="glass-panel p-8 md:p-10 rounded-[3.5rem] space-y-8 hover:bg-white/5 transition-all border border-white/10 group">
     <div className="flex justify-between items-start">
-      <div className="w-20 h-20 md:w-24 md:h-24 rounded-[2rem] bg-black border-4 border-white flex items-center justify-center text-white text-3xl font-black shadow-xl group-hover:scale-105 transition-transform">
+      <div className="w-20 h-20 md:w-24 md:h-24 rounded-[2rem] bg-indigo-600 border-4 border-white/10 flex items-center justify-center text-white text-3xl font-black shadow-2xl group-hover:scale-105 transition-transform">
         {name[0]}
       </div>
-      <div className="flex items-center gap-1.5 px-3 py-1 bg-orange-50 rounded-full text-orange-500">
+      <div className="flex items-center gap-1.5 px-3 py-1 bg-white/5 rounded-full text-orange-400 border border-white/10">
         <Star className="w-3.5 h-3.5 fill-current" />
         <span className="text-xs font-black">{rating.toFixed(1)}</span>
       </div>
     </div>
     <div className="space-y-3">
-      <h3 className="text-2xl font-black uppercase italic text-black group-hover:text-indigo-600 transition-colors">{name}</h3>
-      <p className="text-xs font-black uppercase tracking-widest text-indigo-500">{role}</p>
+      <h3 className="text-2xl font-black uppercase italic text-white group-hover:text-indigo-400 transition-colors">{name}</h3>
+      <p className="text-xs font-black uppercase tracking-widest text-indigo-400">{role}</p>
     </div>
     <div className="flex flex-wrap gap-2">
       {tags.map((tag: string) => (
-        <span key={tag} className="px-4 py-1.5 bg-black/5 rounded-full text-[10px] font-black uppercase text-gray-500 hover:bg-black hover:text-white transition-colors cursor-default">{tag}</span>
+        <span key={tag} className="px-4 py-1.5 bg-white/5 border border-white/5 rounded-full text-[10px] font-black uppercase text-gray-400 hover:bg-indigo-600 hover:text-white transition-colors cursor-default">{tag}</span>
       ))}
     </div>
-    <div className="pt-8 border-t border-black/5 flex items-center justify-between">
+    <div className="pt-8 border-t border-white/5 flex items-center justify-between">
       <div>
-        <span className="text-[10px] font-black uppercase text-gray-400 tracking-widest">{t('price_from')}</span>
-        <div className="text-3xl font-black italic text-black">${price}<span className="text-sm font-medium not-italic text-gray-400">{t('per_hour')}</span></div>
+        <span className="text-[10px] font-black uppercase text-gray-500 tracking-widest">{t('price_from')}</span>
+        <div className="text-3xl font-black italic text-white">${price}<span className="text-sm font-medium not-italic text-gray-400">{t('per_hour')}</span></div>
       </div>
-      <Link to="/auth" className="px-8 py-4 bg-black text-white rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-indigo-600 hover:scale-105 active:scale-95 transition-all shadow-lg shadow-black/20">
+      <Link to="/auth" className="btn-capsule">
         {t('contact_specialist')}
       </Link>
     </div>

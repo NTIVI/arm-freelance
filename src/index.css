@@ -1,93 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
 :root {
-  --primary: #000000;
-  --secondary: #000000;
-  --background: #f3f4f6;
-  --glass-bg: rgba(255, 255, 255, 0.4);
-  --glass-border: rgba(255, 255, 255, 0.5);
-  --text-main: #000000;
-  --text-muted: #000000;
-  --radius: 2rem;
+  --primary: #6366f1;
+  --primary-glow: rgba(99, 102, 241, 0.5);
+  --accent: #f472b6;
+  --bg-deep: #030712;
+  --bg-surface: #111827;
+  --text-main: #f9fafb;
+  --text-muted: #9ca3af;
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
 }
 
 body {
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  background: radial-gradient(circle at top left, #ffffff, #e5e7eb);
-  color: #000000;
-  min-height: 100vh;
+  background-color: var(--bg-deep);
+  color: var(--text-main);
+  font-family: 'Outfit', sans-serif;
   overflow-x: hidden;
-}
-
-/* Map all text tailwind colors to black except white */
-[class*="text-"]:not(.text-white):not([class*="text-white"]) {
-  color: #000000 !important;
-}
-
-.text-white, .group-hover\:text-white:hover, .hover\:text-white:hover {
-  color: #ffffff !important;
-}
-
-.text-black {
-  color: #000000 !important;
-}
-
-h1, h2, h3, h4, h5, h6, p, span, label, a, div, li, ul, ol, strong, em, i, b, td, th, dt, dd, button, input, textarea, select, main, section, article, nav, header, footer {
-  color: #000000;
-}
-
-h1 span, h2 span, h3 span, h4 span, h5 span, h6 span {
-  color: inherit;
-}
-
-a:hover {
-  color: #000000;
 }
 
 @layer components {
   .glass-panel {
-    @apply bg-white/70 backdrop-blur-xl border-2 border-white/50 rounded-[2.5rem] shadow-[20px_20px_60px_-15px_rgba(0,0,0,0.05)];
+    @apply bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] shadow-[0_8px_32px_0_rgba(0,0,0,0.37)];
   }
 
-  .glass-panel-dark {
-    @apply bg-black/90 backdrop-blur-xl border border-white/10 rounded-[2.5rem] shadow-2xl;
+  .glass-panel-light {
+    @apply bg-white/10 backdrop-blur-3xl border border-white/20 rounded-[2.5rem];
   }
 
-  /* Dark Glassmorphism for Buttons as requested */
   .btn-capsule {
-    @apply px-10 py-4 bg-black border border-black text-white rounded-full font-bold transition-all active:scale-95 hover:bg-gray-900 flex items-center gap-3 shadow-xl shadow-black/20 text-base;
-  }
-  .btn-capsule, .btn-capsule * {
-    color: #ffffff !important;
+    @apply flex items-center gap-2 px-8 py-4 bg-indigo-600 text-white rounded-full font-black uppercase tracking-widest hover:bg-indigo-500 hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] hover:scale-[1.02] active:scale-95 transition-all duration-300 shadow-xl;
   }
 
   .btn-ghost {
-    @apply px-10 py-4 bg-black border border-black text-white rounded-full font-semibold transition-all hover:bg-gray-900 flex items-center gap-3 shadow-xl shadow-black/20 text-base;
-  }
-  .btn-ghost, .btn-ghost * {
-    color: #ffffff !important;
+    @apply flex items-center gap-2 px-8 py-4 bg-white/5 border border-white/10 text-white rounded-full font-black uppercase tracking-widest hover:bg-white/10 transition-all duration-300;
   }
 
   .input-capsule {
-    @apply bg-white border-2 border-black rounded-full px-8 py-5 outline-none focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all placeholder:text-gray-500 text-base text-black;
+    @apply bg-white/5 border border-white/10 rounded-full px-8 py-5 outline-none focus:border-indigo-500/50 focus:bg-white/10 transition-all text-white placeholder:text-gray-500;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/40;
   }
 }
 
-input, textarea, select {
-  @apply text-black;
-}
-
 /* Custom Scrollbar */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { 
-  background: rgba(0, 0, 0, 0.2); 
-  border-radius: 10px; 
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 /* Layout */
@@ -95,37 +69,41 @@ input, textarea, select {
   display: grid;
   grid-template-columns: 280px 1fr;
   height: 100vh;
-  padding: 2rem;
-  gap: 2rem;
+  padding: 1.5rem;
+  gap: 1.5rem;
+  background-color: var(--bg-deep);
 }
 
 .main-content {
   display: grid;
   grid-template-rows: auto 1fr;
-  gap: 2rem;
+  gap: 1.5rem;
   overflow: hidden;
 }
 
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr 380px;
-  gap: 2rem;
+  gap: 1.5rem;
   overflow-y: auto;
-  padding-right: 1rem;
+  padding-right: 0.5rem;
+}
+
+/* Background Gradients */
+.bg-mesh {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  background-color: var(--bg-deep);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(244, 114, 182, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(79, 70, 229, 0.1) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(139, 92, 246, 0.1) 0px, transparent 50%);
 }
 
 @media (min-width: 1536px) {
   html {
     font-size: 18px;
   }
-}
-
-@media (max-width: 1280px) {
-  .app-container { grid-template-columns: 280px 1fr; padding: 1.5rem; gap: 1.5rem; }
-  .dashboard-grid { grid-template-columns: 1fr 340px; gap: 1.5rem; }
-}
-
-@media (max-width: 1024px) {
-  .app-container { grid-template-columns: 1fr; padding: 1rem; gap: 1rem; }
-  .dashboard-grid { grid-template-columns: 1fr; gap: 1rem; }
 }
