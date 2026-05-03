@@ -22,6 +22,8 @@ export const Dashboard = () => {
   const { t } = useLanguage();
   const { user, logout, jobs, proposals, specialists } = useAppContext();
   const [activeTab, setActiveTab] = useState<'browse' | 'my-work' | 'settings'>('browse');
+
+  if (!user) return null;
   const [search, setSearch] = useState('');
   const [filterType, setFilterType] = useState<'jobs' | 'specialists'>(user?.role === 'client' ? 'specialists' : 'jobs');
 
@@ -70,10 +72,10 @@ export const Dashboard = () => {
       <main className="main-content">
         <header className="flex items-center justify-between">
           <div className="space-y-1">
-            <h1 className="text-4xl font-black italic uppercase tracking-tighter">
+            <h1 className="text-6xl font-black italic uppercase tracking-tighter">
               {activeTab === 'browse' ? (user?.role === 'client' ? t('find_it_talent') : t('browse_it_projects')) : activeTab === 'my-work' ? t('my_workspace') : t('settings')}
             </h1>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
               {user?.role === 'client' ? t('client_dashboard') : t('freelancer_dashboard')} • {new Date().toLocaleDateString()}
             </p>
           </div>
@@ -82,7 +84,7 @@ export const Dashboard = () => {
             <LanguageSwitcher />
             <Link 
               to="/" 
-              className="px-6 py-2 bg-black/5 border border-black/10 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-black/10 transition-all flex items-center gap-2"
+              className="px-8 py-3 bg-black/5 border border-black/10 rounded-full text-xs font-black uppercase tracking-widest hover:bg-black/10 transition-all flex items-center gap-2"
             >
               {t('main_page')}
             </Link>
@@ -91,7 +93,7 @@ export const Dashboard = () => {
               <input 
                 type="text" 
                 placeholder={filterType === 'jobs' ? t('search_projects_placeholder') : t('search_talent_placeholder')} 
-                className="input-capsule pl-11 w-64 shadow-sm"
+                className="input-capsule pl-14 w-80 shadow-sm"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
               />
@@ -173,7 +175,7 @@ export const Dashboard = () => {
                   <h3 className="font-black uppercase italic">{user?.fullName}</h3>
                   <div className="flex items-center gap-1 text-emerald-500">
                     <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span className="text-[10px] font-black uppercase tracking-widest">{t('verified_user')} {user?.role}</span>
+                    <span className="text-xs font-black uppercase tracking-widest">{t('verified_user')} {user?.role}</span>
                   </div>
                 </div>
               </div>
@@ -184,7 +186,7 @@ export const Dashboard = () => {
               </div>
 
               <div className="pt-6 border-t border-black/5 space-y-4">
-                <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest">{t('platform_activity')}</p>
+                <p className="text-xs font-black uppercase text-gray-400 tracking-widest">{t('platform_activity')}</p>
                 <div className="space-y-4">
                    <div className="flex justify-between items-center text-[11px] font-bold">
                      <span className="text-gray-400 uppercase">{t('response_rate')}</span>
@@ -222,8 +224,8 @@ const SidebarItem = ({ active, icon: Icon, onClick, label }: any) => {
     onClick={onClick}
     className={`w-full flex flex-col items-center gap-1 p-4 rounded-3xl transition-all ${active ? 'bg-black text-white shadow-xl shadow-black/20 scale-105' : 'text-gray-400 hover:text-black hover:bg-black/5'}`}
   >
-    <Icon className="w-6 h-6" />
-    <span className="text-[8px] font-black uppercase tracking-widest">{label}</span>
+    <Icon className="w-8 h-8" />
+    <span className="text-[10px] font-black uppercase tracking-widest">{label}</span>
   </button>
   );
 }
@@ -234,23 +236,23 @@ const JobCard = ({ job }: any) => {
   <Link to={`/jobs/${job.id}`} className="block glass-panel p-8 rounded-[3rem] hover:scale-[1.01] transition-all group border border-white">
     <div className="flex justify-between items-start mb-6">
       <div className="space-y-2">
-        <span className="px-3 py-1 bg-indigo-500/10 text-indigo-600 rounded-full text-[9px] font-black uppercase tracking-widest">{job.category}</span>
-        <h3 className="text-2xl font-black uppercase italic text-black group-hover:text-indigo-600 transition-colors">{job.title}</h3>
+        <span className="px-4 py-1.5 bg-indigo-500/10 text-indigo-600 rounded-full text-[11px] font-black uppercase tracking-widest">{job.category}</span>
+        <h3 className="text-3xl font-black uppercase italic text-black group-hover:text-indigo-600 transition-colors">{job.title}</h3>
       </div>
       <div className="text-right">
-        <p className="text-2xl font-black italic tracking-tighter">${job.budget}</p>
-        <p className="text-[9px] font-bold text-gray-400 uppercase">{job.type}</p>
+        <p className="text-3xl font-black italic tracking-tighter">${job.budget}</p>
+        <p className="text-[11px] font-bold text-gray-400 uppercase">{job.type}</p>
       </div>
     </div>
-    <p className="text-gray-500 text-sm line-clamp-2 mb-8">{job.description}</p>
+    <p className="text-gray-500 text-base line-clamp-2 mb-8">{job.description}</p>
     <div className="flex items-center justify-between pt-6 border-t border-black/5">
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center font-bold text-xs">{job.clientName[0]}</div>
         <span className="text-[10px] font-black uppercase italic">{job.clientName}</span>
       </div>
       <div className="flex items-center gap-4 text-gray-400">
-        <div className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /><span className="text-[10px] font-bold">New</span></div>
-        <div className="flex items-center gap-1.5"><Send className="w-3.5 h-3.5" /><span className="text-[10px] font-bold">{job.proposalsCount} bids</span></div>
+        <div className="flex items-center gap-1.5"><Clock className="w-4 h-4" /><span className="text-xs font-bold">New</span></div>
+        <div className="flex items-center gap-1.5"><Send className="w-4 h-4" /><span className="text-xs font-bold">{job.proposalsCount} bids</span></div>
       </div>
     </div>
   </Link>
@@ -281,8 +283,8 @@ const SpecialistCard = ({ spec }: any) => {
         </div>
       </div>
       <div className="text-right">
-        <p className="text-2xl font-black italic tracking-tighter">${spec.price}</p>
-        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Starting from</p>
+        <p className="text-3xl font-black italic tracking-tighter">${spec.price}</p>
+        <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Starting from</p>
       </div>
     </div>
     <div className="flex gap-3 pt-4">
@@ -300,7 +302,7 @@ const MyJobCard = ({ job }: any) => {
   <div className="glass-panel p-8 rounded-[3rem] space-y-6 border border-white">
     <div className="flex justify-between items-center">
       <h3 className="text-xl font-black uppercase italic">{job.title}</h3>
-      <span className="px-4 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-full text-[10px] font-black uppercase">{job.status}</span>
+      <span className="px-5 py-2 bg-emerald-500/10 text-emerald-600 rounded-full text-xs font-black uppercase">{job.status}</span>
     </div>
     <div className="flex items-center gap-8">
       <StatBox label={t('proposals_count')} value={job.proposalsCount} />
@@ -359,8 +361,8 @@ const ClientProposalCard = ({ proposal, job }: any) => {
 
 const StatBox = ({ label, value }: any) => (
   <div>
-    <p className="text-2xl font-black tracking-tighter italic">{value}</p>
-    <p className="text-[9px] font-bold uppercase text-gray-400 tracking-widest">{label}</p>
+    <p className="text-3xl font-black tracking-tighter italic">{value}</p>
+    <p className="text-[11px] font-bold uppercase text-gray-400 tracking-widest">{label}</p>
   </div>
 )
 

@@ -44,7 +44,6 @@ const translations: Record<Language, Record<string, string>> = {
     specialists_title: 'Verified IT Specialists',
     specialists_subtitle: 'Top developers ready to start',
     view_profile: 'View Profile',
-    contact_specialist: 'Contact',
     price_from: 'from',
     per_hour: '/hr',
     testimonials_title: 'Voices of Excellence',
@@ -157,7 +156,8 @@ const translations: Record<Language, Record<string, string>> = {
     proposals_count: 'Proposals',
     budget: 'Budget',
     email: 'Email',
-    telegram: 'Telegram'
+    telegram: 'Telegram',
+    edit_profile: 'Edit Profile'
   },
   ru: {
     find_talent: 'Найти IT-фрилансера',
@@ -194,7 +194,6 @@ const translations: Record<Language, Record<string, string>> = {
     specialists_title: 'Проверенные IT-специалисты',
     specialists_subtitle: 'Топ-разработчики, готовые к работе',
     view_profile: 'Профиль',
-    contact_specialist: 'Связаться',
     price_from: 'от',
     per_hour: '/час',
     testimonials_title: 'Голоса успеха',
@@ -307,7 +306,8 @@ const translations: Record<Language, Record<string, string>> = {
     proposals_count: 'Заявок',
     budget: 'Бюджет',
     email: 'Эл. почта',
-    telegram: 'Телеграм'
+    telegram: 'Телеграм',
+    edit_profile: 'Редактировать профиль'
   },
   hy: {
     find_talent: 'Գտնել IT-ֆրիլանսեր',
@@ -451,13 +451,14 @@ const translations: Record<Language, Record<string, string>> = {
     proposals_count: 'Հայտեր',
     budget: 'Բյուջե',
     email: 'Էլ. փոստ',
-    telegram: 'Տելեգրամ'
+    telegram: 'Տելեգրամ',
+    edit_profile: 'Խմբագրել պրոֆիլը'
   }
 };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
   const [lang, setLang] = useState<Language>('en');
 
   // Auto-localization based on IP (using free service)

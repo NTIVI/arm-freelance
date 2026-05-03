@@ -56,21 +56,21 @@ a:hover {
 
   /* Dark Glassmorphism for Buttons as requested */
   .btn-capsule {
-    @apply px-6 py-2 bg-black border border-black text-white rounded-full font-bold transition-all active:scale-95 hover:bg-gray-900 flex items-center gap-2 shadow-xl shadow-black/20;
+    @apply px-10 py-4 bg-black border border-black text-white rounded-full font-bold transition-all active:scale-95 hover:bg-gray-900 flex items-center gap-3 shadow-xl shadow-black/20 text-base;
   }
   .btn-capsule, .btn-capsule * {
     color: #ffffff !important;
   }
 
   .btn-ghost {
-    @apply px-6 py-2 bg-black border border-black text-white rounded-full font-semibold transition-all hover:bg-gray-900 flex items-center gap-2 shadow-xl shadow-black/20;
+    @apply px-10 py-4 bg-black border border-black text-white rounded-full font-semibold transition-all hover:bg-gray-900 flex items-center gap-3 shadow-xl shadow-black/20 text-base;
   }
   .btn-ghost, .btn-ghost * {
     color: #ffffff !important;
   }
 
   .input-capsule {
-    @apply bg-white border-2 border-black rounded-full px-6 py-3 outline-none focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all placeholder:text-gray-500 text-sm text-black;
+    @apply bg-white border-2 border-black rounded-full px-8 py-5 outline-none focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all placeholder:text-gray-500 text-base text-black;
   }
 }
 
@@ -79,38 +79,49 @@ input, textarea, select {
 }
 
 /* Custom Scrollbar */
-::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { 
-  background: rgba(0, 0, 0, 0.1); 
+  background: rgba(0, 0, 0, 0.2); 
   border-radius: 10px; 
 }
 
 /* Layout */
 .app-container {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 350px 1fr;
   height: 100vh;
-  padding: 1.5rem;
-  gap: 1.5rem;
+  padding: 3rem;
+  gap: 3rem;
 }
 
 .main-content {
   display: grid;
   grid-template-rows: auto 1fr;
-  gap: 1.5rem;
+  gap: 3rem;
   overflow: hidden;
 }
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 1.5rem;
+  grid-template-columns: 1fr 450px;
+  gap: 3rem;
   overflow-y: auto;
-  padding-right: 0.5rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 1536px) {
+  html {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .app-container { grid-template-columns: 280px 1fr; padding: 1.5rem; gap: 1.5rem; }
+  .dashboard-grid { grid-template-columns: 1fr 340px; gap: 1.5rem; }
 }
 
 @media (max-width: 1024px) {
-  .app-container { grid-template-columns: 1fr; }
-  .dashboard-grid { grid-template-columns: 1fr; }
+  .app-container { grid-template-columns: 1fr; padding: 1rem; gap: 1rem; }
+  .dashboard-grid { grid-template-columns: 1fr; gap: 1rem; }
 }

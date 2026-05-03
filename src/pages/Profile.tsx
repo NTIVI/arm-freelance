@@ -78,6 +78,9 @@ export const Profile = () => {
                     <span className="text-xs font-black text-black">{(user.rating || 5.0).toFixed(1)}</span>
                   </div>
                 )}
+                <button className="mt-6 w-full btn-capsule py-3 text-xs justify-center">
+                  {t('edit_profile')}
+                </button>
               </div>
 
               <div className="pt-6 border-t border-black/5 space-y-6">

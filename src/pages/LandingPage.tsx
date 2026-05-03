@@ -40,15 +40,15 @@ export const LandingPage = () => {
               <div className="w-8 h-8 md:w-10 md:h-10 bg-black rounded-xl flex items-center justify-center group-hover:bg-indigo-600 transition-all">
                 <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-white rounded-sm rotate-45"></div>
               </div>
-              <span className="text-base md:text-xl font-bold tracking-tight uppercase italic hidden sm:block">Armenia Freelance</span>
+              <span className="text-xl md:text-2xl font-bold tracking-tight uppercase italic hidden sm:block">Armenia Freelance</span>
             </Link>
           </div>
           
           <div className="flex items-center space-x-2 md:space-x-8">
-            <div className="hidden lg:flex items-center space-x-6">
-              <a href="#specialists" className="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors">{t('find_talent')}</a>
-              <a href="#post-project" className="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors">{t('find_work')}</a>
-              <a href="#how-it-works" className="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors">{t('how_it_works_title')}</a>
+            <div className="hidden lg:flex items-center space-x-12">
+              <a href="#specialists" className="text-sm md:text-base font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors">{t('find_talent')}</a>
+              <a href="#post-project" className="text-sm md:text-base font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors">{t('find_work')}</a>
+              <a href="#how-it-works" className="text-sm md:text-base font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors">{t('how_it_works_title')}</a>
             </div>
             <LanguageSwitcher lang={lang} setLang={setLang} />
             <div className="flex items-center gap-2">
@@ -79,17 +79,17 @@ export const LandingPage = () => {
         
         <div className="max-w-6xl mx-auto text-center space-y-8 md:space-y-12">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} className="space-y-6 md:space-y-8">
-            <div className="inline-flex items-center space-x-2 px-4 md:px-6 py-2 bg-white/60 border border-white rounded-full text-[9px] md:text-[10px] font-black tracking-[0.2em] text-indigo-500 uppercase shadow-sm">
-              <Sparkles className="w-3 md:w-3.5 h-3 md:h-3.5" />
+            <div className="inline-flex items-center space-x-2 px-6 md:px-8 py-3 md:py-4 bg-white/60 border border-white rounded-full text-xs md:text-sm font-black tracking-[0.2em] text-indigo-500 uppercase shadow-sm">
+              <Sparkles className="w-4 md:w-5 h-4 md:h-5" />
               <span>Premium IT Ecosystem in Armenia</span>
             </div>
             
-            <h1 className="text-4xl md:text-8xl lg:text-9xl font-black leading-[0.9] tracking-tighter text-black">
+            <h1 className="text-5xl md:text-9xl lg:text-[10rem] font-black leading-[0.85] tracking-tighter text-black">
               {t('hero_title').split(' ').slice(0, -1).join(' ')} <br />
               <span className="text-gray-400">{t('hero_title').split(' ').slice(-1)}</span>
             </h1>
             
-            <p className="max-w-3xl mx-auto text-base md:text-2xl text-gray-500 font-medium leading-relaxed px-4">
+            <p className="max-w-4xl mx-auto text-lg md:text-3xl text-gray-500 font-medium leading-relaxed px-4">
               {t('hero_subtitle')}
             </p>
           </motion.div>
@@ -374,8 +374,8 @@ const SpecialistCard = ({ name, role, rating, price, tags, t }: any) => (
     </div>
     <div className="pt-6 border-t border-black/5 flex items-center justify-between">
       <div>
-        <span className="text-[9px] font-black uppercase text-gray-400">{t('price_from')}</span>
-        <div className="text-lg font-black italic text-black">${price}<span className="text-xs font-medium not-italic text-gray-400">{t('per_hour')}</span></div>
+        <span className="text-xs font-black uppercase text-gray-400">{t('price_from')}</span>
+        <div className="text-2xl font-black italic text-black">${price}<span className="text-sm font-medium not-italic text-gray-400">{t('per_hour')}</span></div>
       </div>
       <Link to="/auth" className="px-6 py-3 bg-black text-white rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-indigo-600 transition-all">
         {t('contact_specialist')}
