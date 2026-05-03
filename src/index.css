@@ -6,12 +6,12 @@
 
 :root {
   --primary: #000000;
-  --secondary: #6b7280;
+  --secondary: #000000;
   --background: #f3f4f6;
   --glass-bg: rgba(255, 255, 255, 0.4);
   --glass-border: rgba(255, 255, 255, 0.5);
-  --text-main: #111827;
-  --text-muted: #6b7280;
+  --text-main: #000000;
+  --text-muted: #000000;
   --radius: 2rem;
 }
 
@@ -19,9 +19,26 @@ body {
   margin: 0;
   font-family: 'Inter', sans-serif;
   background: radial-gradient(circle at top left, #ffffff, #e5e7eb);
-  color: var(--text-main);
+  color: #000000;
   min-height: 100vh;
   overflow-x: hidden;
+}
+
+/* Force all utility text colors to black unless explicitly white */
+[class*="text-gray-"], [class*="text-indigo-"], [class*="text-indigo-"], [class*="text-emerald-"], [class*="text-orange-"], [class*="text-pink-"] {
+  color: #000000 !important;
+}
+
+.text-white {
+  color: #ffffff !important;
+}
+
+h1, h2, h3, h4, h5, h6, p, span, a, label {
+  color: #000000;
+}
+
+a:hover {
+  color: #000000;
 }
 
 @layer components {
