@@ -9,6 +9,10 @@ interface User {
   avatar?: string;
   bio?: string;
   location?: string;
+  skills?: string[];
+  rating?: number;
+  price?: string;
+  github?: string;
 }
 
 interface Job {
@@ -25,6 +29,16 @@ interface Job {
   status: 'open' | 'closed';
 }
 
+interface Specialist extends User {
+  id: string;
+  fullName: string;
+  title: string;
+  skills: string[];
+  rating: number;
+  price: string;
+  avatar: string;
+}
+
 interface Proposal {
   id: string;
   jobId: string;
@@ -39,6 +53,7 @@ interface AppContextType {
   user: User | null;
   jobs: Job[];
   proposals: Proposal[];
+  specialists: Specialist[];
   login: (user: User) => void;
   logout: () => void;
   addJob: (job: Omit<Job, 'id' | 'createdAt' | 'proposalsCount' | 'status'>) => void;
@@ -52,6 +67,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [user, setUser] = useState<User | null>(null);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [proposals, setProposals] = useState<Proposal[]>([]);
+  const [specialists] = useState<Specialist[]>([
+    { id: 's1', fullName: 'Armen Sargsyan', title: 'Senior React Developer', skills: ['React', 'TypeScript', 'Node.js'], rating: 5.0, price: '45/hr', avatar: 'AS', role: 'freelancer', email: 'armen@af.am' },
+    { id: 's2', fullName: 'Ani Martirosyan', title: 'Senior UI/UX Designer', skills: ['Figma', 'UI/UX', 'Mobile Design'], rating: 4.9, price: '40/hr', avatar: 'AM', role: 'freelancer', email: 'ani@af.am' },
+    { id: 's3', fullName: 'Karen Hovhannisyan', title: 'DevOps Engineer', skills: ['Docker', 'AWS', 'K8s'], rating: 5.0, price: '60/hr', avatar: 'KH', role: 'freelancer', email: 'karen@af.am' },
+    { id: 's4', fullName: 'Lilit Karapetyan', title: 'Backend Lead', skills: ['Python', 'Go', 'PostgreSQL'], rating: 4.8, price: '55/hr', avatar: 'LK', role: 'freelancer', email: 'lilit@af.am' },
+  ]);
 
   useEffect(() => {
     const savedUser = localStorage.getItem('af_user');
@@ -120,7 +141,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   return (
-    <AppContext.Provider value={{ user, jobs, proposals, login, logout, addJob, applyToJob, updateProfile }}>
+    <AppContext.Provider value={{ user, jobs, proposals, specialists, login, logout, addJob, applyToJob, updateProfile }}>
       {children}
     </AppContext.Provider>
   );

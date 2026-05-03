@@ -77,10 +77,14 @@ export const PostJob = () => {
                     value={formData.category}
                     onChange={e => setFormData({...formData, category: e.target.value})}
                   >
-                    <option>Web Development</option>
-                    <option>Design</option>
-                    <option>Mobile Apps</option>
-                    <option>Marketing</option>
+                    <option>Web Development (React, Vue, Node)</option>
+                    <option>Mobile Development (iOS, Android, Flutter)</option>
+                    <option>Backend / API (Python, Go, Java)</option>
+                    <option>DevOps / Infrastructure</option>
+                    <option>Data Science / Databases</option>
+                    <option>UI/UX Design</option>
+                    <option>QA / Testing</option>
+                    <option>AI / Automation</option>
                   </select>
                 </div>
                 <div className="space-y-2">

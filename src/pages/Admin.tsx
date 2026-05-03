@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { 
   ArrowLeft, 
   Users, 
@@ -46,7 +46,9 @@ export const Admin = () => {
                <ArrowLeft className="w-4 h-4" />
                Exit Admin Panel
              </button>
-             <h1 className="text-4xl font-black italic uppercase tracking-tighter text-black">Admin <span className="text-black">Workspace</span></h1>
+             <h1 className="text-4xl font-black italic uppercase tracking-tighter text-black">
+               <Link to="/" className="hover:text-indigo-600 transition-colors">Admin</Link> <span className="text-black">Workspace</span>
+             </h1>
           </div>
           
           <div className="flex items-center gap-6">

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   ArrowLeft, 
@@ -51,12 +51,20 @@ export const JobDetails = () => {
   return (
     <div className="min-h-screen bg-[#f3f4f6] p-8 font-sans">
       <div className="max-w-6xl mx-auto">
-        <button 
-          onClick={() => navigate('/dashboard')} 
-          className="mb-12 flex items-center gap-3 text-[10px] font-black uppercase text-gray-400 hover:text-black transition-all"
-        >
-          <ArrowLeft className="w-4 h-4" /> Back to Feed
-        </button>
+        <div className="flex items-center gap-6 mb-12">
+          <button 
+            onClick={() => navigate('/dashboard')} 
+            className="flex items-center gap-3 text-[10px] font-black uppercase text-gray-400 hover:text-black transition-all"
+          >
+            <ArrowLeft className="w-4 h-4" /> Back to Feed
+          </button>
+          <Link 
+            to="/" 
+            className="flex items-center gap-3 text-[10px] font-black uppercase text-gray-400 hover:text-black transition-all"
+          >
+            Go to Main Page
+          </Link>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           <div className="lg:col-span-8 space-y-12">

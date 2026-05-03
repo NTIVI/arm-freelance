@@ -42,12 +42,12 @@ export const Auth = () => {
   return (
     <div className="min-h-screen bg-[#f3f4f6] flex items-center justify-center p-6 font-sans">
       <div className="w-full max-w-lg">
-        <div className="flex flex-col items-center mb-16 space-y-4">
-          <div className="w-14 h-14 rounded-2xl bg-black flex items-center justify-center shadow-xl">
+        <Link to="/" className="flex flex-col items-center mb-16 space-y-4 group">
+          <div className="w-14 h-14 rounded-2xl bg-black flex items-center justify-center shadow-xl group-hover:bg-indigo-600 transition-all">
             <div className="w-7 h-7 border-2 border-white rounded rotate-45"></div>
           </div>
           <h2 className="text-2xl font-black uppercase italic tracking-tighter">Armenia Freelance</h2>
-        </div>
+        </Link>
 
         <AnimatePresence mode="wait">
           {step === 1 ? (
