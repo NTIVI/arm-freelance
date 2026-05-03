@@ -79,6 +79,12 @@ export const Dashboard = () => {
 
           <div className="flex items-center gap-4">
             <LanguageSwitcher />
+            <Link 
+              to="/" 
+              className="px-6 py-2 bg-black/5 border border-black/10 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-black/10 transition-all flex items-center gap-2"
+            >
+              Main Page
+            </Link>
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input 

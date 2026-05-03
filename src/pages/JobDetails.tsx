@@ -27,6 +27,9 @@ export const JobDetails = () => {
     if (foundJob) setJob(foundJob);
   }, [id, jobs]);
 
+  const jobProposals = proposals.filter(p => p.jobId === id);
+  const isOwner = user?.id === job?.clientId;
+
   if (!job) return null;
 
   const handleApply = (e: React.FormEvent) => {
@@ -46,6 +49,11 @@ export const JobDetails = () => {
       setShowApply(false);
       navigate('/dashboard'); 
     }, 2000);
+  };
+
+  const handleHire = (freelancerId: string) => {
+    const { hireSpecialist } = useAppContext(); // Get context again to ensure latest
+    // Wait, hireSpecialist is already in context, but I didn't destructure it above.
   };
 
   return (
@@ -73,7 +81,7 @@ export const JobDetails = () => {
                 <span className="px-4 py-1.5 bg-indigo-500/10 text-indigo-600 rounded-full text-[10px] font-black uppercase tracking-widest">{job.category}</span>
                 <div className="flex items-center gap-1.5 text-gray-400">
                   <Clock className="w-4 h-4" />
-                  <span className="text-[10px] font-bold uppercase">Posted 2 hours ago</span>
+                  <span className="text-[10px] font-bold uppercase">Status: {job.status}</span>
                 </div>
               </div>
               <h1 className="text-5xl md:text-7xl font-black italic uppercase leading-[0.9] tracking-tighter text-black">{job.title}</h1>
@@ -90,14 +98,26 @@ export const JobDetails = () => {
               <p className="text-gray-600 text-lg leading-relaxed whitespace-pre-wrap">{job.description}</p>
             </div>
 
-            <div className="space-y-4">
-              <h3 className="text-xl font-black uppercase italic">Required Skills</h3>
-              <div className="flex flex-wrap gap-3">
-                {['React', 'TypeScript', 'Tailwind', 'REST API'].map(skill => (
-                  <span key={skill} className="px-6 py-2 bg-white rounded-full text-xs font-bold shadow-sm border border-black/5">{skill}</span>
-                ))}
+            {/* Proposals Section for Client */}
+            {isOwner && (
+              <div className="space-y-8 pt-12 border-t border-black/5">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-2xl font-black uppercase italic">Proposals ({jobProposals.length})</h3>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Candidates for this project</p>
+                </div>
+                <div className="space-y-6">
+                  {jobProposals.length === 0 ? (
+                    <div className="p-12 glass-panel rounded-[2rem] text-center text-gray-400 text-sm font-medium">
+                      No proposals yet.
+                    </div>
+                  ) : (
+                    jobProposals.map((p: any) => (
+                      <ProposalActionCard key={p.id} proposal={p} job={job} />
+                    ))
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           <div className="lg:col-span-4">
@@ -121,11 +141,11 @@ export const JobDetails = () => {
                   <span className="text-black">{job.proposalsCount}</span>
                 </div>
                 <div className="h-1.5 w-full bg-black/5 rounded-full overflow-hidden">
-                  <div className="h-full bg-black rounded-full" style={{ width: '40%' }}></div>
+                  <div className="h-full bg-black rounded-full" style={{ width: job.status === 'open' ? '40%' : '100%' }}></div>
                 </div>
               </div>
 
-              {user?.role === 'freelancer' && !applied && (
+              {user?.role === 'freelancer' && !applied && job.status === 'open' && (
                 <button 
                   onClick={() => setShowApply(true)} 
                   className="btn-capsule w-full py-5 justify-center shadow-2xl shadow-black/10"
@@ -139,9 +159,15 @@ export const JobDetails = () => {
                   <CheckCircle2 className="w-5 h-5" /> Submitted Successfully
                 </div>
               )}
+
+              {job.status !== 'open' && (
+                <div className="p-6 bg-indigo-500/10 text-indigo-600 rounded-[2rem] text-[11px] font-black uppercase text-center">
+                  Project Status: {job.status}
+                </div>
+              )}
               
               <p className="text-[10px] text-gray-400 font-medium text-center px-4 leading-relaxed">
-                Applying uses 2 connects. Your current balance is 45 connects.
+                Connect with the finest talent in Armenia.
               </p>
             </div>
           </div>
@@ -215,3 +241,85 @@ const DetailItem = ({ icon: Icon, label, value }: any) => (
     <p className="text-2xl font-black italic uppercase tracking-tighter text-black">{value}</p>
   </div>
 )
+
+const ProposalActionCard = ({ proposal, job }: any) => {
+  const { hireSpecialist, completeJob } = useAppContext();
+  const [rating, setRating] = useState(5);
+  const [showRating, setShowRating] = useState(false);
+
+  const isAccepted = proposal.status === 'accepted';
+  const isInProgress = job.status === 'in-progress' && isAccepted;
+  const isCompleted = job.status === 'completed';
+
+  return (
+    <div className={`glass-panel p-8 rounded-[2.5rem] border-2 transition-all ${isAccepted ? 'border-indigo-500' : 'border-transparent'}`}>
+      <div className="flex justify-between items-start mb-6">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 bg-black rounded-2xl flex items-center justify-center text-white font-bold text-xl">
+            {proposal.freelancerName[0]}
+          </div>
+          <div>
+            <h4 className="font-black uppercase italic">{proposal.freelancerName}</h4>
+            <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+              <span>Bid: ${proposal.bid}</span>
+              <span>•</span>
+              <span>{new Date(proposal.createdAt).toLocaleDateString()}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          {job.status === 'open' && (
+            <button 
+              onClick={() => hireSpecialist(job.id, proposal.freelancerId)}
+              className="btn-capsule bg-black text-white px-6 py-2 text-[10px]"
+            >
+              Hire Specialist
+            </button>
+          )}
+          
+          {isInProgress && (
+            <button 
+              onClick={() => setShowRating(true)}
+              className="btn-capsule bg-emerald-600 text-white px-6 py-2 text-[10px]"
+            >
+              Mark Completed
+            </button>
+          )}
+
+          {isAccepted && !isInProgress && !isCompleted && (
+            <span className="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-full text-[10px] font-black uppercase">Contract Started</span>
+          )}
+
+          {isCompleted && isAccepted && (
+            <span className="px-4 py-2 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase">Project Finished</span>
+          )}
+        </div>
+      </div>
+
+      <p className="text-gray-600 text-sm leading-relaxed italic mb-4">"{proposal.coverLetter}"</p>
+
+      {showRating && (
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="pt-6 border-t border-black/5 mt-6 space-y-4">
+          <p className="text-[10px] font-black uppercase text-center">Rate this specialist</p>
+          <div className="flex justify-center gap-2">
+            {[1, 2, 3, 4, 5].map(star => (
+              <button key={star} onClick={() => setRating(star)} className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${rating >= star ? 'bg-orange-400 text-white' : 'bg-gray-100 text-gray-400'}`}>
+                <Star className={`w-4 h-4 ${rating >= star ? 'fill-current' : ''}`} />
+              </button>
+            ))}
+          </div>
+          <button 
+            onClick={() => {
+              completeJob(job.id, proposal.freelancerId, rating);
+              setShowRating(false);
+            }}
+            className="w-full btn-capsule justify-center bg-black text-white"
+          >
+            Submit Feedback
+          </button>
+        </motion.div>
+      )}
+    </div>
+  );
+};

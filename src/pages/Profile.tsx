@@ -17,16 +17,15 @@ import { motion } from 'framer-motion'
 
 export const Profile = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAppContext();
+  const { user, logout, jobs } = useAppContext();
   const { lang, setLang, t } = useLanguage();
 
   if (!user) return null;
 
-  const completedOrders = [
-    { id: 1, title: "E-commerce Mobile App", date: "24.03.2024", status: "Completed", amount: "$2,400" },
-    { id: 2, title: "Infrastructure Migration", date: "12.02.2024", status: "Completed", amount: "$1,850" },
-    { id: 3, title: "UI/UX Redesign for Fintech", date: "05.01.2024", status: "Completed", amount: "$900" },
-  ];
+  const completedOrders = jobs.filter(j => 
+    (user.role === 'freelancer' && j.selectedFreelancerId === user.id && j.status === 'completed') ||
+    (user.role === 'client' && j.clientId === user.id && j.status === 'completed')
+  );
 
   return (
     <div className="min-h-screen bg-[#f3f4f6] font-sans">
@@ -34,11 +33,11 @@ export const Profile = () => {
         
         {/* Header */}
         <header className="flex items-center justify-between mb-12">
-          <Link to="/" className="flex items-center gap-3 group">
+          <Link to="/dashboard" className="flex items-center gap-3 group">
             <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white shadow-lg group-hover:bg-indigo-600 transition-all">
-              <div className="w-5 h-5 border-2 border-white rounded rotate-45"></div>
+              <ArrowLeft className="w-5 h-5" />
             </div>
-            <span className="font-black italic uppercase tracking-tighter text-xl">AF</span>
+            <span className="font-black italic uppercase tracking-tighter text-[10px] text-gray-400">Back to Dashboard</span>
           </Link>
 
           <button 
@@ -54,7 +53,7 @@ export const Profile = () => {
           {/* Profile Sidebar */}
           <div className="lg:col-span-1 space-y-6">
             <div className="glass-panel p-8 rounded-[3rem] text-center space-y-6 relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-br from-indigo-600 to-indigo-900 -z-10"></div>
+              <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-br from-black to-gray-800 -z-10"></div>
               
               <div className="relative mt-8 group cursor-pointer inline-block">
                 <div className="w-32 h-32 rounded-[2.5rem] bg-black border-4 border-white flex items-center justify-center text-white text-5xl font-black shadow-2xl overflow-hidden">
@@ -73,6 +72,12 @@ export const Profile = () => {
                     {user.role === 'freelancer' ? 'Elite Specialist' : 'Marketplace Client'}
                   </span>
                 </div>
+                {user.role === 'freelancer' && (
+                  <div className="flex items-center justify-center gap-1 mt-2 text-orange-400">
+                    <Star className="w-4 h-4 fill-current" />
+                    <span className="text-xs font-black text-black">{(user.rating || 5.0).toFixed(1)}</span>
+                  </div>
+                )}
               </div>
 
               <div className="pt-6 border-t border-black/5 space-y-6">
@@ -95,10 +100,18 @@ export const Profile = () => {
                       </div>
                     </div>
 
-                    <div className="flex justify-between items-center py-3 border-t border-black/5">
-                      <span className="text-xs font-bold text-gray-600 uppercase tracking-widest">Email</span>
-                      <span className="text-[11px] font-medium text-gray-400 truncate max-w-[120px]">{user.email}</span>
-                    </div>
+                    {user.role === 'freelancer' && (
+                      <>
+                        <div className="flex justify-between items-center py-3 border-t border-black/5">
+                          <span className="text-xs font-bold text-gray-600 uppercase tracking-widest">Category</span>
+                          <span className="text-[11px] font-black uppercase text-indigo-600">{user.category}</span>
+                        </div>
+                        <div className="flex justify-between items-center py-3 border-t border-black/5">
+                          <span className="text-xs font-bold text-gray-600 uppercase tracking-widest">Experience</span>
+                          <span className="text-[11px] font-bold text-black">{user.experienceYears} Years</span>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -108,43 +121,46 @@ export const Profile = () => {
           {/* Activity Section */}
           <div className="lg:col-span-2 space-y-6">
             <div className="glass-panel p-10 rounded-[3.5rem] space-y-8">
+              <div className="space-y-4">
+                <h3 className="text-xl font-black uppercase italic tracking-tighter">About</h3>
+                <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-wrap">{user.bio || "No description provided."}</p>
+              </div>
+            </div>
+
+            <div className="glass-panel p-10 rounded-[3.5rem] space-y-8">
               <div className="flex items-center justify-between">
                 <h3 className="text-xl font-black uppercase italic tracking-tighter">Completed Orders</h3>
                 <span className="px-4 py-1.5 bg-black/5 rounded-full text-[10px] font-black uppercase">{completedOrders.length} projects</span>
               </div>
 
               <div className="space-y-4">
-                {completedOrders.map((order) => (
-                  <div key={order.id} className="group p-6 rounded-[2rem] bg-white hover:bg-black hover:text-white transition-all border border-black/5 shadow-sm flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-black/5 group-hover:bg-white/10 rounded-2xl flex items-center justify-center transition-all">
-                        <Briefcase className="w-6 h-6 text-gray-400 group-hover:text-white" />
-                      </div>
-                      <div>
-                        <h4 className="font-black uppercase italic text-sm">{order.title}</h4>
-                        <p className="text-[10px] font-bold text-gray-400 uppercase group-hover:text-white/60">{order.date}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-lg font-black italic tracking-tighter">{order.amount}</p>
-                      <div className="flex items-center gap-1 justify-end text-emerald-500 group-hover:text-emerald-400">
-                        <CheckCircle2 className="w-3 h-3" />
-                        <span className="text-[9px] font-black uppercase tracking-widest">Completed</span>
-                      </div>
-                    </div>
+                {completedOrders.length === 0 ? (
+                  <div className="p-12 border-2 border-dashed border-black/5 rounded-[2rem] text-center text-gray-400 text-sm font-medium">
+                    No completed projects yet.
                   </div>
-                ))}
+                ) : (
+                  completedOrders.map((order) => (
+                    <div key={order.id} className="group p-6 rounded-[2rem] bg-white hover:bg-black hover:text-white transition-all border border-black/5 shadow-sm flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-black/5 group-hover:bg-white/10 rounded-2xl flex items-center justify-center transition-all">
+                          <Briefcase className="w-6 h-6 text-gray-400 group-hover:text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-black uppercase italic text-sm">{order.title}</h4>
+                          <p className="text-[10px] font-bold text-gray-400 uppercase group-hover:text-white/60">{new Date(order.createdAt).toLocaleDateString()}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-lg font-black italic tracking-tighter">${order.budget}</p>
+                        <div className="flex items-center gap-1 justify-end text-emerald-500 group-hover:text-emerald-400">
+                          <CheckCircle2 className="w-3 h-3" />
+                          <span className="text-[9px] font-black uppercase tracking-widest">Completed</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
-
-              <button className="w-full py-5 border-2 border-dashed border-black/10 rounded-[2rem] text-gray-400 hover:text-black hover:border-black/30 transition-all text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2">
-                View All History <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* Profile Activity Highlights */}
-            <div className="grid grid-cols-2 gap-6">
-              <ActivityStat label="Response Rate" value="100%" color="text-indigo-600" />
-              <ActivityStat label="On Time" value="98%" color="text-emerald-500" />
             </div>
           </div>
         </div>
@@ -152,10 +168,3 @@ export const Profile = () => {
     </div>
   )
 }
-
-const ActivityStat = ({ label, value, color }: any) => (
-  <div className="glass-panel p-8 rounded-[2.5rem] space-y-2">
-    <p className={`text-4xl font-black italic tracking-tighter ${color}`}>{value}</p>
-    <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest">{label}</p>
-  </div>
-)

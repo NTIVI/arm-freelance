@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { 
   Mail, 
   Lock, 
@@ -8,7 +8,10 @@ import {
   ArrowRight, 
   Briefcase, 
   Users, 
-  CheckCircle2
+  CheckCircle2,
+  Camera,
+  Layers,
+  Star
 } from 'lucide-react'
 import { useAppContext } from '../context/AppContext'
 
@@ -21,13 +24,22 @@ export const Auth = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    fullName: ''
+    firstName: '',
+    lastName: '',
+    bio: '',
+    category: 'Web Development',
+    experienceYears: 1
   });
 
   const handleAuth = (e: React.FormEvent) => {
     e.preventDefault();
     if (isLogin) {
-      login({ id: 'u1', email: formData.email, fullName: 'Demo User', role: 'freelancer' });
+      login({ 
+        id: 'u1', 
+        email: formData.email, 
+        fullName: 'Demo User', 
+        role: 'freelancer' 
+      });
       navigate('/dashboard');
     } else {
       setStep(2);
@@ -35,7 +47,17 @@ export const Auth = () => {
   };
 
   const handleFinalize = () => {
-    login({ id: Math.random().toString(36).substr(2, 9), email: formData.email, fullName: formData.fullName, role: role! });
+    login({ 
+      id: Math.random().toString(36).substr(2, 9), 
+      email: formData.email, 
+      fullName: `${formData.firstName} ${formData.lastName}`,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      bio: formData.bio,
+      category: formData.category,
+      experienceYears: formData.experienceYears,
+      role: role! 
+    });
     navigate('/dashboard');
   };
 
@@ -51,19 +73,13 @@ export const Auth = () => {
 
         <AnimatePresence mode="wait">
           {step === 1 ? (
-            <motion.div key="auth-form" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, y: -20 }} className="glass-panel p-12 rounded-[3.5rem] space-y-10">
+            <motion.div key="step-1" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, y: -20 }} className="glass-panel p-12 rounded-[3.5rem] space-y-10">
               <div className="text-center space-y-2">
                 <h3 className="text-3xl font-black uppercase italic">{isLogin ? 'Hello Again' : 'Join AF'}</h3>
                 <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Premium Professional Network</p>
               </div>
 
               <form onSubmit={handleAuth} className="space-y-4">
-                {!isLogin && (
-                  <div className="relative group">
-                    <User className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300" />
-                    <input required type="text" placeholder="Full Name" className="input-capsule pl-14 w-full" value={formData.fullName} onChange={e => setFormData({...formData, fullName: e.target.value})} />
-                  </div>
-                )}
                 <div className="relative group">
                   <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300" />
                   <input required type="email" placeholder="Gmail / Email Address" className="input-capsule pl-14 w-full" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
@@ -80,16 +96,16 @@ export const Auth = () => {
                 )}
                 
                 <button type="submit" className="btn-capsule w-full py-5 justify-center shadow-2xl shadow-black/10 mt-6">
-                  {isLogin ? 'Enter Workspace' : 'Create Account'} <ArrowRight className="w-5 h-5" />
+                  {isLogin ? 'Enter Workspace' : 'Continue to Role'} <ArrowRight className="w-5 h-5" />
                 </button>
               </form>
 
               <div className="space-y-4 pt-6 border-t border-black/5">
                 <p className="text-[9px] font-black uppercase text-gray-400 text-center tracking-widest">Or connect with</p>
                 <div className="grid grid-cols-3 gap-3">
-                  <SocialBtn icon="/google-icon.svg" label="Google" />
-                  <SocialBtn icon="/vk-icon.svg" label="VK" />
-                  <SocialBtn icon="/fb-icon.svg" label="Facebook" color="bg-[#1877F2]" />
+                  <SocialBtn icon="G" label="Google" />
+                  <SocialBtn icon="V" label="VK" />
+                  <SocialBtn icon="F" label="Facebook" color="bg-[#1877F2]" />
                 </div>
               </div>
 
@@ -97,15 +113,79 @@ export const Auth = () => {
                 {isLogin ? "Create an Elite Account" : "Access Existing Workspace"}
               </button>
             </motion.div>
-          ) : (
-            <motion.div key="role-selection" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
+          ) : step === 2 ? (
+            <motion.div key="step-2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
+               <div className="text-center pb-8">
+                 <h3 className="text-2xl font-black uppercase italic">Choose Your Path</h3>
+               </div>
                <RoleOption selected={role === 'freelancer'} onClick={() => setRole('freelancer')} icon={Briefcase} title="Elite Specialist" desc="I provide professional services" />
                <RoleOption selected={role === 'client'} onClick={() => setRole('client')} icon={Users} title="Marketplace Client" desc="I hire top-tier talent" />
                {role && (
-                 <button onClick={handleFinalize} className="btn-capsule w-full py-5 justify-center animate-bounce mt-8">
-                   Initialize Profile <ArrowRight className="w-5 h-5" />
+                 <button onClick={() => setStep(3)} className="btn-capsule w-full py-5 justify-center mt-8">
+                   Complete Profile <ArrowRight className="w-5 h-5" />
                  </button>
                )}
+            </motion.div>
+          ) : (
+            <motion.div key="step-3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-panel p-10 rounded-[3.5rem] space-y-8">
+              <div className="text-center space-y-2">
+                <h3 className="text-2xl font-black uppercase italic">Profile Details</h3>
+                <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Almost there, {role}</p>
+              </div>
+
+              <div className="flex flex-col items-center gap-6">
+                <div className="w-24 h-24 bg-black/5 rounded-full border-2 border-dashed border-black/10 flex items-center justify-center cursor-pointer group hover:bg-black/10 transition-all">
+                  <Camera className="w-8 h-8 text-gray-300 group-hover:text-black" />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4 w-full">
+                  <input required type="text" placeholder="First Name" className="input-capsule w-full" value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} />
+                  <input required type="text" placeholder="Last Name" className="input-capsule w-full" value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} />
+                </div>
+
+                <textarea 
+                  required 
+                  placeholder={role === 'client' ? "Short bio about your project goals..." : "Detailed description of your experience and expertise..."} 
+                  rows={role === 'freelancer' ? 5 : 3} 
+                  className="input-capsule w-full rounded-3xl py-4 resize-none"
+                  value={formData.bio}
+                  onChange={e => setFormData({...formData, bio: e.target.value})}
+                ></textarea>
+
+                {role === 'freelancer' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                    <div className="relative">
+                      <Layers className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <select 
+                        className="input-capsule pl-11 w-full appearance-none"
+                        value={formData.category}
+                        onChange={e => setFormData({...formData, category: e.target.value})}
+                      >
+                        <option>Web Development</option>
+                        <option>Mobile Apps</option>
+                        <option>UI/UX Design</option>
+                        <option>DevOps</option>
+                        <option>AI / Data Science</option>
+                      </select>
+                    </div>
+                    <div className="relative">
+                      <Star className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <input 
+                        required 
+                        type="number" 
+                        placeholder="Years of Exp" 
+                        className="input-capsule pl-11 w-full" 
+                        value={formData.experienceYears}
+                        onChange={e => setFormData({...formData, experienceYears: parseInt(e.target.value)})}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <button onClick={handleFinalize} className="btn-capsule w-full py-5 justify-center mt-4">
+                  Finalize & Launch <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -114,10 +194,10 @@ export const Auth = () => {
   )
 }
 
-const SocialBtn = ({ label, color }: any) => (
+const SocialBtn = ({ label, color, icon }: any) => (
   <button className={`flex items-center justify-center p-3 rounded-2xl bg-white/40 border border-white/60 hover:bg-white/60 transition-all group`}>
-    <div className={`w-5 h-5 rounded-md ${color || 'bg-white'} flex items-center justify-center text-[10px] font-bold`}>
-      {label[0]}
+    <div className={`w-5 h-5 rounded-md ${color || 'bg-white text-black'} flex items-center justify-center text-[10px] font-bold`}>
+      {icon}
     </div>
   </button>
 )

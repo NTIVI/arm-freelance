@@ -5,6 +5,8 @@ interface User {
   fullName: string;
   email: string;
   role: 'client' | 'freelancer';
+  firstName?: string;
+  lastName?: string;
   title?: string;
   avatar?: string;
   bio?: string;
@@ -13,6 +15,8 @@ interface User {
   rating?: number;
   price?: string;
   github?: string;
+  category?: string;
+  experienceYears?: number;
 }
 
 interface Job {
@@ -26,7 +30,8 @@ interface Job {
   clientName: string;
   createdAt: string;
   proposalsCount: number;
-  status: 'open' | 'closed';
+  status: 'open' | 'in-progress' | 'completed' | 'closed';
+  selectedFreelancerId?: string;
 }
 
 interface Specialist extends User {
@@ -47,6 +52,7 @@ interface Proposal {
   bid: string;
   coverLetter: string;
   createdAt: string;
+  status: 'pending' | 'accepted' | 'rejected';
 }
 
 interface AppContextType {
@@ -57,8 +63,10 @@ interface AppContextType {
   login: (user: User) => void;
   logout: () => void;
   addJob: (job: Omit<Job, 'id' | 'createdAt' | 'proposalsCount' | 'status'>) => void;
-  applyToJob: (proposal: Omit<Proposal, 'id' | 'createdAt'>) => void;
+  applyToJob: (proposal: Omit<Proposal, 'id' | 'createdAt' | 'status'>) => void;
   updateProfile: (data: Partial<User>) => void;
+  hireSpecialist: (jobId: string, freelancerId: string) => void;
+  completeJob: (jobId: string, freelancerId: string, rating: number) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -116,11 +124,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem('af_jobs', JSON.stringify(updatedJobs));
   };
 
-  const applyToJob = (proposalData: Omit<Proposal, 'id' | 'createdAt'>) => {
+  const applyToJob = (proposalData: Omit<Proposal, 'id' | 'createdAt' | 'status'>) => {
     const newProposal: Proposal = {
       ...proposalData,
       id: Math.random().toString(36).substr(2, 9),
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      status: 'pending'
     };
     const updatedProposals = [newProposal, ...proposals];
     setProposals(updatedProposals);
@@ -133,6 +142,31 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem('af_jobs', JSON.stringify(updatedJobs));
   };
 
+  const hireSpecialist = (jobId: string, freelancerId: string) => {
+    const updatedJobs = jobs.map(j => 
+      j.id === jobId ? { ...j, status: 'in-progress' as const, selectedFreelancerId: freelancerId } : j
+    );
+    setJobs(updatedJobs);
+    localStorage.setItem('af_jobs', JSON.stringify(updatedJobs));
+
+    const updatedProposals = proposals.map(p => 
+      p.jobId === jobId ? { ...p, status: p.freelancerId === freelancerId ? 'accepted' as const : 'rejected' as const } : p
+    );
+    setProposals(updatedProposals);
+    localStorage.setItem('af_proposals', JSON.stringify(updatedProposals));
+  };
+
+  const completeJob = (jobId: string, freelancerId: string, rating: number) => {
+    const updatedJobs = jobs.map(j => 
+      j.id === jobId ? { ...j, status: 'completed' as const } : j
+    );
+    setJobs(updatedJobs);
+    localStorage.setItem('af_jobs', JSON.stringify(updatedJobs));
+
+    // Update specialist rating (mock logic for demo)
+    console.log(`Job ${jobId} completed. Freelancer ${freelancerId} received rating: ${rating}`);
+  };
+
   const updateProfile = (data: Partial<User>) => {
     if (!user) return;
     const updatedUser = { ...user, ...data };
@@ -141,7 +175,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   return (
-    <AppContext.Provider value={{ user, jobs, proposals, specialists, login, logout, addJob, applyToJob, updateProfile }}>
+    <AppContext.Provider value={{ 
+      user, 
+      jobs, 
+      proposals, 
+      specialists, 
+      login, 
+      logout, 
+      addJob, 
+      applyToJob, 
+      updateProfile,
+      hireSpecialist,
+      completeJob
+    }}>
       {children}
     </AppContext.Provider>
   );
