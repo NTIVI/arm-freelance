@@ -51,20 +51,26 @@ a:hover {
 
 @layer components {
   .glass-panel {
-    @apply bg-white/40 backdrop-blur-2xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.05)];
+    @apply bg-white/40 backdrop-blur-2xl border border-black shadow-[0_8px_32px_rgba(0,0,0,0.05)];
   }
 
   /* Dark Glassmorphism for Buttons as requested */
   .btn-capsule {
     @apply px-6 py-2 bg-black border border-black text-white rounded-full font-bold transition-all active:scale-95 hover:bg-gray-900 flex items-center gap-2 shadow-xl shadow-black/20;
   }
+  .btn-capsule, .btn-capsule * {
+    color: #ffffff !important;
+  }
 
   .btn-ghost {
     @apply px-6 py-2 bg-black border border-black text-white rounded-full font-semibold transition-all hover:bg-gray-900 flex items-center gap-2 shadow-xl shadow-black/20;
   }
+  .btn-ghost, .btn-ghost * {
+    color: #ffffff !important;
+  }
 
   .input-capsule {
-    @apply bg-white/40 border border-white/60 rounded-full px-6 py-3 outline-none focus:bg-white/60 transition-all placeholder:text-gray-500 text-sm text-black;
+    @apply bg-white/40 border border-black rounded-full px-6 py-3 outline-none focus:bg-white/60 transition-all placeholder:text-gray-500 text-sm text-black;
   }
 }
 
