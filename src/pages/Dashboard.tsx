@@ -20,7 +20,7 @@ import { useLanguage } from '../context/LanguageContext'
 
 export const Dashboard = () => {
   const { t } = useLanguage();
-  const { user, logout, jobs, proposals, specialists } = useAppContext();
+  const { user, logout, jobs, proposals, specialists, applyToJob, hireSpecialist, completeJob } = useAppContext();
   const [activeTab, setActiveTab] = useState<'browse' | 'my-work' | 'settings'>('browse');
 
   if (!user) return null;
@@ -352,7 +352,12 @@ const ClientProposalCard = ({ proposal, job }: any) => {
     </div>
     <p className="text-gray-500 text-xs font-medium leading-relaxed italic line-clamp-3">"{proposal.coverLetter}"</p>
     <div className="flex gap-4 pt-4">
-       <button className="btn-capsule flex-1 justify-center bg-emerald-600 hover:bg-emerald-700">{t('approve_and_hire')}</button>
+       <button 
+         onClick={() => navigate(`/jobs/${job.id}`)}
+         className="btn-capsule flex-1 justify-center bg-emerald-600 hover:bg-emerald-700"
+       >
+         {t('approve_and_hire')}
+       </button>
        <button className="btn-ghost flex-1 justify-center bg-white border border-black/10">{t('message')}</button>
     </div>
   </div>

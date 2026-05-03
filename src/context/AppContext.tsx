@@ -17,6 +17,13 @@ interface User {
   github?: string;
   category?: string;
   experienceYears?: number;
+  ip?: string;
+  country?: string;
+  verified?: boolean;
+  online?: boolean;
+  completedJobsCount?: number;
+  appliedJobsCount?: number;
+  postedJobsCount?: number;
 }
 
 interface Job {
@@ -60,6 +67,7 @@ interface AppContextType {
   jobs: Job[];
   proposals: Proposal[];
   specialists: Specialist[];
+  users: User[];
   login: (user: User) => void;
   logout: () => void;
   addJob: (job: Omit<Job, 'id' | 'createdAt' | 'proposalsCount' | 'status'>) => void;
@@ -75,6 +83,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [proposals, setProposals] = useState<Proposal[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [specialists] = useState<Specialist[]>([
     { id: 's1', fullName: 'Armen Sargsyan', title: 'Senior React Developer', skills: ['React', 'TypeScript', 'Node.js'], rating: 5.0, price: '45/hr', avatar: 'AS', role: 'freelancer', email: 'armen@af.am' },
     { id: 's2', fullName: 'Ani Martirosyan', title: 'Senior UI/UX Designer', skills: ['Figma', 'UI/UX', 'Mobile Design'], rating: 4.9, price: '40/hr', avatar: 'AM', role: 'freelancer', email: 'ani@af.am' },
@@ -86,10 +95,12 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     const savedUser = localStorage.getItem('af_user');
     const savedJobs = localStorage.getItem('af_jobs');
     const savedProposals = localStorage.getItem('af_proposals');
+    const savedUsers = localStorage.getItem('af_users');
     
     if (savedUser) setUser(JSON.parse(savedUser));
     if (savedJobs) setJobs(JSON.parse(savedJobs));
     if (savedProposals) setProposals(JSON.parse(savedProposals));
+    if (savedUsers) setUsers(JSON.parse(savedUsers));
 
     if (!savedJobs) {
       const initialJobs: Job[] = [
@@ -102,11 +113,39 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const login = (userData: User) => {
-    setUser(userData);
-    localStorage.setItem('af_user', JSON.stringify(userData));
+    const userWithDefaults = {
+      ...userData,
+      online: true,
+      verified: userData.verified ?? false,
+      completedJobsCount: userData.completedJobsCount ?? 0,
+      appliedJobsCount: userData.appliedJobsCount ?? 0,
+      postedJobsCount: userData.postedJobsCount ?? 0
+    };
+    setUser(userWithDefaults);
+    localStorage.setItem('af_user', JSON.stringify(userWithDefaults));
+    
+    // Sync to global users list
+    setUsers(prev => {
+      const exists = prev.find(u => u.id === userData.id);
+      let newUsers;
+      if (exists) {
+        newUsers = prev.map(u => u.id === userData.id ? { ...u, ...userWithDefaults } : u);
+      } else {
+        newUsers = [...prev, userWithDefaults];
+      }
+      localStorage.setItem('af_users', JSON.stringify(newUsers));
+      return newUsers;
+    });
   };
 
   const logout = () => {
+    if (user) {
+      setUsers(prev => {
+        const newUsers = prev.map(u => u.id === user.id ? { ...u, online: false } : u);
+        localStorage.setItem('af_users', JSON.stringify(newUsers));
+        return newUsers;
+      });
+    }
     setUser(null);
     localStorage.removeItem('af_user');
   };
@@ -122,6 +161,11 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     const updatedJobs = [newJob, ...jobs];
     setJobs(updatedJobs);
     localStorage.setItem('af_jobs', JSON.stringify(updatedJobs));
+
+    if (user) {
+      const updatedUser = { ...user, postedJobsCount: (user.postedJobsCount || 0) + 1 };
+      updateProfile(updatedUser);
+    }
   };
 
   const applyToJob = (proposalData: Omit<Proposal, 'id' | 'createdAt' | 'status'>) => {
@@ -140,6 +184,11 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     );
     setJobs(updatedJobs);
     localStorage.setItem('af_jobs', JSON.stringify(updatedJobs));
+
+    if (user) {
+      const updatedUser = { ...user, appliedJobsCount: (user.appliedJobsCount || 0) + 1 };
+      updateProfile(updatedUser);
+    }
   };
 
   const hireSpecialist = (jobId: string, freelancerId: string) => {
@@ -165,6 +214,23 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Update specialist rating (mock logic for demo)
     console.log(`Job ${jobId} completed. Freelancer ${freelancerId} received rating: ${rating}`);
+
+    // Update stats for both client and freelancer
+    setUsers(prev => {
+      const newUsers = prev.map(u => {
+        if (u.id === freelancerId || u.id === user?.id) {
+          return { ...u, completedJobsCount: (u.completedJobsCount || 0) + 1 };
+        }
+        return u;
+      });
+      localStorage.setItem('af_users', JSON.stringify(newUsers));
+      return newUsers;
+    });
+
+    if (user) {
+      const updatedUser = { ...user, completedJobsCount: (user.completedJobsCount || 0) + 1 };
+      updateProfile(updatedUser);
+    }
   };
 
   const updateProfile = (data: Partial<User>) => {
@@ -180,6 +246,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       jobs, 
       proposals, 
       specialists, 
+      users,
       login, 
       logout, 
       addJob, 

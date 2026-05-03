@@ -46,7 +46,19 @@ export const Auth = () => {
     }
   };
 
-  const handleFinalize = () => {
+  const handleFinalize = async () => {
+    let ip = '127.0.0.1';
+    let country = 'Armenia';
+    
+    try {
+      const response = await fetch('https://ipapi.co/json/');
+      const data = await response.json();
+      ip = data.ip;
+      country = data.country_name;
+    } catch (e) {
+      console.error('Failed to fetch IP/Location', e);
+    }
+
     login({ 
       id: Math.random().toString(36).substr(2, 9), 
       email: formData.email, 
@@ -56,7 +68,14 @@ export const Auth = () => {
       bio: formData.bio,
       category: formData.category,
       experienceYears: formData.experienceYears,
-      role: role! 
+      role: role!,
+      ip,
+      country,
+      verified: false,
+      online: true,
+      completedJobsCount: 0,
+      appliedJobsCount: 0,
+      postedJobsCount: 0
     });
     navigate('/dashboard');
   };

@@ -16,7 +16,7 @@ import { useAppContext } from '../context/AppContext'
 export const JobDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { jobs, user, applyToJob } = useAppContext();
+  const { jobs, user, applyToJob, hireSpecialist, completeJob, proposals } = useAppContext();
   const [job, setJob] = useState<any>(null);
   const [showApply, setShowApply] = useState(false);
   const [applied, setApplied] = useState(false);
