@@ -37,13 +37,13 @@ const BackgroundAnimation = () => (
         key={i}
         className="floating-circle"
         style={{
-          width: Math.random() * 200 + 50 + 'px',
-          height: Math.random() * 200 + 50 + 'px',
+          width: Math.random() * 300 + 100 + 'px',
+          height: Math.random() * 300 + 100 + 'px',
           left: Math.random() * 100 + '%',
           top: Math.random() * 100 + '%',
           animationDelay: Math.random() * 15 + 's',
           animationDuration: Math.random() * 20 + 20 + 's',
-          opacity: Math.random() * 0.03 + 0.02
+          opacity: Math.random() * 0.05 + 0.05
         }}
       />
     ))}
@@ -61,7 +61,7 @@ export const LandingPage = () => {
   ].slice(0, 3);
 
   return (
-    <div className="min-h-screen text-black bg-[#fcfcfc] selection:bg-black/5 font-sans relative">
+    <div className="min-h-screen text-black selection:bg-black/5 font-sans relative">
       <BackgroundAnimation />
       
       {/* Navigation */}
