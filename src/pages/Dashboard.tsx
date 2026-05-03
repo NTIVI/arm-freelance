@@ -13,15 +13,21 @@ import {
   Clock,
   Send,
   Github,
-  MoreVertical
+  MoreVertical,
+  PlusCircle,
+  X,
+  ArrowRight,
+  Layers
 } from 'lucide-react'
 import { useAppContext } from '../context/AppContext'
 import { useLanguage } from '../context/LanguageContext'
 
 export const Dashboard = () => {
   const { t } = useLanguage();
-  const { user, logout, jobs, proposals, specialists, applyToJob, hireSpecialist, completeJob } = useAppContext();
+  const { user, logout, jobs, proposals, specialists, applyToJob, hireSpecialist, completeJob, addJob } = useAppContext();
   const [activeTab, setActiveTab] = useState<'browse' | 'my-work' | 'settings'>('browse');
+  const [showPostModal, setShowPostModal] = useState(false);
+  const [newJob, setNewJob] = useState({ title: '', description: '', budget: '', category: 'Web Development', type: 'fixed' as const });
 
   if (!user) return null;
   const [search, setSearch] = useState('');
@@ -56,6 +62,17 @@ export const Dashboard = () => {
         <nav className="flex-1 w-full space-y-4">
           <SidebarItem active={activeTab === 'browse'} icon={LayoutGrid} onClick={() => setActiveTab('browse')} label="Market" />
           <SidebarItem active={activeTab === 'my-work'} icon={Briefcase} onClick={() => setActiveTab('my-work')} label="Work" />
+          
+          {user?.role === 'client' && (
+            <button 
+              onClick={() => setShowPostModal(true)}
+              className="w-full flex flex-col items-center gap-1 p-4 rounded-3xl transition-all text-indigo-600 hover:bg-indigo-50 mt-4 border-2 border-dashed border-indigo-200"
+            >
+              <PlusCircle className="w-7 h-7" />
+              <span className="text-[10px] font-black uppercase tracking-widest">Post Project</span>
+            </button>
+          )}
+
           <SidebarItem active={activeTab === 'settings'} icon={Settings} onClick={() => setActiveTab('settings')} label="Settings" />
         </nav>
 
@@ -393,6 +410,107 @@ const LanguageSwitcher = () => {
           {l.label}
         </button>
       ))}
+      {/* Post Job Modal */}
+      <AnimatePresence>
+        {showPostModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setShowPostModal(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative w-full max-w-xl bg-white rounded-[3rem] p-10 shadow-2xl space-y-8"
+            >
+              <div className="flex justify-between items-center">
+                <h2 className="text-3xl font-black uppercase italic tracking-tighter text-black">Post New Project</h2>
+                <button onClick={() => setShowPostModal(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors"><X className="w-6 h-6" /></button>
+              </div>
+
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest ml-4">Project Title</label>
+                  <input 
+                    type="text" 
+                    className="input-capsule w-full" 
+                    placeholder="e.g. Build a Modern E-commerce" 
+                    value={newJob.title}
+                    onChange={e => setNewJob({...newJob, title: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest ml-4">Project Category</label>
+                  <select 
+                    className="input-capsule w-full appearance-none"
+                    value={newJob.category}
+                    onChange={e => setNewJob({...newJob, category: e.target.value})}
+                  >
+                    <option>Web Development</option>
+                    <option>Mobile Apps</option>
+                    <option>Design</option>
+                    <option>DevOps</option>
+                  </select>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest ml-4">Budget ($)</label>
+                    <input 
+                      type="text" 
+                      className="input-capsule w-full" 
+                      placeholder="e.g. 5000" 
+                      value={newJob.budget}
+                      onChange={e => setNewJob({...newJob, budget: e.target.value})}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest ml-4">Budget Type</label>
+                    <select 
+                      className="input-capsule w-full appearance-none"
+                      value={newJob.type}
+                      onChange={e => setNewJob({...newJob, type: e.target.value as any})}
+                    >
+                      <option value="fixed">Fixed Price</option>
+                      <option value="hourly">Hourly Rate</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest ml-4">Project Description</label>
+                  <textarea 
+                    rows={4} 
+                    className="input-capsule w-full rounded-3xl py-4 resize-none" 
+                    placeholder="Describe your requirements..."
+                    value={newJob.description}
+                    onChange={e => setNewJob({...newJob, description: e.target.value})}
+                  ></textarea>
+                </div>
+              </div>
+
+              <button 
+                onClick={() => {
+                  if (newJob.title && newJob.description && newJob.budget) {
+                    addJob({
+                      title: newJob.title,
+                      description: newJob.description,
+                      budget: newJob.budget,
+                      category: newJob.category,
+                      type: newJob.type,
+                      clientId: user!.id,
+                      clientName: user!.fullName
+                    });
+                    setShowPostModal(false);
+                    setNewJob({ title: '', description: '', budget: '', category: 'Web Development', type: 'fixed' });
+                  }
+                }}
+                className="btn-capsule w-full py-5 justify-center"
+              >
+                Launch Project <ArrowRight className="w-5 h-5 ml-2" />
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
