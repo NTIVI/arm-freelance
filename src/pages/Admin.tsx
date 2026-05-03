@@ -44,8 +44,8 @@ export const Admin = () => {
   }, {});
 
   return (
-    <div className="min-h-screen text-white p-8 font-sans relative bg-neutral-950">
-      <div className="bg-mesh"></div>
+    <div className="min-h-screen bg-[#f3f4f6] p-8 font-sans relative">
+
       <div className="max-w-7xl mx-auto space-y-12">
         <header className="flex items-center justify-between">
           <div className="space-y-2">
@@ -56,19 +56,19 @@ export const Admin = () => {
                <ArrowLeft className="w-4 h-4" />
                Exit Admin Panel
              </button>
-             <h1 className="text-4xl font-black italic uppercase tracking-tighter text-white">
-               <Link to="/" className="hover:text-indigo-400 transition-colors">Admin</Link> <span className="text-neutral-500">Workspace</span>
+             <h1 className="text-4xl font-black italic uppercase tracking-tighter text-black">
+               <Link to="/" className="hover:text-indigo-600 transition-colors">Admin</Link> <span className="text-gray-400">Workspace</span>
              </h1>
           </div>
           
           <div className="flex items-center gap-6">
-             <div className="glass-panel px-6 py-3 rounded-full flex items-center gap-4 border border-white/10">
-                <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-[0_0_20px_rgba(99,102,241,0.3)]">
+             <div className="glass-panel px-6 py-3 rounded-full flex items-center gap-4 border border-black/5">
+                <div className="w-10 h-10 rounded-xl bg-black flex items-center justify-center text-white shadow-xl">
                   <ShieldCheck className="w-5 h-5" />
                 </div>
                 <div>
-                   <p className="text-xs font-bold text-white">{user?.fullName || 'Super Admin'}</p>
-                   <p className="text-[9px] font-black uppercase text-indigo-400">Global Moderator</p>
+                   <p className="text-xs font-bold text-black">{user?.fullName || 'Super Admin'}</p>
+                   <p className="text-[9px] font-black uppercase text-indigo-600">Global Moderator</p>
                 </div>
              </div>
           </div>
@@ -212,36 +212,31 @@ export const Admin = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <div className="glass-panel rounded-[3.5rem] p-10 space-y-10">
+            <div className="glass-panel rounded-[3.5rem] p-10 space-y-10 bg-white">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-white">
+                <div className="w-12 h-12 bg-black rounded-2xl flex items-center justify-center text-white">
                   <Activity className="w-6 h-6" />
                 </div>
-                <h2 className="text-xl font-black uppercase italic text-white">Live Stats</h2>
+                <h2 className="text-xl font-black uppercase italic text-black">Live Stats</h2>
               </div>
               <div className="grid grid-cols-2 gap-8">
                 <div className="space-y-1">
-                  <p className="text-5xl font-black italic tracking-tighter text-indigo-400">{stats.online}</p>
-                  <p className="text-[10px] font-black uppercase text-neutral-500 tracking-widest">Active Users</p>
+                  <p className="text-5xl font-black italic tracking-tighter text-indigo-600">{stats.online}</p>
+                  <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest">Active Users</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-5xl font-black italic tracking-tighter text-white">{stats.total}</p>
-                  <p className="text-[10px] font-black uppercase text-neutral-500 tracking-widest">Total Users</p>
+                  <p className="text-5xl font-black italic tracking-tighter text-black">{stats.total}</p>
+                  <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest">Total Users</p>
                 </div>
               </div>
             </div>
 
-            <div className="glass-panel rounded-[3.5rem] p-10 space-y-10">
-              <Link to="/" className="flex flex-col items-center mb-16 space-y-4 group">
-                <div className="w-14 h-14 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-[0_0_30px_rgba(99,102,241,0.4)] group-hover:bg-indigo-500 transition-all">
-                  <div className="w-7 h-7 border-2 border-white rounded rotate-45"></div>
-                </div>
-              </Link>
+            <div className="glass-panel rounded-[3.5rem] p-10 space-y-10 bg-white">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-white">
+                <div className="w-12 h-12 bg-black rounded-2xl flex items-center justify-center text-white">
                   <Globe className="w-6 h-6" />
                 </div>
-                <h2 className="text-xl font-black uppercase italic text-white">Geographical Breakdown</h2>
+                <h2 className="text-xl font-black uppercase italic text-black">Geographical Breakdown</h2>
               </div>
               <div className="space-y-6">
                 {Object.entries(countriesBreakdown).map(([name, count]: any) => (
@@ -269,15 +264,15 @@ const CountryRow = ({ name, percent, count }: any) => (
 )
 
 const AdminStat = ({ icon: Icon, label, value, trend }: any) => (
-  <div className="glass-panel p-8 rounded-[2.5rem] space-y-4 border border-white/10 shadow-2xl">
+  <div className="glass-panel p-8 rounded-[2.5rem] space-y-4">
      <div className="flex justify-between items-start">
-        <div className="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-[0_0_20px_rgba(99,102,241,0.3)]">
+        <div className="w-12 h-12 rounded-2xl bg-black flex items-center justify-center text-white shadow-lg shadow-black/10">
            <Icon className="w-6 h-6" />
         </div>
-        {trend && <span className="text-[9px] font-black text-indigo-400 bg-indigo-400/10 px-3 py-1.5 rounded-lg border border-indigo-400/20">{trend}</span>}
+        {trend && <span className="text-[9px] font-black text-emerald-600 bg-emerald-500/10 px-3 py-1.5 rounded-lg">{trend}</span>}
      </div>
      <div className="space-y-1">
-        <p className="text-3xl font-black italic tracking-tighter text-white">{value}</p>
+        <p className="text-3xl font-black italic tracking-tighter text-black">{value}</p>
         <p className="text-[9px] font-black uppercase text-gray-500 tracking-widest">{label}</p>
      </div>
   </div>

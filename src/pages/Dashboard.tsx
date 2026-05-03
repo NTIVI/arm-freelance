@@ -42,7 +42,7 @@ export const Dashboard = () => {
   const myJobs = jobs.filter(j => j.clientId === user?.id);
 
   return (
-    <div className="app-container text-white">
+    <div className="app-container text-black">
       <div className="bg-mesh"></div>
       {/* Sidebar */}
       <aside className="glass-panel rounded-[2.5rem] p-8 flex flex-col items-center">
@@ -59,11 +59,11 @@ export const Dashboard = () => {
           <SidebarItem active={activeTab === 'settings'} icon={Settings} onClick={() => setActiveTab('settings')} label="Settings" />
         </nav>
 
-        <div className="mt-auto pt-8 border-t border-white/5 w-full flex flex-col items-center gap-6">
-          <Link to="/profile" className="w-14 h-14 rounded-2xl bg-indigo-600 flex items-center justify-center text-white font-black text-xl shadow-[0_0_20px_rgba(99,102,241,0.3)]">
+        <div className="mt-auto pt-8 border-t border-black/5 w-full flex flex-col items-center gap-6">
+          <Link to="/profile" className="w-14 h-14 rounded-2xl bg-black flex items-center justify-center text-white font-black text-xl shadow-xl shadow-black/10">
             {user?.fullName?.[0]}
           </Link>
-          <button onClick={logout} className="p-3 text-gray-500 hover:text-red-400 transition-colors">
+          <button onClick={logout} className="p-3 text-gray-400 hover:text-red-500 transition-colors">
             <LogOut className="w-5 h-5" />
           </button>
         </div>
@@ -73,7 +73,7 @@ export const Dashboard = () => {
       <main className="main-content">
         <header className="flex items-center justify-between">
           <div className="space-y-1">
-            <h1 className="text-5xl font-black italic uppercase tracking-tighter text-white">
+            <h1 className="text-5xl font-black italic uppercase tracking-tighter text-black">
               {activeTab === 'browse' ? (user?.role === 'client' ? t('find_it_talent') : t('browse_it_projects')) : activeTab === 'my-work' ? t('my_workspace') : t('settings')}
             </h1>
             <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
@@ -94,7 +94,7 @@ export const Dashboard = () => {
               <input 
                 type="text" 
                 placeholder={filterType === 'jobs' ? t('search_projects_placeholder') : t('search_talent_placeholder')} 
-                className="input-capsule pl-14 w-80 shadow-2xl bg-white/5 border-white/10"
+                className="input-capsule pl-14 w-80 shadow-sm"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
               />
@@ -223,7 +223,7 @@ const SidebarItem = ({ active, icon: Icon, onClick, label }: any) => {
   return (
   <button 
     onClick={onClick}
-    className={`w-full flex flex-col items-center gap-1 p-4 rounded-3xl transition-all ${active ? 'bg-indigo-600 text-white shadow-[0_0_30px_rgba(99,102,241,0.3)] scale-105' : 'text-gray-500 hover:text-white hover:bg-white/5'}`}
+    className={`w-full flex flex-col items-center gap-1 p-4 rounded-3xl transition-all ${active ? 'bg-black text-white shadow-xl shadow-black/20 scale-105' : 'text-gray-400 hover:text-black hover:bg-black/5'}`}
   >
     <Icon className="w-7 h-7" />
     <span className="text-[10px] font-black uppercase tracking-widest">{label}</span>
@@ -234,26 +234,26 @@ const SidebarItem = ({ active, icon: Icon, onClick, label }: any) => {
 const JobCard = ({ job }: any) => {
   const { t } = useLanguage();
   return (
-  <Link to={`/jobs/${job.id}`} className="block glass-panel p-8 rounded-[3rem] hover:scale-[1.01] transition-all group border border-white/5 shadow-2xl">
+  <Link to={`/jobs/${job.id}`} className="block glass-panel p-8 rounded-[3rem] hover:scale-[1.01] transition-all group border border-white shadow-sm">
     <div className="flex justify-between items-start mb-6">
       <div className="space-y-2">
-        <span className="px-4 py-1.5 bg-indigo-500/10 text-indigo-400 rounded-full text-[11px] font-black uppercase tracking-widest border border-indigo-500/10">{job.category}</span>
-        <h3 className="text-3xl font-black uppercase italic text-white group-hover:text-indigo-400 transition-colors">{job.title}</h3>
+        <span className="px-4 py-1.5 bg-indigo-50 text-indigo-600 rounded-full text-[11px] font-black uppercase tracking-widest">{job.category}</span>
+        <h3 className="text-3xl font-black uppercase italic text-black group-hover:text-indigo-600 transition-colors">{job.title}</h3>
       </div>
       <div className="text-right">
         <p className="text-3xl font-black italic tracking-tighter">${job.budget}</p>
         <p className="text-[11px] font-bold text-gray-400 uppercase">{job.type}</p>
       </div>
     </div>
-    <p className="text-gray-400 text-base line-clamp-2 mb-8 font-medium">{job.description}</p>
-    <div className="flex items-center justify-between pt-6 border-t border-white/5">
+    <p className="text-gray-500 text-base line-clamp-2 mb-8">{job.description}</p>
+    <div className="flex items-center justify-between pt-6 border-t border-black/5">
       <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-xs text-white">{job.clientName[0]}</div>
-        <span className="text-[10px] font-black uppercase italic text-gray-300">{job.clientName}</span>
+        <div className="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center font-bold text-xs">{job.clientName[0]}</div>
+        <span className="text-[10px] font-black uppercase italic">{job.clientName}</span>
       </div>
-      <div className="flex items-center gap-4 text-gray-500">
+      <div className="flex items-center gap-4 text-gray-400">
         <div className="flex items-center gap-1.5"><Clock className="w-4 h-4" /><span className="text-xs font-bold">New</span></div>
-        <div className="flex items-center gap-1.5"><Send className="w-4 h-4" /><span className="text-xs font-bold text-indigo-400">{job.proposalsCount} bids</span></div>
+        <div className="flex items-center gap-1.5"><Send className="w-4 h-4" /><span className="text-xs font-bold">{job.proposalsCount} bids</span></div>
       </div>
     </div>
   </Link>
@@ -263,35 +263,35 @@ const JobCard = ({ job }: any) => {
 const SpecialistCard = ({ spec }: any) => {
   const { t } = useLanguage();
   return (
-  <div className="glass-panel p-8 rounded-[3rem] space-y-6 hover:scale-[1.01] transition-all border border-white/10 shadow-2xl">
+  <div className="glass-panel p-8 rounded-[3rem] space-y-6 hover:scale-[1.01] transition-all border border-white shadow-sm">
     <div className="flex justify-between items-start">
       <div className="flex gap-6">
-        <div className="w-20 h-20 bg-indigo-600 rounded-[2rem] flex items-center justify-center text-white text-3xl font-black shadow-[0_0_30px_rgba(99,102,241,0.3)]">
+        <div className="w-20 h-20 bg-black rounded-[2rem] flex items-center justify-center text-white text-3xl font-black shadow-xl">
           {spec.avatar}
         </div>
         <div className="space-y-2">
            <div className="flex items-center gap-2">
-              <h3 className="text-2xl font-black uppercase italic text-white">{spec.fullName}</h3>
+              <h3 className="text-2xl font-black uppercase italic text-black">{spec.fullName}</h3>
               <div className="flex items-center gap-1 text-orange-400">
                 <Star className="w-4 h-4 fill-current" />
-                <span className="text-xs font-black text-white">{spec.rating}</span>
+                <span className="text-xs font-black text-black">{spec.rating}</span>
               </div>
            </div>
-           <p className="text-indigo-400 text-xs font-black uppercase tracking-widest">{spec.title}</p>
+           <p className="text-indigo-600 text-xs font-black uppercase tracking-widest">{spec.title}</p>
            <div className="flex flex-wrap gap-2 pt-2">
-             {spec.skills.map((s: string) => <span key={s} className="px-3 py-1 bg-white/5 border border-white/5 rounded-full text-[9px] font-bold uppercase text-gray-400">{s}</span>)}
+             {spec.skills.map((s: string) => <span key={s} className="px-3 py-1 bg-black/5 rounded-full text-[9px] font-bold uppercase">{s}</span>)}
            </div>
         </div>
       </div>
       <div className="text-right">
-        <p className="text-3xl font-black italic tracking-tighter text-white">${spec.price}</p>
-        <p className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">{t('per_hour')}</p>
+        <p className="text-3xl font-black italic tracking-tighter text-black">${spec.price}</p>
+        <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Starting from</p>
       </div>
     </div>
     <div className="flex gap-3 pt-4">
        <button className="btn-capsule flex-1 justify-center">{t('hire_specialist')}</button>
-       <button className="btn-ghost flex-1 justify-center">{t('view_portfolio')}</button>
-       <button className="w-12 h-12 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-white/10 transition-all text-white"><Github className="w-5 h-5" /></button>
+       <button className="btn-ghost flex-1 justify-center bg-white border border-black/10">{t('view_portfolio')}</button>
+       <button className="w-12 h-12 rounded-full bg-black/5 flex items-center justify-center hover:bg-black transition-all hover:text-white group"><Github className="w-5 h-5" /></button>
     </div>
   </div>
   );

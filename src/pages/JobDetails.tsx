@@ -57,19 +57,19 @@ export const JobDetails = () => {
   };
 
   return (
-    <div className="min-h-screen text-white p-8 font-sans relative overflow-hidden">
+    <div className="min-h-screen bg-[#f3f4f6] p-8 font-sans relative overflow-hidden text-black">
       <div className="bg-mesh"></div>
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="flex items-center gap-6 mb-12">
           <button 
             onClick={() => navigate('/dashboard')} 
-            className="flex items-center gap-3 text-[10px] font-black uppercase text-gray-500 hover:text-white transition-all"
+            className="flex items-center gap-3 text-[10px] font-black uppercase text-gray-400 hover:text-black transition-all"
           >
             <ArrowLeft className="w-4 h-4" /> Back to Feed
           </button>
           <Link 
             to="/" 
-            className="flex items-center gap-3 text-[10px] font-black uppercase text-gray-500 hover:text-white transition-all"
+            className="flex items-center gap-3 text-[10px] font-black uppercase text-gray-400 hover:text-black transition-all"
           >
             Go to Main Page
           </Link>
@@ -124,15 +124,15 @@ export const JobDetails = () => {
           <div className="lg:col-span-4">
             <div className="glass-panel p-10 rounded-[3rem] space-y-8 sticky top-8">
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-[0_0_20px_rgba(99,102,241,0.3)]">
+                <div className="w-14 h-14 rounded-2xl bg-black flex items-center justify-center text-white shadow-lg">
                   <Building2 className="w-6 h-6" />
                 </div>
                 <div>
-                   <h4 className="text-sm font-black uppercase italic text-white">{job.clientName}</h4>
-                   <div className="flex items-center gap-1 text-emerald-400">
-                     <CheckCircle2 className="w-3 h-3" />
-                     <span className="text-[9px] font-black uppercase tracking-widest">Verified Client</span>
-                   </div>
+                  <h4 className="text-sm font-black uppercase italic">{job.clientName}</h4>
+                  <div className="flex items-center gap-1 text-emerald-500">
+                    <CheckCircle2 className="w-3 h-3" />
+                    <span className="text-[9px] font-black uppercase tracking-widest">Verified Client</span>
+                  </div>
                 </div>
               </div>
 
@@ -255,19 +255,19 @@ const ProposalActionCard = ({ proposal, job }: any) => {
   return (
     <div className={`glass-panel p-8 rounded-[2.5rem] border-2 transition-all ${isAccepted ? 'border-indigo-500' : 'border-transparent'}`}>
       <div className="flex justify-between items-start mb-6">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-[0_0_20px_rgba(99,102,241,0.3)]">
-              {proposal.freelancerName[0]}
-            </div>
-            <div>
-              <h4 className="font-black uppercase italic text-white">{proposal.freelancerName}</h4>
-              <div className="flex items-center gap-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-                <span>Bid: ${proposal.bid}</span>
-                <span>•</span>
-                <span>{new Date(proposal.createdAt).toLocaleDateString()}</span>
-              </div>
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 bg-black rounded-2xl flex items-center justify-center text-white font-bold text-xl">
+            {proposal.freelancerName[0]}
+          </div>
+          <div>
+            <h4 className="font-black uppercase italic">{proposal.freelancerName}</h4>
+            <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+              <span>Bid: ${proposal.bid}</span>
+              <span>•</span>
+              <span>{new Date(proposal.createdAt).toLocaleDateString()}</span>
             </div>
           </div>
+        </div>
         
         <div className="flex items-center gap-2">
           {job.status === 'open' && (
