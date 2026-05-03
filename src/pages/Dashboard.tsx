@@ -14,7 +14,9 @@ import {
   X,
   PlusCircle,
   HelpCircle,
-  Layout
+  Layout,
+  Instagram,
+  MessageSquare
 } from 'lucide-react'
 import { useAppContext } from '../context/AppContext'
 import { useLanguage } from '../context/LanguageContext'
@@ -69,6 +71,8 @@ export const Dashboard = () => {
           </button>
         </div>
       </aside>
+
+      <SupportWidget />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col gap-6 overflow-hidden">
@@ -160,25 +164,84 @@ export const Dashboard = () => {
            </div>
         </div>
 
-        {/* Help Card */}
-        <div className="bg-[#5c56ff] rounded-[3rem] p-8 text-white space-y-6 shadow-xl relative overflow-hidden group">
-           <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20 group-hover:scale-110 transition-transform duration-700"></div>
-           <div className="w-10 h-10 bg-black/20 rounded-xl flex items-center justify-center relative z-10">
-              <Star className="w-5 h-5 fill-current" />
-           </div>
-           <div className="space-y-2 relative z-10">
-              <h3 className="font-black uppercase italic text-lg leading-tight">ПОМОЧЬ С ВЫБОРОМ</h3>
-              <p className="text-[10px] font-medium text-white/70 leading-relaxed">
-                 Не уверены, какой специалист нужен? Получите бесплатную 15-минутную консультацию с нашим тех. менеджером.
-              </p>
-           </div>
-           <button className="w-full py-4 bg-white text-[#5c56ff] rounded-2xl text-[9px] font-black uppercase tracking-widest hover:bg-black hover:text-white transition-all relative z-10 shadow-lg">
-              ЗАПРОСИТЬ КОНСУЛЬТАЦИЮ
-           </button>
-        </div>
+        <SupportWidget />
       </aside>
     </div>
   );
+}
+
+const SupportWidget = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="fixed bottom-8 right-8 z-[100] flex flex-col items-end gap-4">
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 20 }}
+            className="bg-[#5c56ff] rounded-[2.5rem] p-8 text-white w-80 shadow-2xl relative overflow-hidden group mb-4"
+          >
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20 group-hover:scale-110 transition-transform duration-700"></div>
+            
+            <button 
+              onClick={() => setIsOpen(false)}
+              className="absolute top-6 right-6 p-2 hover:bg-white/10 rounded-full transition-colors z-20"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="w-10 h-10 bg-black/20 rounded-xl flex items-center justify-center relative z-10 mb-6">
+              <Star className="w-5 h-5 fill-current" />
+            </div>
+
+            <div className="space-y-4 relative z-10">
+              <h3 className="font-black uppercase italic text-xl leading-tight">ПОМОЧЬ С ВЫБОРОМ</h3>
+              <p className="text-[11px] font-medium text-white/70 leading-relaxed">
+                Не уверены, какой специалист нужен? Получите бесплатную 15-минутную консультацию с нашим тех. менеджером.
+              </p>
+              
+              <button className="w-full py-4 bg-white text-[#5c56ff] rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-black hover:text-white transition-all shadow-lg">
+                ЗАПРОСИТЬ КОНСУЛЬТАЦИЮ
+              </button>
+
+              <div className="pt-6 border-t border-white/10 space-y-3">
+                 <p className="text-[9px] font-black uppercase tracking-widest text-white/40">Связаться напрямую:</p>
+                 <div className="flex flex-col gap-2">
+                    <a href="https://t.me/Markosya_77" target="_blank" rel="noreferrer" className="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-all group/link">
+                       <div className="w-8 h-8 bg-[#229ED9] rounded-lg flex items-center justify-center">
+                          <Send className="w-4 h-4 fill-current" />
+                       </div>
+                       <div>
+                          <p className="text-[10px] font-black uppercase italic">Telegram</p>
+                          <p className="text-[9px] text-white/50">@Markosya_77</p>
+                       </div>
+                    </a>
+                    <a href="https://instagram.com/___markosyan" target="_blank" rel="noreferrer" className="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-all group/link">
+                       <div className="w-8 h-8 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 rounded-lg flex items-center justify-center">
+                          <Instagram className="w-4 h-4" />
+                       </div>
+                       <div>
+                          <p className="text-[10px] font-black uppercase italic">Instagram</p>
+                          <p className="text-[9px] text-white/50">@___markosyan</p>
+                       </div>
+                    </a>
+                 </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-110 active:scale-95 ${isOpen ? 'bg-white text-[#5c56ff] rotate-90' : 'bg-[#5c56ff] text-white'}`}
+      >
+        <MessageSquare className="w-7 h-7" />
+      </button>
+    </div>
+  )
 }
 
 const SidebarItem = ({ active, icon: Icon, onClick, label }: any) => (
