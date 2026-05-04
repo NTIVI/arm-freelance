@@ -17,7 +17,6 @@ interface User {
   github?: string;
   category?: string;
   experienceYears?: number;
-  age?: number;
   ip?: string;
   country?: string;
   verified?: boolean;
