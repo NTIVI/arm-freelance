@@ -99,7 +99,7 @@ export const Auth = () => {
                   <input 
                     type="email" 
                     required 
-                    className="input-capsule w-full bg-zinc-50 border-black/5 focus:bg-white" 
+                    className="input-capsule w-full" 
                     placeholder="name@gmail.com" 
                     value={formData.email}
                     onChange={e => setFormData({...formData, email: e.target.value})}
@@ -110,7 +110,7 @@ export const Auth = () => {
                   <input 
                     type="password" 
                     required 
-                    className="input-capsule w-full bg-zinc-50 border-black/5 focus:bg-white" 
+                    className="input-capsule w-full" 
                     placeholder="••••••••" 
                     value={formData.password}
                     onChange={e => setFormData({...formData, password: e.target.value})}
@@ -139,7 +139,7 @@ export const Auth = () => {
                 <input 
                   type="text" 
                   maxLength={4} 
-                  className="w-full text-center text-4xl font-black tracking-[1em] py-6 bg-zinc-50 rounded-3xl border border-black/5 outline-none focus:bg-white transition-all" 
+                  className="w-full text-center text-4xl font-black tracking-[1em] py-6 bg-zinc-50 rounded-3xl border border-black/5 outline-none focus:bg-white transition-all text-black" 
                   placeholder="0000"
                   value={verificationCode}
                   onChange={e => setVerificationCode(e.target.value)}

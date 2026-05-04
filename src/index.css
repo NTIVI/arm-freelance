@@ -49,6 +49,14 @@ body {
   .subheading-premium {
     @apply text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-gray-400;
   }
+
+  .btn-capsule {
+    @apply flex items-center gap-3 px-8 py-4 bg-black text-white rounded-full font-black uppercase tracking-widest hover:bg-zinc-800 hover:scale-[1.01] active:scale-[0.98] transition-all duration-300 shadow-lg shadow-black/10;
+  }
+
+  .input-capsule {
+    @apply bg-zinc-50 border border-black/5 rounded-[2rem] px-8 py-5 outline-none focus:bg-white focus:border-black/20 transition-all text-black font-semibold placeholder:text-gray-300 placeholder:font-medium;
+  }
 }
 
 .bg-mesh {
