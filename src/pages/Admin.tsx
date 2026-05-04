@@ -205,6 +205,16 @@ export const Admin = () => {
                       </div>
                       <h3 className="text-xl font-black uppercase italic tracking-tighter">{job.title}</h3>
                       <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">POSTED BY: {job.clientName}</p>
+                      {job.status === 'completed' && job.selectedFreelancerId && (
+                        <div className="mt-2 p-2 bg-emerald-50 rounded-lg border border-emerald-100">
+                          <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">
+                            ИСПОЛНИТЕЛЬ: {users.find(u => u.id === job.selectedFreelancerId)?.fullName || 'НЕИЗВЕСТНО'}
+                          </p>
+                          <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">
+                            ДАТА ЗАВЕРШЕНИЯ: {new Date().toLocaleDateString('ru-RU')}
+                          </p>
+                        </div>
+                      )}
                    </div>
                    <div className="flex items-center gap-12">
                       <div className="text-right">

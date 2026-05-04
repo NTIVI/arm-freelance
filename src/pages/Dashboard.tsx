@@ -36,6 +36,7 @@ export const Dashboard = () => {
   const [activeChat, setActiveChat] = useState<any>(null);
   const [isRating, setIsRating] = useState(false);
   const [selectedRating, setSelectedRating] = useState(5);
+  const [expandedProposals, setExpandedProposals] = useState<Record<string, boolean>>({});
 
   if (!user) return null;
 
@@ -198,14 +199,18 @@ export const Dashboard = () => {
                       </div>
                    </div>
 
-                   {user.role === 'client' && item.status === 'open' && (
-                     <div className="space-y-4 pt-6 border-t border-black/5">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">ОТКЛИКИ ФРИЛАНСЕРОВ ({proposals.filter(p => p.jobId === item.id).length}):</p>
-                        <div className="grid grid-cols-1 gap-4">
-                           {proposals.filter(p => p.jobId === item.id).length === 0 ? (
-                             <p className="text-[9px] font-bold text-gray-300 uppercase">ОТКЛИКОВ ПОКА НЕТ</p>
-                           ) : (
-                             proposals.filter(p => p.jobId === item.id).map(p => (
+                   {user.role === 'client' && item.status === 'open' && proposals.filter(p => p.jobId === item.id).length > 0 && (
+                     <div className="pt-6 border-t border-black/5">
+                        <button 
+                          onClick={() => setExpandedProposals(prev => ({...prev, [item.id]: !prev[item.id]}))}
+                          className="px-6 py-2 bg-black text-white rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-zinc-800 transition-all shadow-lg"
+                        >
+                          {expandedProposals[item.id] ? 'СКРЫТЬ ОТКЛИКИ' : 'ОТКЛИКИ'}
+                        </button>
+                        
+                        {expandedProposals[item.id] && (
+                           <div className="grid grid-cols-1 gap-4 mt-6">
+                             {proposals.filter(p => p.jobId === item.id).map(p => (
                                <div key={p.id} className="flex items-center justify-between p-6 bg-black/5 rounded-[2rem] hover:bg-black/10 transition-all">
                                   <div className="flex items-center gap-4">
                                      <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white font-black text-sm">{p.freelancerName[0]}</div>
@@ -224,9 +229,9 @@ export const Dashboard = () => {
                                     ВЫБРАТЬ И ОТКРЫТЬ ЧАТ
                                   </button>
                                </div>
-                             ))
-                           )}
-                        </div>
+                             ))}
+                           </div>
+                        )}
                      </div>
                    )}
                 </div>
@@ -276,8 +281,20 @@ export const Dashboard = () => {
                             </div>
                          </div>
                          <div className="flex gap-2">
-                            <button className="p-3 bg-black/5 rounded-xl hover:bg-black hover:text-white transition-all"><Ban className="w-4 h-4" /></button>
-                            <button className="p-3 bg-black/5 rounded-xl hover:bg-red-50 text-red-500 transition-all"><Trash2 className="w-4 h-4" /></button>
+                            {user.role === 'client' && (
+                               <button 
+                                 onClick={() => setIsRating(true)}
+                                 className="px-3 py-2 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-500 hover:text-white transition-all text-[9px] font-black uppercase flex items-center gap-1"
+                               >
+                                 <Check className="w-3 h-3" /> ПОДТВЕРДИТЬ
+                               </button>
+                            )}
+                            <button className="px-3 py-2 bg-black/5 rounded-xl hover:bg-black hover:text-white transition-all text-[9px] font-black uppercase flex items-center gap-1">
+                               <Ban className="w-3 h-3" /> ЗАБЛОКИРОВАТЬ
+                            </button>
+                            <button className="px-3 py-2 bg-black/5 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all text-[9px] font-black uppercase flex items-center gap-1">
+                               <Trash2 className="w-3 h-3" /> УДАЛИТЬ ЧАТ
+                            </button>
                          </div>
                       </div>
 
@@ -295,27 +312,15 @@ export const Dashboard = () => {
                       </div>
 
                       <div className="p-8 border-t border-black/5 bg-white">
-                         {user.role === 'client' ? (
-                           <div className="flex flex-col gap-4">
-                              <p className="text-[9px] font-black text-center text-gray-400 uppercase tracking-widest">УПРАВЛЕНИЕ ЗАКАЗОМ:</p>
-                              <button 
-                                onClick={() => setIsRating(true)}
-                                className="w-full py-4 bg-emerald-500 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-lg flex items-center justify-center gap-2"
-                              >
-                                <Check className="w-4 h-4" /> ЗАВЕРШИТЬ СДЕЛКУ И ВЫПЛАТИТЬ
-                              </button>
-                           </div>
-                         ) : (
-                           <div className="relative">
-                              <input 
-                                className="w-full py-4 pl-6 pr-20 bg-gray-50 border-2 border-black/5 rounded-2xl outline-none text-sm focus:border-black transition-all" 
-                                placeholder="Напишите сообщение..." 
-                              />
-                              <button className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-black text-white rounded-xl">
-                                <Send className="w-4 h-4" />
-                              </button>
-                           </div>
-                         )}
+                         <div className="relative">
+                            <input 
+                              className="w-full py-4 pl-6 pr-20 bg-gray-50 border-2 border-black/5 rounded-2xl outline-none text-sm focus:border-black transition-all" 
+                              placeholder="Напишите сообщение..." 
+                            />
+                            <button className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-black text-white rounded-xl hover:bg-blue-600 transition-colors">
+                              <Send className="w-4 h-4" />
+                            </button>
+                         </div>
                       </div>
                     </>
                   ) : (
