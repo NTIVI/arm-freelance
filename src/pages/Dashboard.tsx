@@ -60,12 +60,6 @@ export const Dashboard = () => {
             </div>
             <span className="font-black text-xl tracking-tighter uppercase italic">ARM Freelance</span>
           </Link>
-          <div className="mt-4 px-4 flex flex-col gap-2">
-             <p className="text-[8px] font-bold text-gray-400 uppercase tracking-widest leading-none">Сделано компанией Agile Business</p>
-             <a href="https://agile-business-pro.com/#services" target="_blank" rel="noreferrer" className="w-fit px-3 py-1.5 bg-zinc-50 border border-black/5 rounded-full text-[8px] font-black uppercase hover:bg-black hover:text-white transition-all shadow-sm">
-               Agile Business
-             </a>
-          </div>
         </div>
 
         <nav className="space-y-3 mb-20">
