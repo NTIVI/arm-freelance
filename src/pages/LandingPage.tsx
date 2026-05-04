@@ -15,7 +15,8 @@ import {
   Star,
   Send,
   HelpCircle,
-  LayoutGrid
+  LayoutGrid,
+  ChevronRight
 } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 import { useAppContext } from '../context/AppContext'
@@ -224,13 +225,21 @@ export const LandingPage = () => {
       <footer className="py-24 px-6 md:px-12 border-t border-black/5 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-16 pb-20">
-            <div className="col-span-1 md:col-span-1 space-y-6">
+            <div className="col-span-1 md:col-span-1">
               <Logo />
-              <div className="flex flex-col gap-2">
-                 <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none">Сделано компанией Agile Business</p>
-                 <a href="https://agile-business-pro.com/#services" target="_blank" rel="noreferrer" className="w-fit px-5 py-2 bg-gray-50 border border-black/5 rounded-full text-[9px] font-black uppercase hover:bg-black hover:text-white transition-all shadow-sm">
-                   Agile Business
-                 </a>
+              <div className="mt-8 p-6 bg-white border-2 border-black rounded-[2.5rem] space-y-4 shadow-sm hover:shadow-xl transition-all group/agile">
+                 <p className="text-[8px] font-black uppercase tracking-widest text-gray-400">Платформа разработана:</p>
+                 <div className="space-y-3">
+                    <p className="text-[11px] font-black uppercase italic leading-none">Agile Business</p>
+                    <a 
+                      href="https://agile-business-pro.com/#services" 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="flex items-center justify-between px-4 py-2 bg-black text-white rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-lg"
+                    >
+                      Сайт компании <ChevronRight className="w-3 h-3" />
+                    </a>
+                 </div>
               </div>
             </div>
             <div className="space-y-6">
