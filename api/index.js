@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_OwT7x2GPnZUt@ep-orange-forest-ankasg1w-pooler.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
 });
 
 // Create tables if they don't exist
@@ -30,6 +30,7 @@ const initDb = async () => {
         bio TEXT,
         category VARCHAR(255),
         "experienceYears" INTEGER,
+        age INTEGER,
         verified BOOLEAN DEFAULT false,
         online BOOLEAN DEFAULT true,
         "completedJobsCount" INTEGER DEFAULT 0,
@@ -85,13 +86,13 @@ app.get('/api/users', async (req, res) => {
 app.post('/api/users', async (req, res) => {
   const user = req.body;
   const query = `
-    INSERT INTO users (id, "fullName", email, role, "firstName", "lastName", title, avatar, bio, category, "experienceYears", verified, online)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-    ON CONFLICT (id) DO UPDATE SET online = EXCLUDED.online
+    INSERT INTO users (id, "fullName", email, role, "firstName", "lastName", title, avatar, bio, category, "experienceYears", age, verified, online)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+    ON CONFLICT (id) DO UPDATE SET online = EXCLUDED.online, age = EXCLUDED.age
   `;
   await pool.query(query, [
     user.id, user.fullName, user.email, user.role, user.firstName, user.lastName, 
-    user.title, user.avatar, user.bio, user.category, user.experienceYears, 
+    user.title, user.avatar, user.bio, user.category, user.experienceYears, user.age, 
     user.verified, user.online
   ]);
   res.json({ success: true });
