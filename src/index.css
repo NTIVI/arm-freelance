@@ -5,17 +5,18 @@
 @tailwind utilities;
 
 :root {
-  --primary: #000000;
-  --accent: #10b981;
-  --bg-main: #ffffff;
-  --bg-soft: #f8f9fa;
-  --glass: rgba(255, 255, 255, 0.7);
-  --border: rgba(0, 0, 0, 0.04);
+  --primary: #ffffff;
+  --accent: #8b5cf6;
+  --accent-2: #ec4899;
+  --bg-main: #050505;
+  --bg-soft: #0f0f0f;
+  --glass: rgba(255, 255, 255, 0.03);
+  --border: rgba(255, 255, 255, 0.06);
 }
 
 body {
   background-color: var(--bg-main);
-  color: #000;
+  color: #fff;
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   letter-spacing: -0.01em;
@@ -24,25 +25,25 @@ body {
 @layer components {
   /* High-End Containers */
   .premium-card {
-    @apply bg-white border border-black/5 rounded-[3rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.04)] hover:shadow-[0_48px_96px_-24px_rgba(0,0,0,0.08)] transition-all duration-700;
+    @apply bg-white/[0.02] backdrop-blur-2xl border border-white/[0.06] rounded-[3rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.4)] hover:shadow-[0_48px_96px_-24px_rgba(0,0,0,0.6)] hover:border-white/10 transition-all duration-700;
   }
 
   .glass-panel {
-    @apply bg-white/70 backdrop-blur-3xl border border-white/40 rounded-[2.5rem] shadow-2xl;
+    @apply bg-white/[0.03] backdrop-blur-3xl border border-white/[0.08] rounded-[2.5rem] shadow-2xl;
   }
 
   /* Typography */
   .text-display {
-    @apply font-['Outfit'] font-black italic uppercase tracking-tighter leading-[0.85];
+    @apply font-['Outfit'] font-black italic uppercase tracking-tighter leading-[0.85] text-white;
   }
 
   .text-label {
-    @apply text-[10px] font-black uppercase tracking-[0.3em] text-gray-400;
+    @apply text-[10px] font-black uppercase tracking-[0.3em] text-white/30;
   }
 
   /* Interactive Elements */
   .btn-lux {
-    @apply relative overflow-hidden px-10 py-5 bg-black text-white rounded-full font-black uppercase tracking-widest text-[11px] hover:scale-[1.03] active:scale-95 transition-all duration-500 shadow-2xl shadow-black/20 flex items-center justify-center gap-3;
+    @apply relative overflow-hidden px-10 py-5 bg-gradient-to-br from-violet-600 via-fuchsia-600 to-pink-600 text-white rounded-full font-black uppercase tracking-widest text-[11px] hover:scale-[1.03] active:scale-95 transition-all duration-500 shadow-2xl shadow-violet-500/20 flex items-center justify-center gap-3 border border-white/10;
   }
 
   .btn-lux::after {
@@ -55,40 +56,41 @@ body {
   }
 
   .input-lux {
-    @apply w-full bg-zinc-50 border border-black/5 rounded-[2rem] px-8 py-5 outline-none focus:bg-white focus:ring-8 focus:ring-black/5 transition-all text-black font-semibold placeholder:text-gray-300;
+    @apply w-full bg-white/[0.03] border border-white/[0.06] rounded-[2rem] px-8 py-5 outline-none focus:bg-white/[0.05] focus:border-white/20 focus:ring-8 focus:ring-violet-500/10 transition-all text-white font-semibold placeholder:text-white/10;
   }
 
   /* Custom UI Components */
   .badge-lux {
-    @apply px-4 py-1.5 bg-black text-white rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg;
+    @apply px-4 py-1.5 bg-white text-black rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg;
   }
 
   .nav-item-active {
-    @apply bg-black text-white shadow-2xl shadow-black/20 scale-105;
+    @apply bg-white/10 text-white shadow-2xl shadow-white/5 scale-105 border border-white/10;
   }
 }
 
 /* Luxury Animations */
 @keyframes mesh-float {
-  0% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -50px) scale(1.1); }
-  66% { transform: translate(-20px, 20px) scale(0.9); }
-  100% { transform: translate(0, 0) scale(1); }
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  33% { transform: translate(100px, -150px) scale(1.3) rotate(120deg); }
+  66% { transform: translate(-80px, 100px) scale(0.8) rotate(240deg); }
+  100% { transform: translate(0, 0) scale(1) rotate(360deg); }
 }
 
 .bg-mesh-container {
   position: fixed;
   inset: 0;
   z-index: -20;
-  background: #fff;
+  background: #000;
   overflow: hidden;
 }
 
 .mesh-blob {
   position: absolute;
-  filter: blur(120px);
-  opacity: 0.15;
-  animation: mesh-float 20s infinite ease-in-out;
+  filter: blur(140px);
+  opacity: 0.25;
+  animation: mesh-float 30s infinite ease-in-out;
+  mix-blend-mode: screen;
 }
 
 /* Scrollbar */
@@ -101,12 +103,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #e2e2e2;
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #000;
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -120,4 +122,10 @@ body {
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* Global Mesh Overlays */
+.bg-overlay {
+  @apply fixed inset-0 z-[-15] pointer-events-none;
+  background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(0,0,0,0.4) 100%);
 }
