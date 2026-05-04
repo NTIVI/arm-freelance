@@ -1,67 +1,42 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import { AppProvider, useAppContext } from './context/AppContext'
-import { LandingPage } from './pages/LandingPage'
-import { Auth } from './pages/Auth'
-import { Dashboard } from './pages/Dashboard'
-import { PostJob } from './pages/PostJob'
-import { JobDetails } from './pages/JobDetails'
-import { Profile } from './pages/Profile'
-import { Admin } from './pages/Admin'
-import { LanguageProvider } from './context/LanguageContext'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AppProvider } from './context/AppContext';
+import { LanguageProvider } from './context/LanguageContext';
+import { Layout } from './components/Layout';
+import { LandingPage } from './pages/LandingPage';
+import { Auth } from './pages/Auth';
+import { Dashboard } from './pages/Dashboard';
+import { PostJob } from './pages/PostJob';
+import { Admin } from './pages/Admin';
+import { JobDetails } from './pages/JobDetails';
+import { Profile } from './pages/Profile';
+import { Messages } from './pages/Messages';
+import { SpecialistCatalog } from './pages/SpecialistCatalog';
+import { ProjectCatalog } from './pages/ProjectCatalog';
 
-const ProtectedRoute = ({ children, role }: { children: React.ReactNode, role?: 'client' | 'freelancer' }) => {
-  const { user } = useAppContext();
-  if (!user) return <Navigate to="/auth" />;
-  if (role && user.role !== role) return <Navigate to="/dashboard" />;
-  return <>{children}</>;
-}
-
-function AppRoutes() {
+function App() {
   return (
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/auth" element={<Auth />} />
-      
-      {/* Protected Routes */}
-      <Route path="/dashboard" element={
-        <ProtectedRoute>
-          <Dashboard />
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/post-job" element={
-        <ProtectedRoute role="client">
-          <PostJob />
-        </ProtectedRoute>
-      } />
-
-      <Route path="/jobs/:id" element={
-        <ProtectedRoute>
-          <JobDetails />
-        </ProtectedRoute>
-      } />
-
-      <Route path="/profile" element={
-        <ProtectedRoute>
-          <Profile />
-        </ProtectedRoute>
-      } />
-
-      <Route path="/admin" element={<Admin />} />
-
-      <Route path="*" element={<Navigate to="/" />} />
-    </Routes>
+    <BrowserRouter>
+      <LanguageProvider>
+        <AppProvider>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/post-job" element={<PostJob />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/job/:id" element={<JobDetails />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/messages" element={<Messages />} />
+              <Route path="/specialists" element={<SpecialistCatalog />} />
+              <Route path="/catalog" element={<ProjectCatalog />} />
+            </Route>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </AppProvider>
+      </LanguageProvider>
+    </BrowserRouter>
   );
 }
 
-export default function App() {
-  return (
-    <LanguageProvider>
-      <AppProvider>
-        <Router>
-          <AppRoutes />
-        </Router>
-      </AppProvider>
-    </LanguageProvider>
-  )
-}
+export default App;
