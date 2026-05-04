@@ -56,7 +56,13 @@ export const Admin = () => {
               <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" /> 
               EXIT ADMIN PANEL
             </button>
-            <h1 className="text-4xl font-black italic uppercase tracking-tighter">ADMIN WORKSPACE</h1>
+            <h1 className="text-4xl font-black italic uppercase tracking-tighter leading-tight">ADMIN WORKSPACE</h1>
+            <div className="flex items-center gap-3">
+               <p className="text-[8px] font-bold text-gray-400 uppercase tracking-widest leading-none">Powered by</p>
+               <a href="https://agile-business-pro.com/#services" target="_blank" rel="noreferrer" className="px-3 py-1 bg-black text-white rounded-full text-[8px] font-black uppercase hover:bg-zinc-800 transition-all shadow-sm">
+                 Agile Business
+               </a>
+            </div>
           </div>
           
           <div className="bg-white border-2 border-black rounded-[1.5rem] px-6 py-3 flex items-center gap-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">

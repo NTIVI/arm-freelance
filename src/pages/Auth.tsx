@@ -72,12 +72,20 @@ export const Auth = () => {
       <BackgroundAnimation />
       
       <div className="w-full max-w-lg relative z-10">
-        <Link to="/" className="flex flex-col items-center mb-12 group">
-          <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-all">
-            <div className="w-6 h-6 border-2 border-white rounded-sm rotate-45"></div>
+        <div className="flex flex-col items-center mb-12">
+          <Link to="/" className="flex flex-col items-center group">
+            <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-all">
+              <div className="w-6 h-6 border-2 border-white rounded-sm rotate-45"></div>
+            </div>
+            <h2 className="mt-4 text-xl font-black uppercase italic tracking-tighter text-black">Armenia Freelance</h2>
+          </Link>
+          <div className="mt-4 flex flex-col items-center gap-2">
+             <p className="text-[8px] font-bold text-gray-400 uppercase tracking-widest leading-none">Сделано компанией Agile Business</p>
+             <a href="https://agile-business-pro.com/#services" target="_blank" rel="noreferrer" className="px-4 py-1.5 bg-zinc-50 border border-black/5 rounded-full text-[8px] font-black uppercase hover:bg-black hover:text-white transition-all shadow-sm">
+               Agile Business
+             </a>
           </div>
-          <h2 className="mt-4 text-xl font-black uppercase italic tracking-tighter text-black">Armenia Freelance</h2>
-        </Link>
+        </div>
 
         <AnimatePresence mode="wait">
           {step === 1 && (

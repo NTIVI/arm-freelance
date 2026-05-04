@@ -53,12 +53,20 @@ export const Dashboard = () => {
       
       {/* Sidebar */}
       <aside className="w-64 bg-white rounded-[3.5rem] border-2 border-black flex flex-col p-6 py-10 shadow-sm shrink-0 h-fit sticky top-4">
-        <Link to="/" className="mb-16 px-4 flex items-center gap-3">
-          <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center">
-            <div className="w-4 h-4 border-2 border-white rounded-sm rotate-45"></div>
+        <div className="mb-16">
+          <Link to="/" className="px-4 flex items-center gap-3 group">
+            <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center group-hover:scale-110 transition-all">
+              <div className="w-4 h-4 border-2 border-white rounded-sm rotate-45"></div>
+            </div>
+            <span className="font-black text-xl tracking-tighter uppercase italic">ARM Freelance</span>
+          </Link>
+          <div className="mt-4 px-4 flex flex-col gap-2">
+             <p className="text-[8px] font-bold text-gray-400 uppercase tracking-widest leading-none">Сделано компанией Agile Business</p>
+             <a href="https://agile-business-pro.com/#services" target="_blank" rel="noreferrer" className="w-fit px-3 py-1.5 bg-zinc-50 border border-black/5 rounded-full text-[8px] font-black uppercase hover:bg-black hover:text-white transition-all shadow-sm">
+               Agile Business
+             </a>
           </div>
-          <span className="font-black text-xl tracking-tighter uppercase italic">ARM Freelance</span>
-        </Link>
+        </div>
 
         <nav className="space-y-3 mb-20">
           <SidebarItem active={activeTab === 'browse'} icon={LayoutGrid} onClick={() => setActiveTab('browse')} label="БИРЖА" />
