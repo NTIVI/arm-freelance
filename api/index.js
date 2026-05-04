@@ -30,6 +30,7 @@ const initDb = async () => {
         bio TEXT,
         category VARCHAR(255),
         "experienceYears" INTEGER,
+        age INTEGER,
         verified BOOLEAN DEFAULT false,
         online BOOLEAN DEFAULT true,
         "completedJobsCount" INTEGER DEFAULT 0,
@@ -85,13 +86,13 @@ app.get('/api/users', async (req, res) => {
 app.post('/api/users', async (req, res) => {
   const user = req.body;
   const query = `
-    INSERT INTO users (id, "fullName", email, role, "firstName", "lastName", title, avatar, bio, category, "experienceYears", verified, online)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-    ON CONFLICT (id) DO UPDATE SET online = EXCLUDED.online
+    INSERT INTO users (id, "fullName", email, role, "firstName", "lastName", title, avatar, bio, category, "experienceYears", age, verified, online)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+    ON CONFLICT (id) DO UPDATE SET online = EXCLUDED.online, age = EXCLUDED.age
   `;
   await pool.query(query, [
     user.id, user.fullName, user.email, user.role, user.firstName, user.lastName, 
-    user.title, user.avatar, user.bio, user.category, user.experienceYears, 
+    user.title, user.avatar, user.bio, user.category, user.experienceYears, user.age, 
     user.verified, user.online
   ]);
   res.json({ success: true });
