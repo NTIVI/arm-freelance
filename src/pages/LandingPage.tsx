@@ -85,7 +85,7 @@ export const LandingPage = () => {
                <p className="text-label tracking-[0.6em] text-white/30">{t('hero_subtitle')}</p>
                <span className="w-12 h-[1px] bg-white/10"></span>
             </div>
-            <h1 className="text-display text-[10rem] md:text-[14rem] lg:text-[18rem] leading-[0.8] mix-blend-screen bg-gradient-to-b from-white via-white to-white/20 bg-clip-text text-transparent">
+            <h1 className="text-display text-5xl md:text-7xl lg:text-8xl leading-none bg-gradient-to-b from-white via-white to-white/20 bg-clip-text text-transparent">
               {t('hero_title').split(' ')[0]} <br />
               <span className="text-white outline-text">{t('hero_title').split(' ').slice(1).join(' ')}</span>
             </h1>
