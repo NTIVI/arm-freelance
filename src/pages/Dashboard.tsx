@@ -150,7 +150,14 @@ export const Dashboard = () => {
                 </div>
               ) : (
                 filteredJobs.map(job => (
-                  <JobCard key={job.id} job={job} t={t} user={user} applyToJob={applyToJob} />
+                  <JobCard 
+                    key={job.id} 
+                    job={job} 
+                    t={t} 
+                    user={user} 
+                    applyToJob={applyToJob} 
+                    hasApplied={proposals.some(p => p.jobId === job.id && p.freelancerId === user.id)}
+                  />
                 ))
               )}
             </motion.div>
@@ -540,7 +547,7 @@ const SidebarItem = ({ active, icon: Icon, onClick, label }: any) => (
   </button>
 )
 
-const JobCard = ({ job, t, user, applyToJob }: any) => (
+const JobCard = ({ job, t, user, applyToJob, hasApplied }: any) => (
   <div className="bg-white rounded-[3rem] border-2 border-black p-10 flex justify-between items-start hover:shadow-xl transition-all group">
     <div className="space-y-4 flex-1">
       <div className="flex items-center gap-3"><span className="px-3 py-1 bg-black/5 rounded-full text-[8px] font-black uppercase tracking-widest text-blue-600">{job.category}</span></div>
@@ -562,10 +569,11 @@ const JobCard = ({ job, t, user, applyToJob }: any) => (
        <p className="text-[10px] font-black uppercase text-gray-300 tracking-widest">{job.type === 'fixed' ? 'FIXED' : 'HOURLY'}</p>
        {user.role === 'freelancer' && (
          <button 
-           onClick={() => applyToJob({ jobId: job.id, freelancerId: user.id, freelancerName: user.fullName, bid: job.budget, coverLetter: "I'm interested!" })}
-           className="mt-6 px-8 py-3 bg-black text-white rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-lg"
+           onClick={() => !hasApplied && applyToJob({ jobId: job.id, freelancerId: user.id, freelancerName: user.fullName, bid: job.budget, coverLetter: "Готов приступить к работе!" })}
+           disabled={hasApplied}
+           className={`mt-6 px-8 py-3 rounded-full text-[9px] font-black uppercase tracking-widest transition-all shadow-lg ${hasApplied ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-black text-white hover:bg-blue-600'}`}
          >
-           ОТКЛИКНУТЬСЯ
+           {hasApplied ? 'ОТКЛИК ОТПРАВЛЕН' : 'ОТКЛИКНУТЬСЯ'}
          </button>
        )}
     </div>
