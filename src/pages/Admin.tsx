@@ -13,7 +13,10 @@ import {
   MoreHorizontal,
   LogOut,
   ChevronRight,
-  Plus
+  Plus,
+  Briefcase,
+  Trash2,
+  Edit3
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAppContext } from '../context/AppContext'
@@ -22,12 +25,21 @@ export const Admin = () => {
   const navigate = useNavigate();
   const { user, users, jobs } = useAppContext();
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeTab, setActiveTab] = useState<'users' | 'stats'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'ads' | 'stats'>('users');
+  const [userRoleFilter, setUserRoleFilter] = useState<'all' | 'freelancer' | 'client'>('all');
 
   const filteredUsers = users.filter(u => 
-    u.fullName.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    u.email.toLowerCase().includes(searchTerm.toLowerCase())
+    (u.fullName.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    u.email.toLowerCase().includes(searchTerm.toLowerCase())) &&
+    (userRoleFilter === 'all' || u.role === userRoleFilter)
   );
+
+  const stats = {
+    total: users.length,
+    online: users.filter(u => u.online).length,
+    verified: users.filter(u => u.verified).length,
+    completed: jobs.filter(j => j.status === 'completed').length
+  };
 
   return (
     <div className="min-h-screen bg-[#fcfcfc] p-8 font-sans relative overflow-hidden text-black">
@@ -67,6 +79,12 @@ export const Admin = () => {
             USER MANAGEMENT
           </button>
           <button 
+            onClick={() => setActiveTab('ads')} 
+            className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'ads' ? 'bg-black text-white' : 'text-gray-400 hover:text-black'}`}
+          >
+            ALL ADS
+          </button>
+          <button 
             onClick={() => setActiveTab('stats')} 
             className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'stats' ? 'bg-black text-white' : 'text-gray-400 hover:text-black'}`}
           >
@@ -76,15 +94,15 @@ export const Admin = () => {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <AdminStat icon={Users} label="TOTAL USERS" value="1,240" growth="+12" />
-          <AdminStat icon={TrendingUp} label="DAILY GROWTH" value="25" growth="+5" color="text-emerald-500" />
-          <AdminStat icon={ShieldCheck} label="VERIFIED" value="890" growth="+18" color="text-blue-500" />
-          <AdminStat icon={Mail} label="NEW INQUIRIES" value="12" />
+          <AdminStat icon={Users} label="TOTAL USERS" value={stats.total} growth="+12" />
+          <AdminStat icon={Activity} label="ONLINE NOW" value={stats.online} growth="+5" color="text-emerald-500" />
+          <AdminStat icon={ShieldCheck} label="VERIFIED" value={stats.verified} growth="+18" color="text-blue-500" />
+          <AdminStat icon={Briefcase} label="COMPLETED" value={stats.completed} />
         </div>
 
         {/* Content Area */}
         <AnimatePresence mode="wait">
-          {activeTab === 'users' ? (
+          {activeTab === 'users' && (
             <motion.div 
               key="users"
               initial={{ opacity: 0, y: 20 }}
@@ -93,7 +111,11 @@ export const Admin = () => {
               className="bg-white border-2 border-black rounded-[3.5rem] p-10 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)] overflow-hidden"
             >
               <div className="flex items-center justify-between mb-10">
-                <h2 className="text-xl font-black italic uppercase tracking-tight">USER MANAGEMENT</h2>
+                <div className="flex gap-2">
+                   <button onClick={() => setUserRoleFilter('all')} className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all ${userRoleFilter === 'all' ? 'bg-black text-white' : 'bg-gray-100 text-gray-400 hover:text-black'}`}>ALL</button>
+                   <button onClick={() => setUserRoleFilter('freelancer')} className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all ${userRoleFilter === 'freelancer' ? 'bg-black text-white' : 'bg-gray-100 text-gray-400 hover:text-black'}`}>FREELANCERS</button>
+                   <button onClick={() => setUserRoleFilter('client')} className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all ${userRoleFilter === 'client' ? 'bg-black text-white' : 'bg-gray-100 text-gray-400 hover:text-black'}`}>CLIENTS</button>
+                </div>
                 <div className="relative">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input 
@@ -112,17 +134,17 @@ export const Admin = () => {
                       <th className="px-4 py-6">USER</th>
                       <th className="px-4 py-6 text-center">ROLE</th>
                       <th className="px-4 py-6 text-center">STATUS</th>
-                      <th className="px-4 py-6 text-center">JOINED DATE</th>
+                      <th className="px-4 py-6 text-center">COMPLETED</th>
                       <th className="px-4 py-6 text-right">ACTIONS</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-black/5">
-                    {filteredUsers.slice(0, 4).map((u, i) => (
+                    {filteredUsers.map((u, i) => (
                       <tr key={u.id} className="group hover:bg-gray-50/50 transition-all">
                         <td className="px-4 py-6">
                            <div className="flex items-center gap-4">
-                              <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-[10px] font-black border border-black/5">
-                                {u.fullName[0]}
+                              <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-[10px] font-black border border-black/5 overflow-hidden">
+                                {u.avatar ? <img src={u.avatar} className="w-full h-full object-cover" /> : u.fullName[0]}
                               </div>
                               <div>
                                  <p className="text-[11px] font-black uppercase italic leading-none">{u.fullName}</p>
@@ -131,23 +153,24 @@ export const Admin = () => {
                            </div>
                         </td>
                         <td className="px-4 py-6 text-center">
-                          <span className="px-4 py-1 rounded-full bg-indigo-50 text-indigo-600 text-[8px] font-black uppercase">
+                          <span className={`px-4 py-1 rounded-full text-[8px] font-black uppercase ${u.role === 'freelancer' ? 'bg-indigo-50 text-indigo-600' : 'bg-emerald-50 text-emerald-600'}`}>
                             {u.role}
                           </span>
                         </td>
                         <td className="px-4 py-6 text-center">
                           <div className="flex items-center justify-center gap-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-                            <span className="text-[9px] font-black uppercase">VERIFIED</span>
+                            <div className={`w-1.5 h-1.5 rounded-full ${u.online ? 'bg-emerald-500' : 'bg-gray-300'}`}></div>
+                            <span className="text-[9px] font-black uppercase">{u.online ? 'ONLINE' : 'OFFLINE'}</span>
                           </div>
                         </td>
                         <td className="px-4 py-6 text-center text-[10px] font-bold text-gray-400 uppercase">
-                          2023-05-{12 + i}
+                          {u.completedJobsCount || 0} DEALS
                         </td>
                         <td className="px-4 py-6 text-right">
-                           <button className="p-2 hover:bg-black hover:text-white rounded-lg transition-all opacity-0 group-hover:opacity-100">
-                             <MoreHorizontal className="w-4 h-4" />
-                           </button>
+                           <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                              <button className="p-2 hover:bg-black hover:text-white rounded-lg transition-all"><Edit3 className="w-4 h-4" /></button>
+                              <button className="p-2 hover:bg-red-500 hover:text-white rounded-lg transition-all"><Trash2 className="w-4 h-4" /></button>
+                           </div>
                         </td>
                       </tr>
                     ))}
@@ -155,7 +178,44 @@ export const Admin = () => {
                 </table>
               </div>
             </motion.div>
-          ) : (
+          )}
+
+          {activeTab === 'ads' && (
+            <motion.div 
+              key="ads"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="space-y-6"
+            >
+              {jobs.map(job => (
+                <div key={job.id} className={`bg-white border-2 border-black rounded-[3rem] p-10 flex justify-between items-center shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)] transition-all ${job.status === 'completed' ? 'border-emerald-500' : ''}`}>
+                   <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <span className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest ${job.status === 'completed' ? 'bg-emerald-500 text-white' : 'bg-black text-white'}`}>
+                          {job.status === 'completed' ? 'ЗАВЕРШЕНО' : job.category}
+                        </span>
+                        {job.status === 'in-progress' && <span className="px-3 py-1 bg-blue-500 text-white rounded-full text-[8px] font-black uppercase tracking-widest">В РАБОТЕ</span>}
+                      </div>
+                      <h3 className="text-xl font-black uppercase italic tracking-tighter">{job.title}</h3>
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">POSTED BY: {job.clientName}</p>
+                   </div>
+                   <div className="flex items-center gap-12">
+                      <div className="text-right">
+                         <p className="text-3xl font-black italic tracking-tighter">${job.budget}</p>
+                         <p className="text-[10px] font-black uppercase text-gray-300 tracking-widest">{job.status}</p>
+                      </div>
+                      <div className="flex gap-2">
+                         <button className="p-4 bg-black/5 hover:bg-black hover:text-white rounded-2xl transition-all"><Edit3 className="w-5 h-5" /></button>
+                         <button className="p-4 bg-black/5 hover:bg-red-500 hover:text-white rounded-2xl transition-all"><Trash2 className="w-5 h-5" /></button>
+                      </div>
+                   </div>
+                </div>
+              ))}
+            </motion.div>
+          )}
+
+          {activeTab === 'stats' && (
             <motion.div 
               key="stats"
               initial={{ opacity: 0, y: 20 }}
@@ -223,7 +283,7 @@ const AdminStat = ({ icon: Icon, label, value, growth, color = "text-emerald-500
       </div>
       {growth && (
         <div className={`px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-100 ${color} text-[9px] font-black tracking-tighter`}>
-          {growth}
+          +{growth}
         </div>
       )}
     </div>
