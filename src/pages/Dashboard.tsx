@@ -41,7 +41,7 @@ export const Dashboard = () => {
       <BackgroundAnimation />
       
       {/* Sidebar */}
-      <aside className="w-64 bg-white rounded-[3.5rem] border border-black/5 flex flex-col p-6 py-10 shadow-sm shrink-0 h-fit sticky top-4">
+      <aside className="w-64 bg-white rounded-[3.5rem] border-2 border-black flex flex-col p-6 py-10 shadow-sm shrink-0 h-fit sticky top-4">
         <Link to="/" className="mb-16 px-4 flex items-center gap-3">
           <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center">
             <div className="w-4 h-4 border-2 border-white rounded-sm rotate-45"></div>
@@ -86,7 +86,7 @@ export const Dashboard = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="bg-white/50 p-1 rounded-full border border-black/5 flex gap-1">
+            <div className="bg-white/50 p-1 rounded-full border-2 border-black flex gap-1">
                {['en', 'ru', 'hy'].map(l => (
                  <button 
                   key={l}
@@ -97,7 +97,7 @@ export const Dashboard = () => {
                  </button>
                ))}
             </div>
-            <Link to="/" className="px-6 py-2 bg-white rounded-full border border-black/5 text-[9px] font-black uppercase tracking-widest hover:bg-black hover:text-white transition-all shadow-sm">
+            <Link to="/" className="px-6 py-2 bg-white rounded-full border-2 border-black text-[9px] font-black uppercase tracking-widest hover:bg-black hover:text-white transition-all shadow-sm">
                ГЛАВНАЯ
             </Link>
             <div className="relative">
@@ -105,7 +105,7 @@ export const Dashboard = () => {
               <input 
                 type="text" 
                 placeholder="Поиск IT-проектов..." 
-                className="bg-white border border-black/5 rounded-full pl-12 pr-6 py-2.5 text-sm outline-none w-64 shadow-sm focus:border-black/20 transition-all"
+                className="bg-white border-2 border-black rounded-full pl-12 pr-6 py-2.5 text-sm outline-none w-64 shadow-sm focus:bg-gray-50 transition-all"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
               />
@@ -124,7 +124,7 @@ export const Dashboard = () => {
       {/* Right Column */}
       <aside className="w-80 space-y-6 shrink-0">
         {/* Profile Stats */}
-        <div className="bg-white rounded-[3rem] border border-black/10 p-8 space-y-10 shadow-sm relative overflow-hidden">
+        <div className="bg-white rounded-[3rem] border-2 border-black p-8 space-y-10 shadow-sm relative overflow-hidden">
            <div className="absolute top-0 right-0 w-32 h-32 bg-black/5 rounded-full -mr-16 -mt-16"></div>
            <div className="flex items-center gap-4 relative z-10">
               <div className="w-14 h-14 bg-black rounded-2xl flex items-center justify-center text-white font-black text-2xl">
@@ -181,7 +181,7 @@ const SupportWidget = () => {
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            className="bg-[#5c56ff] rounded-[2.5rem] p-8 text-white w-80 shadow-2xl relative overflow-hidden group mb-4"
+            className="bg-[#5c56ff] rounded-[2.5rem] p-8 text-white w-80 shadow-2xl relative overflow-hidden group mb-4 border-2 border-black"
           >
             <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20 group-hover:scale-110 transition-transform duration-700"></div>
             
@@ -236,7 +236,7 @@ const SupportWidget = () => {
 
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-110 active:scale-95 ${isOpen ? 'bg-white text-[#5c56ff] rotate-90' : 'bg-[#5c56ff] text-white'}`}
+        className={`w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-110 active:scale-95 border-2 border-black ${isOpen ? 'bg-white text-[#5c56ff] rotate-90' : 'bg-[#5c56ff] text-white'}`}
       >
         <MessageSquare className="w-7 h-7" />
       </button>
@@ -255,7 +255,7 @@ const SidebarItem = ({ active, icon: Icon, onClick, label }: any) => (
 )
 
 const JobCard = ({ job, t, user, applyToJob }: any) => (
-  <div className="bg-white rounded-[3rem] border border-black/10 p-10 flex justify-between items-start hover:shadow-xl transition-all group">
+  <div className="bg-white rounded-[3rem] border-2 border-black p-10 flex justify-between items-start hover:shadow-xl transition-all group">
     <div className="space-y-4 flex-1">
       <div className="flex items-center gap-3">
          <span className="px-3 py-1 bg-black/5 rounded-full text-[8px] font-black uppercase tracking-widest text-blue-600">{job.category}</span>
