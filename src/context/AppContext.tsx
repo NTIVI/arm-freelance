@@ -22,8 +22,9 @@ interface User {
   verified?: boolean;
   online?: boolean;
   completedJobsCount?: number;
-  appliedJobsCount?: number;
   postedJobsCount?: number;
+  ratingCount?: number;
+  ratingSum?: number;
 }
 
 interface Job {
@@ -31,6 +32,7 @@ interface Job {
   title: string;
   description: string;
   budget: string;
+  deadline: string;
   type: 'fixed' | 'hourly';
   category: string;
   clientId: string;
@@ -212,13 +214,20 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     setJobs(updatedJobs);
     localStorage.setItem('af_jobs', JSON.stringify(updatedJobs));
 
-    // Update specialist rating (mock logic for demo)
-    console.log(`Job ${jobId} completed. Freelancer ${freelancerId} received rating: ${rating}`);
-
-    // Update stats for both client and freelancer
     setUsers(prev => {
       const newUsers = prev.map(u => {
-        if (u.id === freelancerId || u.id === user?.id) {
+        if (u.id === freelancerId) {
+          const newCount = (u.ratingCount || 0) + 1;
+          const newSum = (u.ratingSum || 0) + rating;
+          return { 
+            ...u, 
+            ratingCount: newCount, 
+            ratingSum: newSum, 
+            rating: parseFloat((newSum / newCount).toFixed(1)),
+            completedJobsCount: (u.completedJobsCount || 0) + 1 
+          };
+        }
+        if (user && u.id === user.id) {
           return { ...u, completedJobsCount: (u.completedJobsCount || 0) + 1 };
         }
         return u;

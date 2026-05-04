@@ -34,6 +34,8 @@ export const Dashboard = () => {
   const [search, setSearch] = useState('');
   const [isCreatingJob, setIsCreatingJob] = useState(false);
   const [activeChat, setActiveChat] = useState<any>(null);
+  const [isRating, setIsRating] = useState(false);
+  const [selectedRating, setSelectedRating] = useState(5);
 
   if (!user) return null;
 
@@ -297,10 +299,7 @@ export const Dashboard = () => {
                            <div className="flex flex-col gap-4">
                               <p className="text-[9px] font-black text-center text-gray-400 uppercase tracking-widest">УПРАВЛЕНИЕ ЗАКАЗОМ:</p>
                               <button 
-                                onClick={() => {
-                                  completeJob(activeChat.id, activeChat.selectedFreelancerId!, 5);
-                                  setActiveChat(null);
-                                }}
+                                onClick={() => setIsRating(true)}
                                 className="w-full py-4 bg-emerald-500 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-lg flex items-center justify-center gap-2"
                               >
                                 <Check className="w-4 h-4" /> ЗАВЕРШИТЬ СДЕЛКУ И ВЫПЛАТИТЬ
@@ -352,10 +351,10 @@ export const Dashboard = () => {
            <div className="grid grid-cols-2 gap-8 relative z-10">
               <div>
                  <p className="text-2xl font-black italic tracking-tighter">
-                   {user.role === 'freelancer' ? '$12.4k' : (user.postedJobsCount || 0)}
+                   {user.role === 'freelancer' ? `$${(user.rating || 5.0).toFixed(1)}` : (user.postedJobsCount || 0)}
                  </p>
                  <p className="text-[9px] font-black uppercase text-gray-400 tracking-widest leading-none mt-1">
-                   {user.role === 'freelancer' ? 'ЗАРАБОТАНО' : 'ЗАКАЗОВ'}
+                   {user.role === 'freelancer' ? 'РЕЙТИНГ' : 'ЗАКАЗОВ'}
                  </p>
               </div>
               <div>
@@ -401,6 +400,7 @@ export const Dashboard = () => {
                  title: e.target.title.value,
                  description: e.target.desc.value,
                  budget: e.target.budget.value,
+                 deadline: e.target.deadline.value,
                  type: 'fixed',
                  category: e.target.category.value,
                  clientId: user.id,
@@ -422,6 +422,10 @@ export const Dashboard = () => {
                     </select>
                   </div>
                   <div className="space-y-1">
+                    <label className="text-[9px] font-black uppercase tracking-widest text-gray-400 ml-4">СРОКИ (НАПР: 2 НЕДЕЛИ)</label>
+                    <input name="deadline" required className="input-capsule w-full bg-gray-50 border-black/5 focus:border-black" placeholder="Напр: 14 дней" />
+                  </div>
+                  <div className="space-y-1 col-span-2">
                     <label className="text-[9px] font-black uppercase tracking-widest text-gray-400 ml-4">БЮДЖЕТ ($)</label>
                     <input name="budget" required type="number" className="input-capsule w-full bg-gray-50 border-black/5 focus:border-black" placeholder="500" />
                   </div>
@@ -434,6 +438,52 @@ export const Dashboard = () => {
                    ОПУБЛИКОВАТЬ ЗАКАЗ <ChevronRight className="w-5 h-5" />
                 </button>
              </form>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Rating Modal */}
+      {isRating && (
+        <div className="fixed inset-0 z-[300] flex items-center justify-center p-6">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/80 backdrop-blur-md" />
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white border-2 border-black rounded-[3.5rem] p-12 w-full max-w-md relative z-10 text-center space-y-8"
+          >
+             <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto">
+                <Star className="w-10 h-10 fill-current" />
+             </div>
+             <div className="space-y-2">
+                <h3 className="text-3xl font-black uppercase italic tracking-tighter">ОЦЕНИТЕ РАБОТУ</h3>
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">ВАША ОЦЕНКА ОЧЕНЬ ВАЖНА ДЛЯ ФРИЛАНСЕРА</p>
+             </div>
+             
+             <div className="flex justify-center gap-3">
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <button 
+                    key={num}
+                    onClick={() => setSelectedRating(num)}
+                    className={`w-12 h-12 rounded-2xl flex items-center justify-center text-lg font-black transition-all ${selectedRating >= num ? 'bg-black text-white shadow-lg scale-110' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}
+                  >
+                    {num}
+                  </button>
+                ))}
+             </div>
+
+             <div className="pt-4 flex flex-col gap-3">
+                <button 
+                  onClick={() => {
+                    completeJob(activeChat.id, activeChat.selectedFreelancerId!, selectedRating);
+                    setIsRating(false);
+                    setActiveChat(null);
+                  }}
+                  className="w-full py-5 bg-black text-white rounded-full text-[11px] font-black uppercase tracking-widest hover:bg-emerald-500 transition-all shadow-xl"
+                >
+                  ЗАВЕРШИТЬ И ПОСТАВИТЬ {selectedRating}
+                </button>
+                <button onClick={() => setIsRating(false)} className="text-[10px] font-black uppercase text-gray-400 hover:text-black transition-colors">ОТМЕНА</button>
+             </div>
           </motion.div>
         </div>
       )}

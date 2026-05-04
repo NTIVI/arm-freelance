@@ -29,7 +29,8 @@ export const Auth = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    fullName: '',
+    firstName: '',
+    lastName: '',
     bio: '',
     category: 'Web Development',
     experienceYears: 1
@@ -56,11 +57,13 @@ export const Auth = () => {
     login({
       id: Math.random().toString(36).substr(2, 9),
       email: formData.email,
-      fullName: formData.fullName,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      fullName: `${formData.firstName} ${formData.lastName}`,
       role: role!,
       bio: formData.bio,
-      category: formData.category,
-      experienceYears: formData.experienceYears,
+      category: role === 'freelancer' ? formData.category : undefined,
+      experienceYears: role === 'freelancer' ? formData.experienceYears : undefined,
       verified: true,
       online: true
     });
@@ -190,13 +193,27 @@ export const Auth = () => {
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <div className="space-y-1">
-                    <label className="text-[9px] font-black uppercase text-gray-400 tracking-widest ml-4">Full Name</label>
-                    <input type="text" className="input-capsule w-full py-4 text-sm" placeholder="John Doe" value={formData.fullName} onChange={e => setFormData({...formData, fullName: e.target.value})} />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-[9px] font-black uppercase text-gray-400 tracking-widest ml-4">First Name</label>
+                      <input type="text" className="input-capsule w-full py-4 text-sm" placeholder="John" value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[9px] font-black uppercase text-gray-400 tracking-widest ml-4">Last Name</label>
+                      <input type="text" className="input-capsule w-full py-4 text-sm" placeholder="Doe" value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} />
+                    </div>
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[9px] font-black uppercase text-gray-400 tracking-widest ml-4">{t('bio')}</label>
-                    <textarea rows={3} className="input-capsule w-full py-4 text-sm resize-none rounded-3xl" placeholder="Tell us about yourself..." value={formData.bio} onChange={e => setFormData({...formData, bio: e.target.value})}></textarea>
+                    <label className="text-[9px] font-black uppercase text-gray-400 tracking-widest ml-4">
+                      {role === 'freelancer' ? 'Detailed About Me' : 'Brief Bio'}
+                    </label>
+                    <textarea 
+                      rows={role === 'freelancer' ? 5 : 3} 
+                      className="input-capsule w-full py-4 text-sm resize-none rounded-3xl" 
+                      placeholder={role === 'freelancer' ? "Describe your expertise, projects and skills in detail..." : "What do you need help with?"}
+                      value={formData.bio} 
+                      onChange={e => setFormData({...formData, bio: e.target.value})}
+                    ></textarea>
                   </div>
                   {role === 'freelancer' && (
                     <div className="grid grid-cols-2 gap-4">
