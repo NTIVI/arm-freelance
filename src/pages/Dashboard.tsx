@@ -494,7 +494,7 @@ const JobCard = ({ job, t, user, applyToJob }: any) => (
       <div className="pt-4 flex items-center gap-8">
         <div className="flex items-center gap-2">
            <div className="w-6 h-6 bg-gray-100 rounded-lg flex items-center justify-center text-[10px] font-black">A</div>
-           <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">{job.clientName.toUpperCase()}</span>
+           <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">{job.clientName?.toUpperCase() || 'CLIENT'}</span>
         </div>
         <div className="flex items-center gap-6 text-[10px] font-black uppercase tracking-widest text-gray-400">
            <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> New</span>
@@ -508,7 +508,7 @@ const JobCard = ({ job, t, user, applyToJob }: any) => (
        {user.role === 'freelancer' && (
          <button 
            onClick={() => applyToJob({ jobId: job.id, freelancerId: user.id, freelancerName: user.fullName, bid: job.budget, coverLetter: "I'm interested!" })}
-           className="mt-6 px-8 py-3 bg-black text-white rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 shadow-lg"
+           className="mt-6 px-8 py-3 bg-black text-white rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-lg"
          >
            ОТКЛИКНУТЬСЯ
          </button>
