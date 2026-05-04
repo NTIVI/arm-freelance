@@ -229,13 +229,18 @@ export const LandingPage = () => {
               <Logo />
               <div className="mt-8 p-6 bg-white border-2 border-black rounded-[2.5rem] space-y-4 shadow-sm hover:shadow-xl transition-all group/agile">
                  <p className="text-[8px] font-black uppercase tracking-widest text-gray-400">Платформа разработана:</p>
-                 <div className="space-y-3">
-                    <p className="text-[11px] font-black uppercase italic leading-none">Agile Business</p>
+                 <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                       <div className="w-8 h-8 bg-red-50 rounded-lg flex items-center justify-center overflow-hidden">
+                          <img src="/agile-logo.png" alt="Logo" className="w-full h-full object-contain" />
+                       </div>
+                       <p className="text-[11px] font-black uppercase italic leading-none">Agile Business</p>
+                    </div>
                     <a 
                       href="https://agile-business-pro.com/#services" 
                       target="_blank" 
                       rel="noreferrer" 
-                      className="flex items-center justify-between px-4 py-2 bg-black text-white rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-lg"
+                      className="flex items-center justify-between px-4 py-2.5 bg-black text-white rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-red-600 transition-all shadow-lg"
                     >
                       Сайт компании <ChevronRight className="w-3 h-3" />
                     </a>
