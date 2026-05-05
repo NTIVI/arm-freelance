@@ -19,6 +19,8 @@ export interface User {
   verified: boolean;
   rating: number;
   online: boolean;
+  rateAMD?: number;
+  rateUSD?: number;
 }
 
 export interface Project {
@@ -78,6 +80,32 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [jobs, setJobs] = useState<Project[]>([]);
   const [proposals, setProposals] = useState<Proposal[]>([]);
 
+  const fetchData = async () => {
+    try {
+      const [usersRes, jobsRes, proposalsRes] = await Promise.all([
+        fetch('/api/users'),
+        fetch('/api/jobs'),
+        fetch('/api/proposals')
+      ]);
+      
+      const usersData = await usersRes.json();
+      const jobsData = await jobsRes.json();
+      const proposalsData = await proposalsRes.json();
+      
+      setUsers(usersData);
+      setJobs(jobsData);
+      setProposals(proposalsData);
+    } catch (err) {
+      console.error('Error fetching data', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+    const interval = setInterval(fetchData, 10000); // Poll every 10s
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     if (user) {
       localStorage.setItem('af_user', JSON.stringify(user));
@@ -86,10 +114,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, [user]);
 
-  const login = (userData: User) => setUser(userData);
+  const login = async (userData: User) => {
+    setUser(userData);
+    try {
+      await fetch('/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+      });
+      fetchData();
+    } catch (err) {
+      console.error('Error syncing user', err);
+    }
+  };
+
   const logout = () => setUser(null);
 
-  const addJob = (job: Partial<Project>) => {
+  const addJob = async (job: Partial<Project>) => {
     const newJob: Project = {
       id: Math.random().toString(36).substr(2, 9),
       status: 'open',
@@ -97,17 +138,44 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       proposalsCount: 0,
       ...job
     } as Project;
+
     setJobs(prev => [newJob, ...prev]);
+
+    try {
+      await fetch('/api/jobs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newJob)
+      });
+      fetchData();
+    } catch (err) {
+      console.error('Error adding job', err);
+    }
   };
 
-  const applyToJob = (proposal: Partial<Proposal>) => {
+  const applyToJob = async (proposal: Partial<Proposal>) => {
     const newProposal: Proposal = {
       id: Math.random().toString(36).substr(2, 9),
       createdAt: new Date().toISOString(),
       status: 'pending',
       ...proposal
     } as Proposal;
+
     setProposals(prev => [...prev, newProposal]);
+
+    try {
+      await fetch('/api/proposals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...newProposal,
+          bid: newProposal.bidAmount?.toString() // API expects 'bid' as string
+        })
+      });
+      fetchData();
+    } catch (err) {
+      console.error('Error applying to job', err);
+    }
   };
 
   return (

@@ -84,7 +84,9 @@ export const Auth = () => {
     lastName: '',
     bio: '',
     category: 'Software Engineering',
-    experience: 1
+    experience: 1,
+    rateAMD: '',
+    rateUSD: ''
   });
 
   const handleAuthSubmit = (e: React.FormEvent) => {
@@ -132,7 +134,9 @@ export const Auth = () => {
       registeredAt: new Date().toISOString(),
       verified: true,
       rating: 0.5,
-      online: true
+      online: true,
+      rateAMD: parseFloat(formData.rateAMD) || 0,
+      rateUSD: parseFloat(formData.rateUSD) || 0
     });
     navigate('/dashboard');
   };
@@ -362,9 +366,21 @@ export const Auth = () => {
                         <option className="bg-[#0f0f0f]">Data Architecture</option>
                       </select>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
-                       <InputGroup label="Rate (AMD)" type="number" placeholder="5000" onChange={() => {}} />
-                       <InputGroup label="Rate (USD)" type="number" placeholder="12" onChange={() => {}} />
+                     <div className="grid grid-cols-2 gap-4">
+                       <InputGroup 
+                         label="Rate (AMD)" 
+                         type="number" 
+                         placeholder="5000" 
+                         value={formData.rateAMD}
+                         onChange={(v: string) => setFormData({...formData, rateAMD: v})} 
+                       />
+                       <InputGroup 
+                         label="Rate (USD)" 
+                         type="number" 
+                         placeholder="12" 
+                         value={formData.rateUSD}
+                         onChange={(v: string) => setFormData({...formData, rateUSD: v})} 
+                       />
                     </div>
                   </div>
                 )}

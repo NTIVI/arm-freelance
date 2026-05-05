@@ -21,6 +21,8 @@ export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
 
+  const isFreelancer = user?.role === 'freelancer';
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-[100] px-6 py-4">
       <motion.div 

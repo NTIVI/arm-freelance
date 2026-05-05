@@ -28,14 +28,18 @@ export const FilterCheck = ({ label }: { label: string }) => (
 
 export const SpecialistCatalog = () => {
   const { t } = useLanguage();
+  const { users } = useAppContext();
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Mock Data
-  const specialists = [
-    { id: '1', name: 'Aris Vardanian', category: 'Software Engineering', rating: 5.0, projects: 12, bio: 'Architecting neural networks and high-scale infrastructures.' },
-    { id: '2', name: 'Nare Mkrtchyan', category: 'Visual Identity', rating: 4.9, projects: 25, bio: 'High-end UI/UX and brand strategy for global IT nodes.' },
-    { id: '3', name: 'Suren Sargsyan', category: 'Data Architecture', rating: 5.0, projects: 8, bio: 'Specializing in big data pipelines and analytical clusters.' },
-    { id: '4', name: 'Mane Gasparyan', category: 'Mobile Ecosystems', rating: 4.8, projects: 15, bio: 'iOS/Android elite deployment and optimization.' }
+  const freelancers = users.filter(u => u.role === 'freelancer' && (
+    u.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    u.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    u.bio?.toLowerCase().includes(searchTerm.toLowerCase())
+  ));
+
+  const displaySpecialists = freelancers.length > 0 ? freelancers : [
+    { id: '1', fullName: 'Aris Vardanian', category: 'Software Engineering', rating: 5.0, completedJobsCount: 12, bio: 'Architecting neural networks and high-scale infrastructures.' },
+    { id: '2', fullName: 'Nare Mkrtchyan', category: 'Visual Identity', rating: 4.9, completedJobsCount: 25, bio: 'High-end UI/UX and brand strategy for global IT nodes.' }
   ];
 
   return (
@@ -119,7 +123,7 @@ export const SpecialistCatalog = () => {
            </div>
 
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {specialists.map(s => (
+              {displaySpecialists.map(s => (
                 <motion.div 
                  key={s.id}
                  initial={{ opacity: 0, scale: 0.95 }}
@@ -129,11 +133,11 @@ export const SpecialistCatalog = () => {
                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-600 to-fuchsia-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                    <div className="space-y-8 relative z-10">
                       <div className="w-20 h-20 bg-gradient-to-br from-violet-600 to-fuchsia-600 rounded-[2rem] flex items-center justify-center text-white text-3xl font-black italic shadow-xl rotate-3 group-hover:rotate-0 transition-transform">
-                         {s.name[0]}
+                         {(s.fullName || 'A')[0]}
                       </div>
                       <div className="space-y-4">
                          <span className="badge-lux">{s.category}</span>
-                         <h3 className="text-display text-2xl italic text-white leading-tight group-hover:text-violet-400 transition-colors">{s.name}</h3>
+                         <h3 className="text-display text-2xl italic text-white leading-tight group-hover:text-violet-400 transition-colors">{s.fullName}</h3>
                          <p className="text-[10px] text-white/20 leading-relaxed font-medium italic">"{s.bio}"</p>
                       </div>
                       <div className="pt-6 border-t border-white/5 flex justify-between items-center">
@@ -141,7 +145,7 @@ export const SpecialistCatalog = () => {
                             <Star className="w-3.5 h-3.5 text-violet-500 fill-current" />
                             <span className="text-display text-lg italic text-white">{s.rating}</span>
                          </div>
-                         <p className="text-label text-[8px] text-white/20 uppercase tracking-widest">{s.projects} Missions</p>
+                         <p className="text-label text-[8px] text-white/20 uppercase tracking-widest">{(s as any).completedJobsCount || 0} Missions</p>
                       </div>
                       <Link to="/profile" className="btn-ghost w-full py-4 text-[9px] mt-4 opacity-0 group-hover:opacity-100 transition-opacity">Audit Node <ArrowUpRight className="w-4 h-4" /></Link>
                    </div>

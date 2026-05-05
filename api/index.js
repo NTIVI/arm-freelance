@@ -37,14 +37,16 @@ const initDb = async () => {
         "postedJobsCount" INTEGER DEFAULT 0,
         "ratingCount" INTEGER DEFAULT 0,
         "ratingSum" NUMERIC DEFAULT 0,
-        rating NUMERIC DEFAULT 5.0
+        rating NUMERIC DEFAULT 5.0,
+        "rateAMD" NUMERIC,
+        "rateUSD" NUMERIC
       );
 
       CREATE TABLE IF NOT EXISTS jobs (
         id VARCHAR(255) PRIMARY KEY,
         title VARCHAR(255),
         description TEXT,
-        budget VARCHAR(255),
+        budget NUMERIC,
         deadline VARCHAR(255),
         type VARCHAR(50),
         category VARCHAR(255),
@@ -61,7 +63,7 @@ const initDb = async () => {
         "jobId" VARCHAR(255),
         "freelancerId" VARCHAR(255),
         "freelancerName" VARCHAR(255),
-        bid VARCHAR(255),
+        bid NUMERIC,
         "coverLetter" TEXT,
         "createdAt" TIMESTAMP,
         status VARCHAR(50) DEFAULT 'pending'
@@ -86,14 +88,14 @@ app.get('/api/users', async (req, res) => {
 app.post('/api/users', async (req, res) => {
   const user = req.body;
   const query = `
-    INSERT INTO users (id, "fullName", email, role, "firstName", "lastName", title, avatar, bio, category, "experienceYears", age, verified, online)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
-    ON CONFLICT (id) DO UPDATE SET online = EXCLUDED.online, age = EXCLUDED.age
+    INSERT INTO users (id, "fullName", email, role, "firstName", "lastName", title, avatar, bio, category, "experienceYears", age, verified, online, "rateAMD", "rateUSD")
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+    ON CONFLICT (id) DO UPDATE SET online = EXCLUDED.online, age = EXCLUDED.age, "rateAMD" = EXCLUDED."rateAMD", "rateUSD" = EXCLUDED."rateUSD"
   `;
   await pool.query(query, [
     user.id, user.fullName, user.email, user.role, user.firstName, user.lastName, 
     user.title, user.avatar, user.bio, user.category, user.experienceYears, user.age, 
-    user.verified, user.online
+    user.verified, user.online, user.rateAMD, user.rateUSD
   ]);
   res.json({ success: true });
 });

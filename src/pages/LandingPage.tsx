@@ -27,7 +27,7 @@ export const LandingPage = () => {
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/home/ntivistudio/.gemini/antigravity/brain/d96238a1-9069-40ff-be18-176a14023868/armenia_hero_bg_1777935731755.png" 
+            src="https://images.unsplash.com/photo-1542435503-956c469947f6?q=80&w=2070&auto=format&fit=crop" 
             className="w-full h-full object-cover opacity-40 scale-105"
             alt="Armenian Landscape"
           />
