@@ -42,7 +42,7 @@ export const Dashboard = () => {
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-600"></div>
           <div className="flex items-center gap-6">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center text-white text-3xl font-black italic shadow-2xl rotate-3 group-hover:rotate-0 transition-transform">
-              {user?.fullName?.[0] || 'A'}
+              {user?.fullName ? user.fullName[0] : 'A'}
             </div>
             <div className="space-y-1">
               <h3 className="text-display text-xl leading-none text-white">{user.fullName}</h3>

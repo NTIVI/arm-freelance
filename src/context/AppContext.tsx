@@ -72,8 +72,14 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem('af_user');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem('af_user');
+      if (!saved || saved === 'undefined') return null;
+      return JSON.parse(saved);
+    } catch (e) {
+      console.error('Failed to parse user from localStorage', e);
+      return null;
+    }
   });
 
   const [users, setUsers] = useState<User[]>([]);

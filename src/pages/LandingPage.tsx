@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
-import { 
-  Search, 
-  ArrowUpRight, 
-  Zap, 
-  Shield, 
-  Globe, 
-  Users, 
+import {
+  Search,
+  ArrowUpRight,
+  Zap,
+  Shield,
+  Globe,
+  Users,
   Briefcase,
   Code,
   Smartphone,
@@ -13,7 +13,8 @@ import {
   Megaphone,
   Database,
   Lock,
-  Star
+  Star,
+  MessageSquare
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { Link } from 'react-router-dom';
@@ -26,8 +27,8 @@ export const LandingPage = () => {
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1542435503-956c469947f6?q=80&w=2070&auto=format&fit=crop" 
+          <img
+            src="https://images.unsplash.com/photo-1542435503-956c469947f6?q=80&w=2070&auto=format&fit=crop"
             className="w-full h-full object-cover opacity-40 scale-105"
             alt="Armenian Landscape"
           />
@@ -52,7 +53,7 @@ export const LandingPage = () => {
           </motion.div>
 
           {/* Search Bar */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.8 }}
@@ -60,9 +61,9 @@ export const LandingPage = () => {
           >
             <div className="flex-1 relative">
               <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-violet-400" />
-              <input 
-                type="text" 
-                placeholder="Scan for technical mastery or project objectives..." 
+              <input
+                type="text"
+                placeholder="Scan for technical mastery or project objectives..."
                 className="w-full bg-transparent border-none px-16 py-6 text-white font-bold placeholder:text-white/20 outline-none"
               />
             </div>
@@ -71,7 +72,7 @@ export const LandingPage = () => {
             </button>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.2 }}
@@ -92,31 +93,31 @@ export const LandingPage = () => {
             <h2 className="text-display text-7xl italic">Elite Specialists</h2>
           </div>
           <div className="flex gap-4">
-             <button className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/20 hover:text-white hover:bg-violet-600 transition-all"><ArrowUpRight className="w-5 h-5 rotate-[225deg]" /></button>
-             <button className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/20 hover:text-white hover:bg-violet-600 transition-all"><ArrowUpRight className="w-5 h-5" /></button>
+            <button className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/20 hover:text-white hover:bg-violet-600 transition-all"><ArrowUpRight className="w-5 h-5 rotate-[225deg]" /></button>
+            <button className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/20 hover:text-white hover:bg-violet-600 transition-all"><ArrowUpRight className="w-5 h-5" /></button>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-           <SpecialistMiniCard name="Aris Vardanian" role="System Architect" rating={5.0} />
-           <SpecialistMiniCard name="Nare Mkrtchyan" role="UI/UX Lead" rating={4.9} />
-           <SpecialistMiniCard name="Suren Sargsyan" role="Data Engineer" rating={5.0} />
-           <SpecialistMiniCard name="Mane Gasparyan" role="Mobile Expert" rating={4.8} />
+          <SpecialistMiniCard name="Aris Vardanian" role="System Architect" rating={5.0} />
+          <SpecialistMiniCard name="Nare Mkrtchyan" role="UI/UX Lead" rating={4.9} />
+          <SpecialistMiniCard name="Suren Sargsyan" role="Data Engineer" rating={5.0} />
+          <SpecialistMiniCard name="Mane Gasparyan" role="Mobile Expert" rating={4.8} />
         </div>
       </section>
 
       {/* Client Reviews Section */}
       <section className="max-w-7xl mx-auto px-6 space-y-20">
-         <div className="text-center space-y-4">
-            <p className="text-label tracking-[0.4em] text-fuchsia-400">Success Transmissions</p>
-            <h2 className="text-display text-7xl italic leading-none">Client Reviews</h2>
-         </div>
+        <div className="text-center space-y-4">
+          <p className="text-label tracking-[0.4em] text-fuchsia-400">Success Transmissions</p>
+          <h2 className="text-display text-7xl italic leading-none">Client Reviews</h2>
+        </div>
 
-         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <ReviewCard name="Vigen S." company="Fintech AM" text="The level of technical expertise in the Armenian cluster is unmatched. Synchronized a full banking core in 3 cycles." />
-            <ReviewCard name="Elena R." company="E-Gov Node" text="Architectural precision and perfect communication. The platform handled the escrow protocol flawlessly." />
-            <ReviewCard name="Gevorg M." company="GameFlow" text="Found a specialized neural network engineer within 24 hours. Scaling has never been this efficient." />
-         </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <ReviewCard name="Vigen S." company="Fintech AM" text="The level of technical expertise in the Armenian cluster is unmatched. Synchronized a full banking core in 3 cycles." />
+          <ReviewCard name="Elena R." company="E-Gov Node" text="Architectural precision and perfect communication. The platform handled the escrow protocol flawlessly." />
+          <ReviewCard name="Gevorg M." company="GameFlow" text="Found a specialized neural network engineer within 24 hours. Scaling has never been this efficient." />
+        </div>
       </section>
 
       {/* Categories Grid */}
@@ -149,22 +150,22 @@ export const LandingPage = () => {
               <p className="text-label tracking-[0.4em] text-violet-400">Execution Protocol</p>
               <h2 className="text-display text-8xl italic leading-none">{t('how_it_works')}</h2>
             </div>
-            
+
             <div className="space-y-12">
-              <ProcessStep 
-                num="01" 
-                title="Define Objective" 
-                desc="Draft a detailed architectural brief for your project." 
+              <ProcessStep
+                num="01"
+                title="Define Objective"
+                desc="Draft a detailed architectural brief for your project."
               />
-              <ProcessStep 
-                num="02" 
-                title="Match Credentials" 
-                desc="Review elite specialist proposals and verified portfolios." 
+              <ProcessStep
+                num="02"
+                title="Match Credentials"
+                desc="Review elite specialist proposals and verified portfolios."
               />
-              <ProcessStep 
-                num="03" 
-                title="Execute Sync" 
-                desc="Establish a secure tunnel and begin architectural deployment." 
+              <ProcessStep
+                num="03"
+                title="Execute Sync"
+                desc="Establish a secure tunnel and begin architectural deployment."
               />
             </div>
           </div>
@@ -219,17 +220,17 @@ const SpecialistMiniCard = ({ name, role, rating }: any) => (
 
 const ReviewCard = ({ name, company, text }: any) => (
   <div className="premium-card p-12 bg-white/[0.02] border-white/5 hover:border-fuchsia-500/20 transition-all duration-700 space-y-8 relative overflow-hidden group">
-     <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-        <MessageSquare className="w-16 h-16 text-fuchsia-500" />
-     </div>
-     <p className="text-white/40 text-lg leading-relaxed italic font-medium relative z-10">"{text}"</p>
-     <div className="flex items-center gap-4 pt-4 relative z-10">
-        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/40 font-black italic">{name[0]}</div>
-        <div>
-           <p className="text-display text-sm italic text-white">{name}</p>
-           <p className="text-label text-[7px] text-white/20 uppercase tracking-widest">{company}</p>
-        </div>
-     </div>
+    <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+      <MessageSquare className="w-16 h-16 text-fuchsia-500" />
+    </div>
+    <p className="text-white/40 text-lg leading-relaxed italic font-medium relative z-10">"{text}"</p>
+    <div className="flex items-center gap-4 pt-4 relative z-10">
+      <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/40 font-black italic">{name[0]}</div>
+      <div>
+        <p className="text-display text-sm italic text-white">{name}</p>
+        <p className="text-label text-[7px] text-white/20 uppercase tracking-widest">{company}</p>
+      </div>
+    </div>
   </div>
 );
 

@@ -95,7 +95,7 @@ export const Header = () => {
                   onClick={() => navigate('/dashboard')}
                   className="w-12 h-12 rounded-[1.25rem] bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center text-white font-black italic shadow-xl shadow-violet-500/20 group-hover:scale-110 group-hover:rotate-3 transition-all cursor-pointer"
                 >
-                  {user.fullName[0]}
+                  {user?.fullName ? user.fullName[0] : 'U'}
                 </div>
               </div>
             </div>
