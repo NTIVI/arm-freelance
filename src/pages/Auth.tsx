@@ -154,19 +154,19 @@ export const Auth = () => {
               className="premium-card p-16 space-y-12 bg-white/[0.03] backdrop-blur-3xl shadow-2xl border-white/10"
             >
               <div className="flex bg-white/5 p-1.5 rounded-3xl border border-white/5">
-                <TabButton active={isLogin} onClick={() => setIsLogin(true)} label="Authentication" />
-                <TabButton active={!isLogin} onClick={() => setIsLogin(false)} label="Initialization" />
+                <TabButton active={isLogin} onClick={() => setIsLogin(true)} label={t('authentication')} />
+                <TabButton active={!isLogin} onClick={() => setIsLogin(false)} label={t('initialization')} />
               </div>
 
               <div className="text-center space-y-4">
-                <h2 className="text-display text-6xl italic leading-none text-white">{isLogin ? 'Welcome Back' : 'Entry Protocol'}</h2>
-                <p className="text-label text-[8px] text-white/20 tracking-[0.4em]">{isLogin ? 'Synchronize with your profile' : 'Begin your elite specialist journey'}</p>
+                <h2 className="text-display text-6xl italic leading-none text-white">{isLogin ? t('welcome_back') : t('entry_protocol')}</h2>
+                <p className="text-label text-[8px] text-white/20 tracking-[0.4em]">{isLogin ? t('auth_subtitle') : t('hero_subtitle')}</p>
               </div>
 
               <form onSubmit={handleAuthSubmit} className="space-y-8">
                 <div className="space-y-6">
                   <InputGroup 
-                    label="Satellite Identity (Email)" 
+                    label={t('email_identity')} 
                     type="email" 
                     placeholder="protocol-01@afmarket.am" 
                     icon={Mail} 
@@ -175,7 +175,7 @@ export const Auth = () => {
                   />
                   {!isLogin && (
                     <InputGroup 
-                      label="Visual Tag (Nickname)" 
+                      label={t('nickname_tag')} 
                       type="text" 
                       placeholder="architect_v1" 
                       icon={User} 
@@ -184,7 +184,7 @@ export const Auth = () => {
                     />
                   )}
                   <InputGroup 
-                    label="Access Key (Password)" 
+                    label={t('password_key')} 
                     type="password" 
                     placeholder="••••••••••••" 
                     icon={Lock} 
@@ -193,7 +193,7 @@ export const Auth = () => {
                   />
                   {!isLogin && (
                     <InputGroup 
-                      label="Confirm Access Key" 
+                      label={t('confirm_key')} 
                       type="password" 
                       placeholder="••••••••••••" 
                       icon={Shield} 
@@ -204,14 +204,14 @@ export const Auth = () => {
                 </div>
 
                 <button type="submit" className="btn-lux w-full py-8 text-sm group">
-                  {isLogin ? 'Authorize Access' : 'Initiate Protocol'} <ArrowUpRight className="w-6 h-6 group-hover:rotate-45 transition-transform" />
+                  {isLogin ? t('authorize_access') : t('initiate_protocol')} <ArrowUpRight className="w-6 h-6 group-hover:rotate-45 transition-transform" />
                 </button>
               </form>
 
               <div className="space-y-8">
                 <div className="flex items-center gap-4">
                   <span className="flex-1 h-[1px] bg-white/5"></span>
-                  <p className="text-label text-[8px] text-white/10">External Gateways</p>
+                  <p className="text-label text-[8px] text-white/10">{t('external_gateways')}</p>
                   <span className="flex-1 h-[1px] bg-white/5"></span>
                 </div>
                 <div className="grid grid-cols-3 gap-4">
@@ -232,14 +232,14 @@ export const Auth = () => {
               className="premium-card p-16 space-y-12 bg-white/[0.03] border-white/10"
             >
               <button onClick={() => setStep(1)} className="flex items-center gap-2 text-label text-[8px] text-white/20 hover:text-white transition-colors">
-                <ChevronLeft className="w-4 h-4" /> Revert to Auth
+                <ChevronLeft className="w-4 h-4" /> {t('welcome_back')}
               </button>
               <div className="text-center space-y-10">
                 <div className="w-24 h-24 bg-gradient-to-br from-violet-600 to-fuchsia-600 rounded-[2.5rem] flex items-center justify-center mx-auto rotate-6 animate-pulse">
                   <Mail className="w-12 h-12 text-white" />
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-display text-5xl italic text-white">Security Audit</h3>
+                  <h3 className="text-display text-5xl italic text-white">{t('security_audit')}</h3>
                   <p className="text-label text-[8px] text-white/20 tracking-[0.4em]">Code transmitted to {formData.email}</p>
                 </div>
                 <div className="space-y-6">
@@ -251,10 +251,9 @@ export const Auth = () => {
                     value={formData.verificationCode}
                     onChange={(e) => setFormData({...formData, verificationCode: e.target.value})}
                   />
-                  <p className="text-[9px] text-white/20 font-black uppercase tracking-widest">Resend protocol available in: <span className="text-violet-400">00:59</span></p>
                 </div>
                 <button onClick={handleVerify} className="btn-lux w-full py-8 text-sm">
-                  Confirm Identity <Check className="w-6 h-6" />
+                  {t('confirm_identity')} <Check className="w-6 h-6" />
                 </button>
               </div>
             </motion.div>
@@ -269,30 +268,30 @@ export const Auth = () => {
               className="premium-card p-16 space-y-12 bg-white/[0.03] border-white/10"
             >
               <div className="text-center space-y-4">
-                <h3 className="text-display text-5xl italic text-white">Path Selection</h3>
-                <p className="text-label text-[8px] text-white/20 tracking-[0.4em]">Define your ecosystem role</p>
+                <h3 className="text-display text-5xl italic text-white">{t('path_selection')}</h3>
+                <p className="text-label text-[8px] text-white/20 tracking-[0.4em]">{t('entry_protocol')}</p>
               </div>
               <div className="grid grid-cols-1 gap-6">
                 <RoleCard 
                   active={role === 'freelancer'} 
                   onClick={() => setRole('freelancer')} 
                   icon={Briefcase} 
-                  title="Specialist Architecture" 
-                  desc="Supply high-end technical expertise" 
+                  title={t('specialist_arch')} 
+                  desc={t('hero_subtitle')} 
                 />
                 <RoleCard 
                   active={role === 'agency'} 
                   onClick={() => setRole('agency')} 
                   icon={Layers} 
-                  title="Agency Infrastructure" 
-                  desc="Coordinating multi-node specialist teams" 
+                  title={t('agency_infra')} 
+                  desc={t('active_protocols')} 
                 />
                 <RoleCard 
                   active={role === 'client'} 
                   onClick={() => setRole('client')} 
                   icon={Command} 
-                  title="Client Procurement" 
-                  desc="Source elite talent for scaling visions" 
+                  title={t('client_procurement')} 
+                  desc={t('become_client_btn')} 
                 />
               </div>
               <button 
@@ -300,7 +299,7 @@ export const Auth = () => {
                 onClick={() => setStep(4)} 
                 className="btn-lux w-full py-8 text-sm disabled:opacity-20 shadow-none mt-4"
               >
-                Proceed to Profiling <ArrowRight className="w-6 h-6" />
+                {t('proceed_profiling')} <ArrowRight className="w-6 h-6" />
               </button>
             </motion.div>
           )}
@@ -313,8 +312,8 @@ export const Auth = () => {
               className="premium-card p-16 space-y-12 bg-white/[0.03] border-white/10"
             >
               <div className="text-center space-y-4">
-                <h3 className="text-display text-6xl italic text-fuchsia-500 leading-none">Profile Genesis</h3>
-                <p className="text-label text-[8px] text-white/20 tracking-[0.4em]">Identity metadata injection required</p>
+                <h3 className="text-display text-6xl italic text-fuchsia-500 leading-none">{t('profile_genesis')}</h3>
+                <p className="text-label text-[8px] text-white/20 tracking-[0.4em]">{t('entry_protocol')}</p>
               </div>
               
               <div className="space-y-10">
@@ -326,14 +325,14 @@ export const Auth = () => {
 
                 <div className="grid grid-cols-2 gap-8">
                   <InputGroup 
-                    label="Given Name" 
+                    label={t('nickname_tag')} 
                     type="text" 
                     placeholder="Aris" 
                     value={formData.firstName}
                     onChange={(v: string) => setFormData({...formData, firstName: v})}
                   />
                   <InputGroup 
-                    label="Surname" 
+                    label={t('nickname_tag')} 
                     type="text" 
                     placeholder="Vardanian" 
                     value={formData.lastName}
@@ -342,7 +341,7 @@ export const Auth = () => {
                 </div>
 
                 <div className="space-y-4">
-                  <label className="text-label text-[8px] ml-6 flex items-center gap-3"><Zap className="w-3.5 h-3.5 text-violet-400" /> Professional Headline</label>
+                  <label className="text-label text-[8px] ml-6 flex items-center gap-3"><Zap className="w-3.5 h-3.5 text-violet-400" /> {t('technical_brief')}</label>
                   <input 
                     type="text" 
                     className="input-lux py-6 text-sm" 
@@ -355,7 +354,7 @@ export const Auth = () => {
                 {role !== 'client' && (
                   <div className="grid grid-cols-2 gap-8">
                     <div className="space-y-4">
-                      <label className="text-label text-[8px] ml-6">Operational Sphere</label>
+                      <label className="text-label text-[8px] ml-6">{t('operational_domain')}</label>
                       <select 
                         className="input-lux py-6 appearance-none"
                         value={formData.category}
@@ -368,7 +367,7 @@ export const Auth = () => {
                     </div>
                      <div className="grid grid-cols-2 gap-4">
                        <InputGroup 
-                         label="Rate (AMD)" 
+                         label={t('resource_allocation')} 
                          type="number" 
                          placeholder="5000" 
                          value={formData.rateAMD}
@@ -386,7 +385,7 @@ export const Auth = () => {
                 )}
 
                 <button onClick={handleFinalize} className="btn-lux w-full py-10 text-lg shadow-fuchsia-500/20">
-                  Deploy Identity <Sparkles className="w-8 h-8" />
+                  {t('deploy_identity')} <Sparkles className="w-8 h-8" />
                 </button>
               </div>
             </motion.div>

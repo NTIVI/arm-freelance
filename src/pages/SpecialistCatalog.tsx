@@ -45,9 +45,12 @@ export const SpecialistCatalog = () => {
   return (
     <div className="max-w-7xl mx-auto px-6 py-12 space-y-20">
       <header className="space-y-12">
+  return (
+    <div className="max-w-7xl mx-auto px-6 py-12 space-y-20">
+      <header className="space-y-12">
         <div className="space-y-4">
-           <h1 className="text-display text-8xl italic leading-none bg-gradient-to-r from-white via-white to-white/20 bg-clip-text text-transparent uppercase text-center">Specialist Registry</h1>
-           <p className="text-label text-[8px] tracking-[0.5em] text-white/20 uppercase text-center">Synchronize with Armenia's Elite Technical Nodes</p>
+           <h1 className="text-display text-8xl italic leading-none bg-gradient-to-r from-white via-white to-white/20 bg-clip-text text-transparent uppercase text-center">{t('specialist_registry')}</h1>
+           <p className="text-label text-[8px] tracking-[0.5em] text-white/20 uppercase text-center">{t('hero_subtitle')}</p>
         </div>
       </header>
 
@@ -56,7 +59,7 @@ export const SpecialistCatalog = () => {
         <aside className="w-full lg:w-80 space-y-10 shrink-0">
            <div className="premium-card p-8 bg-white/[0.02] border-white/5 space-y-10">
               <div className="space-y-6">
-                 <h4 className="text-label text-violet-400 tracking-[0.4em]">Operational Spheres</h4>
+                 <h4 className="text-label text-violet-400 tracking-[0.4em]">{t('operational_domains')}</h4>
                  <div className="space-y-3">
                     <FilterCheck label="Software Engineering" />
                     <FilterCheck label="Visual Identity" />
@@ -66,7 +69,7 @@ export const SpecialistCatalog = () => {
               </div>
 
               <div className="space-y-6">
-                 <h4 className="text-label text-fuchsia-400 tracking-[0.4em]">Geographical Nodes</h4>
+                 <h4 className="text-label text-fuchsia-400 tracking-[0.4em]">{t('geo_nodes')}</h4>
                  <div className="space-y-3">
                     <FilterCheck label="Yerevan (Main)" />
                     <FilterCheck label="Gyumri Cluster" />
@@ -76,7 +79,7 @@ export const SpecialistCatalog = () => {
               </div>
 
               <div className="space-y-6">
-                 <h4 className="text-label text-indigo-400 tracking-[0.4em]">Valuation Range</h4>
+                 <h4 className="text-label text-indigo-400 tracking-[0.4em]">{t('valuation_range')}</h4>
                  <div className="space-y-4">
                     <div className="flex gap-4">
                        <input type="number" placeholder="Min" className="input-lux py-3 text-[10px] px-4" />
@@ -86,7 +89,7 @@ export const SpecialistCatalog = () => {
               </div>
 
               <div className="space-y-6">
-                 <h4 className="text-label text-emerald-400 tracking-[0.4em]">Mastery Level</h4>
+                 <h4 className="text-label text-emerald-400 tracking-[0.4em]">{t('mastery_level')}</h4>
                  <div className="space-y-3">
                     <FilterCheck label="Expert (8+ yrs)" />
                     <FilterCheck label="Intermediate" />
@@ -94,7 +97,7 @@ export const SpecialistCatalog = () => {
                  </div>
               </div>
 
-              <button className="btn-lux w-full py-4 text-[9px] shadow-none">Apply Filter Protocol</button>
+              <button className="btn-lux w-full py-4 text-[9px] shadow-none">{t('apply_filters')}</button>
            </div>
         </aside>
 
@@ -105,19 +108,19 @@ export const SpecialistCatalog = () => {
                  <Search className="w-5 h-5 text-white/20 ml-6" />
                  <input 
                   type="text" 
-                  placeholder="Scan for technical skills, names, or categories..." 
+                  placeholder={t('search_placeholder')} 
                   className="w-full bg-transparent border-none px-6 py-4 text-white font-bold placeholder:text-white/10 outline-none"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                  />
               </div>
               <div className="flex items-center gap-4 shrink-0">
-                 <span className="text-label text-white/20">Sort By:</span>
+                 <span className="text-label text-white/20">{t('sort_by')}:</span>
                  <select className="bg-white/5 border border-white/10 rounded-xl px-6 py-3 text-label text-[9px] text-white outline-none">
-                    <option className="bg-[#0f0f0f]">Rating Protocol</option>
-                    <option className="bg-[#0f0f0f]">Valuation (Low-High)</option>
-                    <option className="bg-[#0f0f0f]">Active Responses</option>
-                    <option className="bg-[#0f0f0f]">New Registry</option>
+                    <option className="bg-[#0f0f0f]">{t('rating_protocol')}</option>
+                    <option className="bg-[#0f0f0f]">{t('valuation_low_high')}</option>
+                    <option className="bg-[#0f0f0f]">{t('active_responses')}</option>
+                    <option className="bg-[#0f0f0f]">{t('new_registry')}</option>
                  </select>
               </div>
            </div>
@@ -145,9 +148,9 @@ export const SpecialistCatalog = () => {
                             <Star className="w-3.5 h-3.5 text-violet-500 fill-current" />
                             <span className="text-display text-lg italic text-white">{s.rating}</span>
                          </div>
-                         <p className="text-label text-[8px] text-white/20 uppercase tracking-widest">{(s as any).completedJobsCount || 0} Missions</p>
+                         <p className="text-label text-[8px] text-white/20 uppercase tracking-widest">{(s as any).completedJobsCount || 0} {t('missions')}</p>
                       </div>
-                      <Link to="/profile" className="btn-ghost w-full py-4 text-[9px] mt-4 opacity-0 group-hover:opacity-100 transition-opacity">Audit Node <ArrowUpRight className="w-4 h-4" /></Link>
+                      <Link to="/profile" className="btn-ghost w-full py-4 text-[9px] mt-4 opacity-0 group-hover:opacity-100 transition-opacity">{t('audit_node')} <ArrowUpRight className="w-4 h-4" /></Link>
                    </div>
                 </motion.div>
               ))}

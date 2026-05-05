@@ -48,7 +48,7 @@ export const LandingPage = () => {
             </div>
             <h1 className="text-display text-7xl md:text-[10rem] bg-gradient-to-b from-white via-white to-white/20 bg-clip-text text-transparent leading-none">
               ARMENIA'S <br />
-              <span className="italic outline-text text-white/50">ELITE GRID</span>
+              <span className="italic outline-text text-white/50">{t('hero_grid')}</span>
             </h1>
           </motion.div>
 
@@ -63,12 +63,12 @@ export const LandingPage = () => {
               <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-violet-400" />
               <input
                 type="text"
-                placeholder="Scan for technical mastery or project objectives..."
+                placeholder={t('search_placeholder')}
                 className="w-full bg-transparent border-none px-16 py-6 text-white font-bold placeholder:text-white/20 outline-none"
               />
             </div>
             <button className="btn-lux px-12 py-6 text-sm">
-              Initialize Search <ArrowUpRight className="w-5 h-5" />
+              {t('initialize_search')} <ArrowUpRight className="w-5 h-5" />
             </button>
           </motion.div>
 
@@ -78,9 +78,9 @@ export const LandingPage = () => {
             transition={{ delay: 1.2 }}
             className="flex flex-wrap justify-center gap-16 pt-10"
           >
-            <QuickStat label="Verified Specialists" value="1,500+" />
-            <QuickStat label="Projected Volume" value="12,000+" />
-            <QuickStat label="Node Uptime" value="99.9%" />
+            <QuickStat label={t('verified_specialists')} value="1,500+" />
+            <QuickStat label={t('projected_volume')} value="12,000+" />
+            <QuickStat label={t('node_uptime')} value="99.9%" />
           </motion.div>
         </div>
       </section>
@@ -89,8 +89,8 @@ export const LandingPage = () => {
       <section className="max-w-7xl mx-auto px-6 space-y-20">
         <div className="flex justify-between items-end">
           <div className="space-y-4">
-            <p className="text-label tracking-[0.4em] text-violet-400">Top-Tier Performers</p>
-            <h2 className="text-display text-7xl italic">Elite Specialists</h2>
+            <p className="text-label tracking-[0.4em] text-violet-400">{t('top_tier_performers')}</p>
+            <h2 className="text-display text-7xl italic">{t('elite_specialists')}</h2>
           </div>
           <div className="flex gap-4">
             <button className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/20 hover:text-white hover:bg-violet-600 transition-all"><ArrowUpRight className="w-5 h-5 rotate-[225deg]" /></button>
@@ -109,8 +109,8 @@ export const LandingPage = () => {
       {/* Client Reviews Section */}
       <section className="max-w-7xl mx-auto px-6 space-y-20">
         <div className="text-center space-y-4">
-          <p className="text-label tracking-[0.4em] text-fuchsia-400">Success Transmissions</p>
-          <h2 className="text-display text-7xl italic leading-none">Client Reviews</h2>
+          <p className="text-label tracking-[0.4em] text-fuchsia-400">{t('success_transmissions')}</p>
+          <h2 className="text-display text-7xl italic leading-none">{t('client_reviews')}</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -124,11 +124,11 @@ export const LandingPage = () => {
       <section className="max-w-7xl mx-auto px-6 space-y-20">
         <div className="flex flex-col md:flex-row justify-between items-end gap-12">
           <div className="space-y-6">
-            <p className="text-label tracking-[0.4em] text-violet-400">Operational Domains</p>
+            <p className="text-label tracking-[0.4em] text-violet-400">{t('operational_domains')}</p>
             <h2 className="text-display text-7xl italic leading-none">{t('categories_title')}</h2>
           </div>
           <Link to="/catalog" className="text-label text-white/30 hover:text-white flex items-center gap-3 transition-all group">
-            Browse All Segments <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            {t('browse_all')} <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
           </Link>
         </div>
 
@@ -147,25 +147,25 @@ export const LandingPage = () => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-32 items-center">
           <div className="space-y-16">
             <div className="space-y-6">
-              <p className="text-label tracking-[0.4em] text-violet-400">Execution Protocol</p>
+              <p className="text-label tracking-[0.4em] text-violet-400">{t('execution_protocol')}</p>
               <h2 className="text-display text-8xl italic leading-none">{t('how_it_works')}</h2>
             </div>
 
             <div className="space-y-12">
               <ProcessStep
                 num="01"
-                title="Define Objective"
-                desc="Draft a detailed architectural brief for your project."
+                title={t('step_1_title')}
+                desc={t('step_1_desc')}
               />
               <ProcessStep
                 num="02"
-                title="Match Credentials"
-                desc="Review elite specialist proposals and verified portfolios."
+                title={t('step_2_title')}
+                desc={t('step_2_desc')}
               />
               <ProcessStep
                 num="03"
-                title="Execute Sync"
-                desc="Establish a secure tunnel and begin architectural deployment."
+                title={t('step_3_title')}
+                desc={t('step_3_desc')}
               />
             </div>
           </div>
@@ -178,7 +178,7 @@ export const LandingPage = () => {
               <div className="w-16 h-16 bg-gradient-to-br from-violet-600 to-fuchsia-600 rounded-2xl flex items-center justify-center shadow-xl shadow-violet-500/20">
                 <Shield className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-display text-4xl italic text-white">Security & Escrow Layer</h3>
+              <h3 className="text-display text-4xl italic text-white">{t('security_escrow')}</h3>
               <p className="text-white/30 text-lg italic leading-relaxed">
                 All value transfers are protected by multi-signature orbital escrow. Funds are only released upon verified milestone completion, ensuring absolute security for both nodes.
               </p>

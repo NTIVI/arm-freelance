@@ -35,7 +35,7 @@ export const Header = () => {
             <div className="w-10 h-10 bg-gradient-to-br from-violet-600 to-fuchsia-600 rounded-xl flex items-center justify-center rotate-3 group-hover:rotate-0 transition-transform">
               <span className="text-white font-black text-xl italic">A</span>
             </div>
-            <span className="text-display text-xl text-white tracking-tighter">ARM FREELANCE</span>
+            <span className="text-display text-xl text-white tracking-tighter">{t('site_name')}</span>
           </Link>
 
           <div className="hidden lg:flex items-center gap-8">

@@ -46,23 +46,23 @@ export const Dashboard = () => {
             </div>
             <div className="space-y-1">
               <h3 className="text-display text-xl leading-none text-white">{user.fullName}</h3>
-              <p className="text-label text-[8px] text-white/20 tracking-widest">{user.role.toUpperCase()}</p>
+              <p className="text-label text-[8px] text-white/20 tracking-widest">{t(`role_${user.role}`)}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4 pt-6 border-t border-white/5">
-             <SidebarStat label="Balance" value={formatPrice(user.balance)} />
-             <SidebarStat label="Credits" value={user.credits} />
+             <SidebarStat label={t('balance')} value={formatPrice(user.balance)} />
+             <SidebarStat label={t('credits')} value={user.credits} />
           </div>
         </div>
 
         <nav className="flex flex-col gap-2">
-          <SidebarLink active={activeTab === 'overview'} onClick={() => setActiveTab('overview')} label="Neural Overview" icon={LayoutGrid} />
-          <SidebarLink active={activeTab === 'projects'} onClick={() => setActiveTab('projects')} label={isFreelancer ? "Mission Hub" : "Project Clusters"} icon={Briefcase} />
-          <SidebarLink active={activeTab === 'messages'} onClick={() => setActiveTab('messages')} label="Dialogue Tunnel" icon={MessageSquare} />
-          <SidebarLink active={activeTab === 'wallet'} onClick={() => setActiveTab('wallet')} label="Value Vault" icon={Wallet} />
+          <SidebarLink active={activeTab === 'overview'} onClick={() => setActiveTab('overview')} label={t('overview')} icon={LayoutGrid} />
+          <SidebarLink active={activeTab === 'projects'} onClick={() => setActiveTab('projects')} label={isFreelancer ? t('active_missions') : t('my_projects')} icon={Briefcase} />
+          <SidebarLink active={activeTab === 'messages'} onClick={() => setActiveTab('messages')} label={t('messages')} icon={MessageSquare} />
+          <SidebarLink active={activeTab === 'wallet'} onClick={() => setActiveTab('wallet')} label={t('wallet')} icon={Wallet} />
           <div className="h-[1px] bg-white/5 my-4" />
-          <SidebarLink active={false} onClick={logout} label="De-authorize Session" icon={Zap} color="text-fuchsia-500" />
+          <SidebarLink active={false} onClick={logout} label={t('logout')} icon={Zap} color="text-fuchsia-500" />
         </nav>
       </aside>
 
@@ -70,38 +70,38 @@ export const Dashboard = () => {
       <main className="flex-1 space-y-12">
         <header className="flex justify-between items-end">
            <div className="space-y-4">
-              <h2 className="text-display text-7xl italic leading-none text-white uppercase">{activeTab === 'overview' ? 'DASHBOARD' : activeTab.toUpperCase()}</h2>
+              <h2 className="text-display text-7xl italic leading-none text-white uppercase">{activeTab === 'overview' ? t('dashboard_title') : t(activeTab)}</h2>
               <div className="flex items-center gap-4">
                  <div className="w-2 h-2 bg-violet-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(139,92,246,0.5)]"></div>
-                 <p className="text-label text-[8px] tracking-[0.4em] text-white/30 uppercase">System Status: Synchronized</p>
+                 <p className="text-label text-[8px] tracking-[0.4em] text-white/30 uppercase">{t('system_status')}: {t('synchronized')}</p>
               </div>
            </div>
 
            {!isFreelancer && (
              <Link to="/post-job" className="btn-lux px-10 py-5 text-[10px]">
-               Deploy Objective <Plus className="w-5 h-5" />
+               {t('post_job')} <Plus className="w-5 h-5" />
              </Link>
            )}
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-           <StatusCard icon={Activity} label="Trust Rating" value={user?.rating?.toFixed(1) || "5.0"} sub="5.0 Total" />
-           <StatusCard icon={Clock} label="Operational Cycles" value={isFreelancer ? "12" : "5"} sub="Milestones" />
-           <StatusCard icon={ShieldCheck} label="Verification" value="TIER 1" sub="Audit Passed" color="text-fuchsia-400" />
+           <StatusCard icon={Activity} label={t('trust_rating')} value={user?.rating?.toFixed(1) || "5.0"} sub="5.0 Total" />
+           <StatusCard icon={Clock} label={t('op_cycles')} value={isFreelancer ? "12" : "5"} sub="Milestones" />
+           <StatusCard icon={ShieldCheck} label={t('verification')} value="TIER 1" sub="Audit Passed" color="text-fuchsia-400" />
         </div>
 
         {activeTab === 'overview' && (
            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
               <div className="lg:col-span-8 space-y-10">
                  <div className="flex items-center justify-between">
-                    <h4 className="text-label text-white/40 tracking-[0.4em]">Active Protocols</h4>
-                    <button className="text-[10px] text-violet-400 font-black uppercase hover:text-white transition-colors">View All Archive</button>
+                    <h4 className="text-label text-white/40 tracking-[0.4em]">{t('active_protocols')}</h4>
+                    <button className="text-[10px] text-violet-400 font-black uppercase hover:text-white transition-colors">{t('view_archive')}</button>
                  </div>
 
                  {isFreelancer ? (
                    <div className="space-y-6">
                       {jobs.filter(j => j.status === 'in-progress').length === 0 ? (
-                        <EmptyState message="No active mission protocols detected." />
+                        <EmptyState message={t('no_missions')} />
                       ) : (
                         <div className="space-y-6">
                            {/* Job Cards */}
@@ -120,13 +120,13 @@ export const Dashboard = () => {
                                     <Clock className="w-3.5 h-3.5" /> {new Date(job.createdAt).toLocaleDateString()}
                                  </div>
                                  <div className="flex items-center gap-2 text-violet-400 text-[9px] font-bold uppercase tracking-widest">
-                                    <Users className="w-3.5 h-3.5" /> {job.proposalsCount} Proposals
+                                    <Users className="w-3.5 h-3.5" /> {job.proposalsCount} {t('proposals')}
                                  </div>
                               </div>
                            </div>
                            <div className="text-right">
-                              <p className="text-display text-4xl italic text-white">${job.budget}</p>
-                              <Link to={`/job/${job.id}`} className="btn-ghost px-6 py-3 text-[8px] mt-6">Audit Status <ArrowUpRight className="w-4 h-4" /></Link>
+                              <p className="text-display text-4xl italic text-white">{formatPrice(job.budget)}</p>
+                              <Link to={`/job/${job.id}`} className="btn-ghost px-6 py-3 text-[8px] mt-6">{t('audit_status')} <ArrowUpRight className="w-4 h-4" /></Link>
                            </div>
                         </div>
                       ))}
@@ -135,7 +135,7 @@ export const Dashboard = () => {
               </div>
 
               <div className="lg:col-span-4 space-y-10">
-                 <h4 className="text-label text-white/40 tracking-[0.4em]">Ecosystem Pulse</h4>
+                 <h4 className="text-label text-white/40 tracking-[0.4em]">{t('pulse')}</h4>
                  <div className="premium-card p-8 space-y-8 bg-white/[0.01] border-white/5">
                     <div className="flex items-center gap-4">
                        <div className="w-10 h-10 bg-violet-600/20 rounded-xl flex items-center justify-center text-violet-400"><Command className="w-5 h-5" /></div>

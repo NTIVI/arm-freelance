@@ -88,12 +88,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const fetchData = async () => {
     try {
+      // Use cache: 'no-store' and a timestamp to ensure fresh data from the server
+      const t = Date.now();
       const [usersRes, jobsRes, proposalsRes] = await Promise.all([
-        fetch('/api/users'),
-        fetch('/api/jobs'),
-        fetch('/api/proposals')
+        fetch(`/api/users?t=${t}`, { cache: 'no-store' }),
+        fetch(`/api/jobs?t=${t}`, { cache: 'no-store' }),
+        fetch(`/api/proposals?t=${t}`, { cache: 'no-store' })
       ]);
       
+      if (!usersRes.ok || !jobsRes.ok || !proposalsRes.ok) {
+        throw new Error('Server response not OK');
+      }
+
       const usersData = await usersRes.json();
       const jobsData = await jobsRes.json();
       const proposalsData = await proposalsRes.json();
@@ -108,7 +114,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 10000); // Poll every 10s
+    const interval = setInterval(fetchData, 5000); // Polling every 5s for better sync
     return () => clearInterval(interval);
   }, []);
 
@@ -145,17 +151,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       ...job
     } as Project;
 
+    // Optimistic UI update
     setJobs(prev => [newJob, ...prev]);
 
     try {
-      await fetch('/api/jobs', {
+      const res = await fetch('/api/jobs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newJob)
       });
-      fetchData();
+      
+      if (!res.ok) throw new Error('Failed to save job to server');
+      
+      // Force refresh data after a small delay to ensure DB persistence
+      setTimeout(fetchData, 500);
     } catch (err) {
       console.error('Error adding job', err);
+      // Rollback optimistic update if failed
+      fetchData();
     }
   };
 
@@ -170,17 +183,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setProposals(prev => [...prev, newProposal]);
 
     try {
-      await fetch('/api/proposals', {
+      const res = await fetch('/api/proposals', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...newProposal,
-          bid: newProposal.bidAmount?.toString() // API expects 'bid' as string
+          bid: newProposal.bidAmount?.toString()
         })
       });
-      fetchData();
+      
+      if (!res.ok) throw new Error('Failed to save proposal');
+      
+      setTimeout(fetchData, 500);
     } catch (err) {
       console.error('Error applying to job', err);
+      fetchData();
     }
   };
 
