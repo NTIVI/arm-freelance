@@ -5,36 +5,18 @@ import { motion } from 'framer-motion';
 
 export const Layout = () => {
   return (
-    <div className="min-h-screen bg-[#050505] selection:bg-violet-500 selection:text-white">
+    <div className="min-h-screen bg-[#050505] selection:bg-violet-500 selection:text-white relative">
       <Header />
-      <main className="pt-24 min-h-screen">
+      <main className="pt-24 min-h-screen relative z-10">
         <Outlet />
       </main>
       <Footer />
       
-      {/* Global Background Elements */}
-      <div className="fixed inset-0 z-[-10] overflow-hidden pointer-events-none">
-        <div className="bg-mesh-container">
-          <motion.div 
-            animate={{ 
-              scale: [1, 1.2, 1],
-              x: [0, 50, 0],
-              y: [0, -50, 0]
-            }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="mesh-blob bg-violet-600/20 w-[1000px] h-[1000px] -top-[300px] -left-[200px]" 
-          />
-          <motion.div 
-            animate={{ 
-              scale: [1, 1.1, 1],
-              x: [0, -50, 0],
-              y: [0, 50, 0]
-            }}
-            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-            className="mesh-blob bg-fuchsia-600/10 w-[800px] h-[800px] -bottom-[200px] -right-[100px]" 
-          />
-        </div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_0%,rgba(0,0,0,0.4)_100%)]"></div>
+      {/* Global Background Elements - Moved to z-[-1] and simplified */}
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none opacity-50">
+        <div className="absolute inset-0 bg-[#050505]"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-violet-600/10 blur-[120px] rounded-full"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-fuchsia-600/5 blur-[120px] rounded-full"></div>
       </div>
     </div>
   );
