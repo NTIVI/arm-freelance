@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
+import { useAppContext } from '../context/AppContext';
 import { Link } from 'react-router-dom';
 
 export const FilterCheck = ({ label }: { label: string }) => (
@@ -45,9 +46,6 @@ export const SpecialistCatalog = () => {
   return (
     <div className="max-w-7xl mx-auto px-6 py-12 space-y-20">
       <header className="space-y-12">
-  return (
-    <div className="max-w-7xl mx-auto px-6 py-12 space-y-20">
-      <header className="space-y-12">
         <div className="space-y-4">
            <h1 className="text-display text-8xl italic leading-none bg-gradient-to-r from-white via-white to-white/20 bg-clip-text text-transparent uppercase text-center">{t('specialist_registry')}</h1>
            <p className="text-label text-[8px] tracking-[0.5em] text-white/20 uppercase text-center">{t('hero_subtitle')}</p>
@@ -61,20 +59,20 @@ export const SpecialistCatalog = () => {
               <div className="space-y-6">
                  <h4 className="text-label text-violet-400 tracking-[0.4em]">{t('operational_domains')}</h4>
                  <div className="space-y-3">
-                    <FilterCheck label="Software Engineering" />
-                    <FilterCheck label="Visual Identity" />
-                    <FilterCheck label="Data Architecture" />
-                    <FilterCheck label="Cyber Security" />
+                    <FilterCheck label={t('domain_software')} />
+                    <FilterCheck label={t('domain_visual')} />
+                    <FilterCheck label={t('domain_data')} />
+                    <FilterCheck label={t('domain_cyber')} />
                  </div>
               </div>
 
               <div className="space-y-6">
                  <h4 className="text-label text-fuchsia-400 tracking-[0.4em]">{t('geo_nodes')}</h4>
                  <div className="space-y-3">
-                    <FilterCheck label="Yerevan (Main)" />
-                    <FilterCheck label="Gyumri Cluster" />
-                    <FilterCheck label="Dilijan Hub" />
-                    <FilterCheck label="Remote Sync" />
+                    <FilterCheck label={t('loc_yerevan')} />
+                    <FilterCheck label={t('loc_gyumri')} />
+                    <FilterCheck label={t('loc_dilijan')} />
+                    <FilterCheck label={t('loc_remote')} />
                  </div>
               </div>
 
@@ -82,8 +80,8 @@ export const SpecialistCatalog = () => {
                  <h4 className="text-label text-indigo-400 tracking-[0.4em]">{t('valuation_range')}</h4>
                  <div className="space-y-4">
                     <div className="flex gap-4">
-                       <input type="number" placeholder="Min" className="input-lux py-3 text-[10px] px-4" />
-                       <input type="number" placeholder="Max" className="input-lux py-3 text-[10px] px-4" />
+                       <input type="number" placeholder={t('min')} className="input-lux py-3 text-[10px] px-4" />
+                       <input type="number" placeholder={t('max')} className="input-lux py-3 text-[10px] px-4" />
                     </div>
                  </div>
               </div>
@@ -91,9 +89,9 @@ export const SpecialistCatalog = () => {
               <div className="space-y-6">
                  <h4 className="text-label text-emerald-400 tracking-[0.4em]">{t('mastery_level')}</h4>
                  <div className="space-y-3">
-                    <FilterCheck label="Expert (8+ yrs)" />
-                    <FilterCheck label="Intermediate" />
-                    <FilterCheck label="Beginner Node" />
+                    <FilterCheck label={t('mastery_expert_yrs')} />
+                    <FilterCheck label={t('mastery_intermediate')} />
+                    <FilterCheck label={t('mastery_beginner')} />
                  </div>
               </div>
 

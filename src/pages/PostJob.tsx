@@ -10,7 +10,7 @@ import {
   ArrowUpRight,
   Shield,
   Layers,
-  CircleCheck
+  CheckCircle
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAppContext } from '../context/AppContext';
@@ -70,7 +70,7 @@ export const PostJob = () => {
             type="text" 
             required 
             className="input-lux py-8 text-xl" 
-            placeholder="Architectural Design for Armenia Fintech..." 
+            placeholder={t('objective_placeholder')} 
             value={formData.title}
             onChange={(e) => setFormData({...formData, title: e.target.value})}
           />
@@ -84,10 +84,10 @@ export const PostJob = () => {
               value={formData.category}
               onChange={(e) => setFormData({...formData, category: e.target.value})}
             >
-              <option className="bg-[#0f0f0f]">Software Engineering</option>
-              <option className="bg-[#0f0f0f]">Mobile Architecture</option>
-              <option className="bg-[#0f0f0f]">Neural Networks (AI)</option>
-              <option className="bg-[#0f0f0f]">Visual Identity</option>
+              <option className="bg-[#0f0f0f]">{t('domain_software')}</option>
+              <option className="bg-[#0f0f0f]">{t('domain_mobile_arch')}</option>
+              <option className="bg-[#0f0f0f]">{t('domain_neural_networks')}</option>
+              <option className="bg-[#0f0f0f]">{t('domain_visual')}</option>
             </select>
           </div>
           <div className="space-y-4">
@@ -96,7 +96,7 @@ export const PostJob = () => {
               type="number" 
               required 
               className="input-lux py-8 text-xl" 
-              placeholder="500000" 
+              placeholder={t('budget_placeholder')} 
               value={formData.budget}
               onChange={(e) => setFormData({...formData, budget: e.target.value})}
             />
@@ -141,7 +141,7 @@ export const PostJob = () => {
             required 
             rows={6}
             className="input-lux h-48 py-8 resize-none" 
-            placeholder="Elaborate on the architectural complexity and outcome expectations..."
+            placeholder={t('tech_brief_placeholder')}
             value={formData.description}
             onChange={(e) => setFormData({...formData, description: e.target.value})}
           />
@@ -153,9 +153,9 @@ export const PostJob = () => {
       </form>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <SecurityFeature icon={Shield} title="Multi-Sig Escrow" desc="Value protected until audit completion." />
-        <SecurityFeature icon={Zap} title="Elite Matching" desc="Synchronized with Tier 1 specialists." />
-        <SecurityFeature icon={CheckCircle} title="Verified Protocol" desc="All interactions are logged and audited." />
+        <SecurityFeature icon={Shield} title={t('security_escrow_title')} desc={t('security_escrow_desc')} />
+        <SecurityFeature icon={Zap} title={t('elite_matching_title')} desc={t('elite_matching_desc')} />
+        <SecurityFeature icon={CheckCircle} title={t('verified_protocol_title')} desc={t('verified_protocol_desc')} />
       </div>
     </div>
   );

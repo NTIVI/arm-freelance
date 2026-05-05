@@ -5,28 +5,24 @@ import {
   Trash2, 
   Ban, 
   CheckCircle, 
-  ArrowLeft,
-  Settings,
-  MoreVertical,
   ShieldAlert,
-  Clock,
-  User,
-  Zap,
-  Star
+  MessageSquare
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppContext } from '../context/AppContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export const Messages = () => {
   const { user } = useAppContext();
+  const { t } = useLanguage();
   const [activeChat, setActiveChat] = useState<any>(null);
   const [message, setMessage] = useState('');
 
   // Mock Chats
   const chats = [
-    { id: '1', name: 'Aris Vardanian', lastMsg: 'Synchronizing neural data...', online: true, role: 'Specialist' },
-    { id: '2', name: 'Vigen Sargsyan', lastMsg: 'Escrow protocol confirmed.', online: false, role: 'Client' },
-    { id: '3', name: 'Mane Gasparyan', lastMsg: 'Drafting visual brief.', online: true, role: 'Specialist' }
+    { id: '1', name: 'Aris Vardanian', lastMsg: t('mock_msg_1'), online: true, role: t('role_freelancer') },
+    { id: '2', name: 'Vigen Sargsyan', lastMsg: t('mock_msg_2'), online: false, role: t('role_client') },
+    { id: '3', name: 'Mane Gasparyan', lastMsg: t('mock_msg_3'), online: true, role: t('role_freelancer') }
   ];
 
   return (
@@ -34,15 +30,15 @@ export const Messages = () => {
       {/* Chat Sidebar */}
       <aside className="w-96 flex flex-col gap-8 shrink-0">
         <div className="space-y-4">
-           <h2 className="text-display text-5xl italic leading-none text-white uppercase">Dialogue Tunnels</h2>
-           <p className="text-label text-[8px] tracking-[0.4em] text-white/20 uppercase">Secure communication matrix active</p>
+           <h2 className="text-display text-5xl italic leading-none text-white uppercase">{t('dialogue_tunnels')}</h2>
+           <p className="text-label text-[8px] tracking-[0.4em] text-white/20 uppercase">{t('secure_matrix')}</p>
         </div>
 
         <div className="relative group">
            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-violet-400 transition-colors" />
            <input 
             type="text" 
-            placeholder="Search tunnels..." 
+            placeholder={t('search_tunnels')} 
             className="input-lux pl-16 py-4 text-xs"
            />
         </div>
@@ -65,7 +61,7 @@ export const Messages = () => {
                    <div className="flex-1 min-w-0 space-y-1">
                       <div className="flex justify-between items-center">
                          <h4 className="text-display text-xl italic text-white truncate">{chat.name}</h4>
-                         <span className="text-[7px] text-white/10 uppercase font-black tracking-widest">2m ago</span>
+                         <span className="text-[7px] text-white/10 uppercase font-black tracking-widest">{t('chat_time_ago')}</span>
                       </div>
                       <p className="text-[10px] text-white/20 font-medium italic truncate">{chat.lastMsg}</p>
                    </div>
@@ -92,14 +88,14 @@ export const Messages = () => {
                      <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-white font-black italic shadow-md">{activeChat.name[0]}</div>
                      <div>
                         <h3 className="text-display text-2xl italic text-white leading-none">{activeChat.name}</h3>
-                        <p className="text-[9px] text-violet-400 uppercase tracking-widest font-bold mt-2">{activeChat.role} • Verified Sync</p>
+                        <p className="text-[9px] text-violet-400 uppercase tracking-widest font-bold mt-2">{activeChat.role} • {t('verified_sync')}</p>
                      </div>
                   </div>
                   <div className="flex items-center gap-4">
                      <ChatAction icon={Trash2} color="text-white/20 hover:text-red-500" />
                      <ChatAction icon={Ban} color="text-white/20 hover:text-fuchsia-500" />
                      <div className="h-8 w-[1px] bg-white/10 mx-2" />
-                     <button className="btn-lux px-8 py-3 text-[9px] shadow-emerald-500/20">Confirm Completion <CheckCircle className="w-4 h-4" /></button>
+                     <button className="btn-lux px-8 py-3 text-[9px] shadow-emerald-500/20">{t('confirm_completion')} <CheckCircle className="w-4 h-4" /></button>
                   </div>
                </header>
 
@@ -107,12 +103,12 @@ export const Messages = () => {
                <div className="flex-1 overflow-y-auto p-12 space-y-8 hide-scrollbar bg-gradient-to-b from-transparent to-white/[0.01]">
                   <div className="flex flex-col items-center gap-4 py-8">
                      <ShieldAlert className="w-8 h-8 text-white/10" />
-                     <p className="text-[9px] text-white/10 uppercase tracking-[0.4em] font-black">End-to-End Encryption Protocol Active</p>
+                     <p className="text-[9px] text-white/10 uppercase tracking-[0.4em] font-black">{t('encryption_active')}</p>
                   </div>
 
-                  <MessageBubble me={false} text="Hello! I've reviewed the technical brief for the Armenia Fintech project. The architectural requirements are clear." time="10:32 AM" />
-                  <MessageBubble me={true} text="Excellent. What's your proposed timeline for the first neural sync cycle?" time="10:35 AM" />
-                  <MessageBubble me={false} text="I estimate 5 cycles for initial deployment. We can initiate the escrow today." time="10:40 AM" />
+                  <MessageBubble me={false} text={t('msg_demo_1')} time="10:32 AM" />
+                  <MessageBubble me={true} text={t('msg_demo_2')} time="10:35 AM" />
+                  <MessageBubble me={false} text={t('msg_demo_3')} time="10:40 AM" />
                </div>
 
                {/* Input Area */}
@@ -120,7 +116,7 @@ export const Messages = () => {
                   <div className="relative group">
                      <input 
                       type="text" 
-                      placeholder="Type your transmission..." 
+                      placeholder={t('type_transmission')} 
                       className="w-full bg-white/5 border border-white/10 rounded-[3rem] py-6 px-10 text-white font-bold outline-none focus:bg-white/10 focus:border-violet-500/30 transition-all shadow-inner"
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
@@ -137,8 +133,8 @@ export const Messages = () => {
                   <MessageSquare className="w-12 h-12" />
                </div>
                <div className="space-y-4 text-center">
-                  <p className="text-display text-4xl italic uppercase">Initialize Dialogue</p>
-                  <p className="text-label text-[8px] tracking-[0.5em] uppercase">Select a node from the registry to begin sync</p>
+                  <p className="text-display text-4xl italic uppercase">{t('initialize_dialogue')}</p>
+                  <p className="text-label text-[8px] tracking-[0.5em] uppercase">{t('select_node_sync')}</p>
                </div>
             </div>
           )}

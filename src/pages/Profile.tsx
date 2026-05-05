@@ -2,20 +2,14 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
   ArrowLeft, 
-  User, 
   MapPin, 
-  Briefcase, 
   Star, 
   ShieldCheck, 
   Globe, 
   Send,
   Zap,
-  Layout,
-  Layers,
+  Clock,
   Settings,
-  Camera,
-  MessageSquare,
-  Award,
   ArrowUpRight
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -25,7 +19,7 @@ import { useLanguage } from '../context/LanguageContext';
 export const Profile = () => {
   const navigate = useNavigate();
   const { user } = useAppContext();
-  const { formatPrice } = useLanguage();
+  const { formatPrice, t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'portfolio' | 'services' | 'reviews'>('portfolio');
 
   if (!user) return null;
@@ -60,11 +54,11 @@ export const Profile = () => {
 
               <div className="space-y-4">
                  <h2 className="text-display text-4xl italic text-white leading-none">{user.fullName}</h2>
-                 <p className="text-label text-[10px] text-violet-400 tracking-[0.4em] uppercase font-black">{user.role}</p>
+                 <p className="text-label text-[10px] text-violet-400 tracking-[0.4em] uppercase font-black">{t(`role_${user.role}`)}</p>
                  <div className="flex items-center justify-center gap-6 pt-4">
-                    <div className="flex items-center gap-2 text-white/30 text-[9px] uppercase tracking-widest"><MapPin className="w-3.5 h-3.5" /> Yerevan</div>
+                    <div className="flex items-center gap-2 text-white/30 text-[9px] uppercase tracking-widest"><MapPin className="w-3.5 h-3.5" /> {t('yerevan')}</div>
                     <div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div>
-                    <div className="flex items-center gap-2 text-white/30 text-[9px] uppercase tracking-widest"><Globe className="w-3.5 h-3.5" /> Synchronized</div>
+                    <div className="flex items-center gap-2 text-white/30 text-[9px] uppercase tracking-widest"><Globe className="w-3.5 h-3.5" /> {t('synchronized')}</div>
                  </div>
               </div>
 
@@ -87,10 +81,10 @@ export const Profile = () => {
            <div className="premium-card p-10 bg-white/[0.01] border-white/5 space-y-8">
               <h4 className="text-label text-white/40 tracking-[0.4em] uppercase">{t('core_skillsets')}</h4>
                 <div className="flex flex-wrap gap-3">
-                   <SkillBadge label="React Architecture" level="Expert" />
-                   <SkillBadge label="Node Infrastructure" level="Expert" />
-                   <SkillBadge label="AWS Deployment" level="Intermediate" />
-                   <SkillBadge label="UI/UX Sync" level="Expert" />
+                   <SkillBadge label={t('react_arch')} level={t('expert')} />
+                   <SkillBadge label={t('node_infra')} level={t('expert')} />
+                   <SkillBadge label={t('aws_deployment')} level={t('intermediate')} />
+                   <SkillBadge label={t('ui_ux_sync')} level={t('expert')} />
                 </div>
            </div>
         </div>
@@ -101,7 +95,7 @@ export const Profile = () => {
               <div className="space-y-6">
                  <h3 className="text-display text-5xl italic text-white uppercase">{t('identity_narrative')}</h3>
                  <p className="text-white/40 text-2xl leading-relaxed italic font-medium">
-                    "{user.bio || "No technical narrative injected into the registry yet. Specialist focuses on high-end architectural deployment and cross-functional synchronization."}"
+                    "{user.bio || t('no_bio')}"
                  </p>
               </div>
 
@@ -122,9 +116,9 @@ export const Profile = () => {
                            exit={{ opacity: 0, y: -10 }}
                            className="grid grid-cols-2 gap-8"
                          >
-                            <PortfolioCard title="AF Market Core" category="Web Engineering" />
+                            <PortfolioCard title="AF Market Core" category={t('domain_software')} />
                             <PortfolioCard title="Neon Database Sync" category="Infrastructure" />
-                            <PortfolioCard title="Cosmic Design System" category="Visual Identity" />
+                            <PortfolioCard title="Cosmic Design System" category={t('domain_visual')} />
                             <PortfolioCard title="Neural Match Algo" category="AI Development" />
                          </motion.div>
                        )}
@@ -135,8 +129,8 @@ export const Profile = () => {
                            animate={{ opacity: 1, y: 0 }}
                            className="space-y-6"
                          >
-                            <ServiceCard title="Full-Stack Deployment Cluster" price={500000} time="14 Cycles" />
-                            <ServiceCard title="Visual Brand Architecture" price={150000} time="5 Cycles" />
+                            <ServiceCard title={t('full_stack_cluster')} price={500000} time="14 Cycles" />
+                            <ServiceCard title={t('visual_brand_arch')} price={150000} time="5 Cycles" />
                          </motion.div>
                        )}
                     </AnimatePresence>
@@ -177,18 +171,21 @@ const PortfolioCard = ({ title, category }: { title: string, category: string })
   </div>
 );
 
-const ServiceCard = ({ title, price, time }: { title: string, price: number, time: string }) => (
-  <div className="premium-card p-10 bg-white/[0.03] border-white/5 flex items-center justify-between group hover:border-violet-500/30 transition-all">
-     <div className="space-y-4">
-        <h4 className="text-display text-3xl italic text-white">{title}</h4>
-        <div className="flex items-center gap-6">
-           <div className="flex items-center gap-2 text-white/20 text-[9px] uppercase tracking-widest font-bold"><Clock className="w-4 h-4" /> {time}</div>
-           <div className="flex items-center gap-2 text-violet-400 text-[9px] uppercase tracking-widest font-bold"><Zap className="w-4 h-4" /> Premium Protocol</div>
-        </div>
-     </div>
-     <div className="text-right">
-        <p className="text-display text-4xl italic text-white">{new Intl.NumberFormat('hy-AM', { style: 'currency', currency: 'AMD' }).format(price)}</p>
-        <button className="btn-lux px-10 py-4 text-[10px] mt-6">Initiate Service <ArrowUpRight className="w-4 h-4" /></button>
-     </div>
-  </div>
-);
+const ServiceCard = ({ title, price, time }: { title: string, price: number, time: string }) => {
+  const { formatPrice, t } = useLanguage();
+  return (
+    <div className="premium-card p-10 bg-white/[0.03] border-white/5 flex items-center justify-between group hover:border-violet-500/30 transition-all">
+       <div className="space-y-4">
+          <h4 className="text-display text-3xl italic text-white">{title}</h4>
+          <div className="flex items-center gap-6">
+             <div className="flex items-center gap-2 text-white/20 text-[9px] uppercase tracking-widest font-bold"><Clock className="w-4 h-4" /> {time}</div>
+             <div className="flex items-center gap-2 text-violet-400 text-[9px] uppercase tracking-widest font-bold"><Zap className="w-4 h-4" /> Premium Protocol</div>
+          </div>
+       </div>
+       <div className="text-right">
+          <p className="text-display text-4xl italic text-white">{formatPrice(price)}</p>
+          <button className="btn-lux px-10 py-4 text-[10px] mt-6">{t('initiate_service')} <ArrowUpRight className="w-4 h-4" /></button>
+       </div>
+    </div>
+  );
+};

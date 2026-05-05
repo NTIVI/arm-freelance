@@ -12,7 +12,7 @@ import {
   CheckCircle,
   Briefcase,
   Command,
-  Layout
+  LayoutGrid
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppContext } from '../context/AppContext';
@@ -22,7 +22,7 @@ export const JobDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { jobs, user, proposals, applyToJob } = useAppContext();
-  const { formatPrice } = useLanguage();
+  const { formatPrice, t } = useLanguage();
   
   const job = jobs.find(j => j.id === id) || jobs[0]; // Fallback for simulation
   const [isApplying, setIsApplying] = useState(false);
@@ -46,9 +46,6 @@ export const JobDetails = () => {
   const isOwner = user?.id === job.clientId;
   const hasApplied = proposals.some(p => p.jobId === job.id && p.freelancerId === user?.id);
 
-  return (
-    <div className="max-w-7xl mx-auto px-6 py-12 space-y-16">
-      <header className="flex items-center justify-between">
   return (
     <div className="max-w-7xl mx-auto px-6 py-12 space-y-16">
       <header className="flex items-center justify-between">
@@ -79,13 +76,13 @@ export const JobDetails = () => {
             <div className="relative z-10 space-y-10">
                <div className="flex flex-wrap items-center gap-4">
                   <span className="badge-lux bg-violet-600 text-white border-violet-500/50">{job.category}</span>
-                  <span className="text-label text-white/20">ID: {job.id.toUpperCase()}</span>
+                  <span className="text-label text-white/20">{t('id_label')}: {job.id.toUpperCase()}</span>
                </div>
                
                <div className="space-y-4">
                   <h1 className="text-display text-8xl italic leading-none bg-gradient-to-r from-white via-white to-white/20 bg-clip-text text-transparent">{job.title}</h1>
                   <div className="flex items-center gap-6 pt-4">
-                     <p className="text-label text-white/40 tracking-widest uppercase flex items-center gap-2"><Layout className="w-4 h-4" /> {job.clientName}</p>
+                     <p className="text-label text-white/40 tracking-widest uppercase flex items-center gap-2"><LayoutGrid className="w-4 h-4" /> {job.clientName}</p>
                      <div className="w-1.5 h-1.5 bg-white/10 rounded-full"></div>
                      <p className="text-label text-white/40 tracking-widest uppercase flex items-center gap-2"><Clock className="w-4 h-4" /> {new Date(job.createdAt).toLocaleDateString()}</p>
                   </div>
@@ -99,8 +96,8 @@ export const JobDetails = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-             <DetailCard icon={Zap} title={t('complexity_level')} value="Senior Architecture" />
-             <DetailCard icon={Shield} title={t('escrow_security')} value="Multi-Sig Enabled" />
+             <DetailCard icon={Zap} title={t('complexity_level')} value={t('senior_arch')} />
+             <DetailCard icon={Shield} title={t('escrow_security')} value={t('multisig_enabled')} />
           </div>
 
           {/* Proposals List for Client */}
@@ -193,7 +190,7 @@ export const JobDetails = () => {
                             required
                             rows={8}
                             className="input-lux h-64 py-8 resize-none" 
-                            placeholder="Detail your technical approach and architectural fit for this specific objective..."
+                            placeholder={t('tech_approach_placeholder')}
                             value={coverLetter}
                             onChange={(e) => setCoverLetter(e.target.value)}
                           />
@@ -205,10 +202,10 @@ export const JobDetails = () => {
                     <div className="premium-card p-10 bg-white/5 border-white/10 space-y-6">
                        <Command className="w-10 h-10 text-violet-400" />
                        <h4 className="text-display text-2xl italic text-white uppercase leading-tight">{t('sync_requirements')}</h4>
-                       <p className="text-[10px] text-white/20 font-medium italic">Credentials will be broadcasted to the client. This action consumes 1 Bid Credit.</p>
+                       <p className="text-[10px] text-white/20 font-medium italic">{t('bid_credit_notice')}</p>
                        <div className="pt-6 border-t border-white/5 space-y-4">
-                          <div className="flex items-center gap-3 text-violet-400 text-[9px] font-black uppercase"><Star className="w-4 h-4" /> Neural Match</div>
-                          <div className="flex items-center gap-3 text-fuchsia-400 text-[9px] font-black uppercase"><Clock className="w-4 h-4" /> 24H Deadline</div>
+                          <div className="flex items-center gap-3 text-violet-400 text-[9px] font-black uppercase"><Star className="w-4 h-4" /> {t('neural_match')}</div>
+                          <div className="flex items-center gap-3 text-fuchsia-400 text-[9px] font-black uppercase"><Clock className="w-4 h-4" /> {t('deadline_24h')}</div>
                        </div>
                     </div>
                     <button onClick={() => setIsApplying(false)} className="w-full text-label text-white/10 hover:text-white transition-colors">{t('abort_procedure')}</button>

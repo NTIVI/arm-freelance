@@ -114,9 +114,9 @@ export const LandingPage = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          <ReviewCard name="Vigen S." company="Fintech AM" text="The level of technical expertise in the Armenian cluster is unmatched. Synchronized a full banking core in 3 cycles." />
-          <ReviewCard name="Elena R." company="E-Gov Node" text="Architectural precision and perfect communication. The platform handled the escrow protocol flawlessly." />
-          <ReviewCard name="Gevorg M." company="GameFlow" text="Found a specialized neural network engineer within 24 hours. Scaling has never been this efficient." />
+          <ReviewCard name="Vigen S." company="Fintech AM" text={t('review_1')} />
+          <ReviewCard name="Elena R." company="E-Gov Node" text={t('review_2')} />
+          <ReviewCard name="Gevorg M." company="GameFlow" text={t('review_3')} />
         </div>
       </section>
 
@@ -133,12 +133,12 @@ export const LandingPage = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <CategoryCard icon={Code} title="Software Engineering" desc="Full-stack, Backend, and Architectural design." />
-          <CategoryCard icon={Smartphone} title="Mobile Ecosystems" desc="iOS, Android, and Cross-platform excellence." />
-          <CategoryCard icon={Palette} title="Visual Identity" desc="High-end UI/UX and brand architecture." />
-          <CategoryCard icon={Database} title="Data Architecture" desc="Neural networks and scalable data models." />
-          <CategoryCard icon={Lock} title="Cyber Security" desc="Infrastructure audits and defense protocols." />
-          <CategoryCard icon={Megaphone} title="Growth Strategies" desc="Market penetration and digital presence." />
+          <CategoryCard icon={Code} title={t('cat_software')} desc={t('cat_software_desc')} />
+          <CategoryCard icon={Smartphone} title={t('cat_mobile')} desc={t('cat_mobile_desc')} />
+          <CategoryCard icon={Palette} title={t('cat_visual')} desc={t('cat_visual_desc')} />
+          <CategoryCard icon={Database} title={t('cat_data')} desc={t('cat_data_desc')} />
+          <CategoryCard icon={Lock} title={t('cat_cyber')} desc={t('cat_cyber_desc')} />
+          <CategoryCard icon={Megaphone} title={t('cat_growth')} desc={t('cat_growth_desc')} />
         </div>
       </section>
 
@@ -180,7 +180,7 @@ export const LandingPage = () => {
               </div>
               <h3 className="text-display text-4xl italic text-white">{t('security_escrow')}</h3>
               <p className="text-white/30 text-lg italic leading-relaxed">
-                All value transfers are protected by multi-signature orbital escrow. Funds are only released upon verified milestone completion, ensuring absolute security for both nodes.
+                {t('security_desc')}
               </p>
               <div className="flex gap-4">
                 <span className="badge-lux">Verified Auth</span>

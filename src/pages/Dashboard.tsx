@@ -85,9 +85,9 @@ export const Dashboard = () => {
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-           <StatusCard icon={Activity} label={t('trust_rating')} value={user?.rating?.toFixed(1) || "5.0"} sub="5.0 Total" />
-           <StatusCard icon={Clock} label={t('op_cycles')} value={isFreelancer ? "12" : "5"} sub="Milestones" />
-           <StatusCard icon={ShieldCheck} label={t('verification')} value="TIER 1" sub="Audit Passed" color="text-fuchsia-400" />
+           <StatusCard icon={Activity} label={t('trust_rating')} value={user?.rating?.toFixed(1) || "5.0"} sub={`${t('total_rating')} 5.0`} />
+           <StatusCard icon={Clock} label={t('op_cycles')} value={isFreelancer ? "12" : "5"} sub={t('milestones')} />
+           <StatusCard icon={ShieldCheck} label={t('verification')} value={t('tier_1')} sub={t('audit_passed')} color="text-fuchsia-400" />
         </div>
 
         {activeTab === 'overview' && (
@@ -139,11 +139,11 @@ export const Dashboard = () => {
                  <div className="premium-card p-8 space-y-8 bg-white/[0.01] border-white/5">
                     <div className="flex items-center gap-4">
                        <div className="w-10 h-10 bg-violet-600/20 rounded-xl flex items-center justify-center text-violet-400"><Command className="w-5 h-5" /></div>
-                       <p className="text-[11px] font-bold text-white/60">New proposal received for "Neural Architecture"</p>
+                       <p className="text-[11px] font-bold text-white/60">{t('new_proposal_notif')}</p>
                     </div>
                     <div className="flex items-center gap-4">
                        <div className="w-10 h-10 bg-fuchsia-600/20 rounded-xl flex items-center justify-center text-fuchsia-400"><Zap className="w-5 h-5" /></div>
-                       <p className="text-[11px] font-bold text-white/60">Balance update: +14,500 AMD</p>
+                       <p className="text-[11px] font-bold text-white/60">{t('balance_update_notif')}</p>
                     </div>
                  </div>
               </div>

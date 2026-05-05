@@ -60,8 +60,8 @@ export const ProjectCatalog = () => {
                  <h4 className="text-label text-indigo-400 tracking-[0.4em]">{t('budget_allocation')}</h4>
                  <div className="space-y-4">
                     <div className="flex gap-4">
-                       <input type="number" placeholder="Min AMD" className="w-full bg-white/[0.03] border border-white/10 p-3 text-[10px] text-white outline-none focus:border-violet-500" />
-                       <input type="number" placeholder="Max AMD" className="w-full bg-white/[0.03] border border-white/10 p-3 text-[10px] text-white outline-none focus:border-violet-500" />
+                       <input type="number" placeholder={t('min_budget')} className="w-full bg-white/[0.03] border border-white/10 p-3 text-[10px] text-white outline-none focus:border-violet-500" />
+                       <input type="number" placeholder={t('max_budget')} className="w-full bg-white/[0.03] border border-white/10 p-3 text-[10px] text-white outline-none focus:border-violet-500" />
                     </div>
                  </div>
               </div>
@@ -84,7 +84,7 @@ export const ProjectCatalog = () => {
                  />
               </div>
               <button className="px-6 py-5 text-[10px] text-white/40 uppercase tracking-widest flex items-center gap-2 hover:text-white">
-                Sort By <ChevronDown className="w-3 h-3" />
+                {t('sort_by')} <ChevronDown className="w-3 h-3" />
               </button>
            </div>
 

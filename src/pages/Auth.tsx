@@ -345,7 +345,7 @@ export const Auth = () => {
                   <input 
                     type="text" 
                     className="input-lux py-6 text-sm" 
-                    placeholder={role === 'client' ? 'CEO at Fintech Solutions' : 'Senior Neural Infrastructure Architect'}
+                    placeholder={role === 'client' ? t('ceo_placeholder') : t('specialist_placeholder')}
                     value={formData.bio}
                     onChange={(e) => setFormData({...formData, bio: e.target.value})}
                   />
@@ -360,9 +360,9 @@ export const Auth = () => {
                         value={formData.category}
                         onChange={(e) => setFormData({...formData, category: e.target.value})}
                       >
-                        <option className="bg-[#0f0f0f]">Software Engineering</option>
-                        <option className="bg-[#0f0f0f]">Visual Identity</option>
-                        <option className="bg-[#0f0f0f]">Data Architecture</option>
+                        <option className="bg-[#0f0f0f]">{t('domain_software')}</option>
+                        <option className="bg-[#0f0f0f]">{t('domain_visual')}</option>
+                        <option className="bg-[#0f0f0f]">{t('domain_data')}</option>
                       </select>
                     </div>
                      <div className="grid grid-cols-2 gap-4">
@@ -374,7 +374,7 @@ export const Auth = () => {
                          onChange={(v: string) => setFormData({...formData, rateAMD: v})} 
                        />
                        <InputGroup 
-                         label="Rate (USD)" 
+                         label={t('rate_usd')} 
                          type="number" 
                          placeholder="12" 
                          value={formData.rateUSD}
