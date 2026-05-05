@@ -35,12 +35,12 @@ export const Profile = () => {
       <header className="flex items-center justify-between">
         <button onClick={() => navigate(-1)} className="flex items-center gap-6 text-label text-[9px] text-white/30 hover:text-white transition-all group">
           <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-full flex items-center justify-center group-hover:bg-violet-600 group-hover:text-white transition-all duration-700 shadow-sm">
-             <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-5 h-5" />
           </div>
-          Return to Registry
+          {t('return_registry')}
         </button>
         <button className="btn-ghost px-8 py-4 text-[9px]">
-           Configure Profile <Settings className="w-4 h-4" />
+           {t('configure_profile')} <Settings className="w-4 h-4" />
         </button>
       </header>
 
@@ -71,21 +71,21 @@ export const Profile = () => {
               <div className="pt-8 border-t border-white/5 grid grid-cols-2 gap-6">
                  <div className="space-y-1">
                     <p className="text-display text-2xl italic text-white leading-none">5.0</p>
-                    <p className="text-label text-[7px] text-white/20 uppercase tracking-widest">Trust Index</p>
+                    <p className="text-label text-[7px] text-white/20 uppercase tracking-widest">{t('trust_index')}</p>
                  </div>
                  <div className="space-y-1">
                     <p className="text-display text-2xl italic text-white leading-none">12</p>
-                    <p className="text-label text-[7px] text-white/20 uppercase tracking-widest">Missions Done</p>
+                    <p className="text-label text-[7px] text-white/20 uppercase tracking-widest">{t('missions_done')}</p>
                  </div>
               </div>
 
               <button className="btn-lux w-full py-6 text-[10px] mt-6">
-                 Initiate Dialogue <Send className="w-4 h-4" />
+                 {t('initiate_dialogue')} <Send className="w-4 h-4" />
               </button>
            </div>
 
            <div className="premium-card p-10 bg-white/[0.01] border-white/5 space-y-8">
-              <h4 className="text-label text-white/40 tracking-[0.4em] uppercase">Core Skillsets</h4>
+              <h4 className="text-label text-white/40 tracking-[0.4em] uppercase">{t('core_skillsets')}</h4>
                 <div className="flex flex-wrap gap-3">
                    <SkillBadge label="React Architecture" level="Expert" />
                    <SkillBadge label="Node Infrastructure" level="Expert" />
@@ -99,7 +99,7 @@ export const Profile = () => {
         <div className="lg:col-span-8 space-y-12">
            <div className="premium-card p-16 bg-white/[0.02] border-white/10 space-y-12">
               <div className="space-y-6">
-                 <h3 className="text-display text-5xl italic text-white uppercase">Identity Narrative</h3>
+                 <h3 className="text-display text-5xl italic text-white uppercase">{t('identity_narrative')}</h3>
                  <p className="text-white/40 text-2xl leading-relaxed italic font-medium">
                     "{user.bio || "No technical narrative injected into the registry yet. Specialist focuses on high-end architectural deployment and cross-functional synchronization."}"
                  </p>
@@ -107,9 +107,9 @@ export const Profile = () => {
 
               <div className="pt-16 border-t border-white/5">
                  <div className="flex items-center gap-12 border-b border-white/5 pb-6">
-                    <TabLink active={activeTab === 'portfolio'} onClick={() => setActiveTab('portfolio')} label="Visual Archive" />
-                    <TabLink active={activeTab === 'services'} onClick={() => setActiveTab('services')} label="Pre-set Services" />
-                    <TabLink active={activeTab === 'reviews'} onClick={() => setActiveTab('reviews')} label="Feedback Logs" />
+                    <TabLink active={activeTab === 'portfolio'} onClick={() => setActiveTab('portfolio')} label={t('visual_archive')} />
+                    <TabLink active={activeTab === 'services'} onClick={() => setActiveTab('services')} label={t('preset_services')} />
+                    <TabLink active={activeTab === 'reviews'} onClick={() => setActiveTab('reviews')} label={t('feedback_logs')} />
                  </div>
 
                  <div className="pt-12">

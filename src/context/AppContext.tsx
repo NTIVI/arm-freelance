@@ -114,7 +114,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 5000); // Polling every 5s for better sync
+    // Faster polling for better real-time feel (2 seconds)
+    const interval = setInterval(fetchData, 2000); 
     return () => clearInterval(interval);
   }, []);
 
@@ -163,8 +164,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       
       if (!res.ok) throw new Error('Failed to save job to server');
       
-      // Force refresh data after a small delay to ensure DB persistence
-      setTimeout(fetchData, 500);
+      // Immediately fetch data to confirm server state
+      await fetchData();
     } catch (err) {
       console.error('Error adding job', err);
       // Rollback optimistic update if failed
@@ -194,7 +195,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       
       if (!res.ok) throw new Error('Failed to save proposal');
       
-      setTimeout(fetchData, 500);
+      await fetchData();
     } catch (err) {
       console.error('Error applying to job', err);
       fetchData();

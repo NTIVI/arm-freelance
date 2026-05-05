@@ -49,14 +49,17 @@ export const JobDetails = () => {
   return (
     <div className="max-w-7xl mx-auto px-6 py-12 space-y-16">
       <header className="flex items-center justify-between">
+  return (
+    <div className="max-w-7xl mx-auto px-6 py-12 space-y-16">
+      <header className="flex items-center justify-between">
         <button onClick={() => navigate(-1)} className="flex items-center gap-6 text-label text-[9px] text-white/30 hover:text-white transition-all group">
           <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-full flex items-center justify-center group-hover:bg-violet-600 group-hover:text-white group-hover:border-violet-500 transition-all duration-700 shadow-sm">
-             <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-5 h-5" />
           </div>
-          Return to Registry
+          {t('return_registry')}
         </button>
         <div className="flex items-center gap-6">
-           <span className="text-label text-white/20">Protocol: Asset Audit</span>
+           <span className="text-label text-white/20">{t('asset_audit')}</span>
            <div className="h-6 w-[1px] bg-white/10"></div>
            <span className="badge-lux">{job.status.toUpperCase()}</span>
         </div>
@@ -89,21 +92,21 @@ export const JobDetails = () => {
                </div>
 
                <div className="pt-12 border-t border-white/5 space-y-8">
-                  <h3 className="text-display text-3xl italic text-white/60">Technical Brief</h3>
+                  <h3 className="text-display text-3xl italic text-white/60">{t('technical_brief')}</h3>
                   <p className="text-white/40 text-2xl leading-relaxed italic font-medium whitespace-pre-wrap">"{job.description}"</p>
                </div>
             </div>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-             <DetailCard icon={Zap} title="Complexity Level" value="Senior Architecture" />
-             <DetailCard icon={Shield} title="Escrow Security" value="Multi-Sig Enabled" />
+             <DetailCard icon={Zap} title={t('complexity_level')} value="Senior Architecture" />
+             <DetailCard icon={Shield} title={t('escrow_security')} value="Multi-Sig Enabled" />
           </div>
 
           {/* Proposals List for Client */}
           {isOwner && (
             <div className="space-y-8 pt-12">
-               <h3 className="text-display text-5xl italic text-white">Neural Responses</h3>
+               <h3 className="text-display text-5xl italic text-white">{t('neural_responses')}</h3>
                <div className="grid grid-cols-1 gap-6">
                   {proposals.filter(p => p.jobId === job.id).map(p => (
                     <div key={p.id} className="premium-card p-10 bg-white/[0.02] border-white/5 flex items-center justify-between group hover:border-violet-500/30 transition-all">
@@ -119,9 +122,9 @@ export const JobDetails = () => {
                        <div className="flex items-center gap-8">
                           <div className="text-right">
                              <p className="text-display text-4xl italic text-white">{formatPrice(p.bidAmount)}</p>
-                             <p className="text-label text-[7px] text-white/20 uppercase tracking-widest mt-1">Valuation Proposal</p>
+                             <p className="text-label text-[7px] text-white/20 uppercase tracking-widest mt-1">{t('valuation_proposal')}</p>
                           </div>
-                          <button className="btn-lux px-8 py-4 text-[9px]">Initiate Sync <ArrowUpRight className="w-4 h-4" /></button>
+                          <button className="btn-lux px-8 py-4 text-[9px]">{t('initiate_sync')} <ArrowUpRight className="w-4 h-4" /></button>
                        </div>
                     </div>
                   ))}
@@ -135,9 +138,9 @@ export const JobDetails = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-violet-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
               <div className="relative z-10 space-y-10">
                  <div className="space-y-2">
-                    <p className="text-label text-violet-400 tracking-[0.5em] uppercase">Value Allocation</p>
+                    <p className="text-label text-violet-400 tracking-[0.5em] uppercase">{t('resource_allocation')}</p>
                     <p className="text-display text-7xl italic leading-none">{formatPrice(job.budget)}</p>
-                    <p className="text-label text-[8px] text-white/10 uppercase tracking-widest mt-4">Protocol: {job.type.toUpperCase()}</p>
+                    <p className="text-label text-[8px] text-white/10 uppercase tracking-widest mt-4">{t('project_protocol')}: {job.type.toUpperCase()}</p>
                  </div>
 
                  <div className="space-y-6 pt-10 border-t border-white/10">
@@ -146,13 +149,13 @@ export const JobDetails = () => {
                         onClick={() => setIsApplying(true)}
                         className="btn-lux w-full py-8 text-lg"
                        >
-                        Initiate Proposal <ArrowUpRight className="w-8 h-8" />
+                        {t('initiate_proposal')} <ArrowUpRight className="w-8 h-8" />
                        </button>
                     )}
                     {hasApplied && (
                        <div className="p-10 premium-card bg-violet-600/10 border-violet-500/30 text-center space-y-4">
                           <CheckCircle className="w-12 h-12 text-violet-400 mx-auto" />
-                          <p className="text-label text-white/40 uppercase tracking-widest">Proposal Broadcasted</p>
+                          <p className="text-label text-white/40 uppercase tracking-widest">{t('proposal_broadcasted')}</p>
                        </div>
                     )}
                     <div className="p-8 premium-card bg-white/[0.02] border-white/5 space-y-4">
@@ -179,13 +182,13 @@ export const JobDetails = () => {
               <div className="flex flex-col md:flex-row gap-16">
                  <div className="flex-1 space-y-12">
                     <div className="space-y-4">
-                       <h3 className="text-display text-6xl italic leading-none text-white uppercase">Proposal Deployment</h3>
-                       <p className="text-label text-white/20 tracking-[0.4em]">Broadcast for: {job.title}</p>
+                       <h3 className="text-display text-6xl italic leading-none text-white uppercase">{t('proposal_deployment')}</h3>
+                       <p className="text-label text-white/20 tracking-[0.4em]">{t('broadcast_for')}: {job.title}</p>
                     </div>
 
                     <form onSubmit={handleApply} className="space-y-10">
                        <div className="space-y-4">
-                          <label className="text-label text-[8px] ml-6 flex items-center gap-3"><MessageSquare className="w-4 h-4 text-violet-400" /> Operational Narrative</label>
+                          <label className="text-label text-[8px] ml-6 flex items-center gap-3"><MessageSquare className="w-4 h-4 text-violet-400" /> {t('operational_narrative')}</label>
                           <textarea 
                             required
                             rows={8}
@@ -195,20 +198,20 @@ export const JobDetails = () => {
                             onChange={(e) => setCoverLetter(e.target.value)}
                           />
                        </div>
-                       <button type="submit" className="btn-lux w-full py-8 text-lg group">Execute Transmission <ArrowUpRight className="w-8 h-8 group-hover:rotate-45 transition-transform" /></button>
+                       <button type="submit" className="btn-lux w-full py-8 text-lg group">{t('execute_transmission')} <ArrowUpRight className="w-8 h-8 group-hover:rotate-45 transition-transform" /></button>
                     </form>
                  </div>
                  <div className="w-72 hidden md:block space-y-8">
                     <div className="premium-card p-10 bg-white/5 border-white/10 space-y-6">
                        <Command className="w-10 h-10 text-violet-400" />
-                       <h4 className="text-display text-2xl italic text-white uppercase leading-tight">Sync Requirements</h4>
+                       <h4 className="text-display text-2xl italic text-white uppercase leading-tight">{t('sync_requirements')}</h4>
                        <p className="text-[10px] text-white/20 font-medium italic">Credentials will be broadcasted to the client. This action consumes 1 Bid Credit.</p>
                        <div className="pt-6 border-t border-white/5 space-y-4">
                           <div className="flex items-center gap-3 text-violet-400 text-[9px] font-black uppercase"><Star className="w-4 h-4" /> Neural Match</div>
                           <div className="flex items-center gap-3 text-fuchsia-400 text-[9px] font-black uppercase"><Clock className="w-4 h-4" /> 24H Deadline</div>
                        </div>
                     </div>
-                    <button onClick={() => setIsApplying(false)} className="w-full text-label text-white/10 hover:text-white transition-colors">Abort Procedure</button>
+                    <button onClick={() => setIsApplying(false)} className="w-full text-label text-white/10 hover:text-white transition-colors">{t('abort_procedure')}</button>
                  </div>
               </div>
             </motion.div>

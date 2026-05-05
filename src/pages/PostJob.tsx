@@ -14,8 +14,8 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAppContext } from '../context/AppContext';
+import { useLanguage } from '../context/LanguageContext';
 
-export const PostJob = () => {
 export const PostJob = () => {
   const navigate = useNavigate();
   const { addJob, user } = useAppContext();
@@ -155,7 +155,7 @@ export const PostJob = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <SecurityFeature icon={Shield} title="Multi-Sig Escrow" desc="Value protected until audit completion." />
         <SecurityFeature icon={Zap} title="Elite Matching" desc="Synchronized with Tier 1 specialists." />
-        <SecurityFeature icon={CircleCheck} title="Verified Protocol" desc="All interactions are logged and audited." />
+        <SecurityFeature icon={CheckCircle} title="Verified Protocol" desc="All interactions are logged and audited." />
       </div>
     </div>
   );
