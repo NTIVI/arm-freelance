@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "concurrently \"node api/index.js\" \"vite preview --port $PORT --host\""
+    "start": "concurrently \"node api/index.js\" \"vite preview --port $PORT --host\"",
+    "bot": "node api/index.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
