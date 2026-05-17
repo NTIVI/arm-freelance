@@ -18,6 +18,10 @@ const schema = `
     phone VARCHAR(50),
     dob VARCHAR(50),
     shadow_banned BOOLEAN DEFAULT FALSE,
+    avatar_url TEXT,
+    level VARCHAR(50) DEFAULT 'Bronze',
+    fired_reason TEXT,
+    is_fired BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
 
@@ -32,6 +36,9 @@ const schema = `
     lat DECIMAL(10, 8),
     lng DECIMAL(11, 8),
     online BOOLEAN DEFAULT FALSE,
+    car_photo_url TEXT,
+    rating DECIMAL(3, 2) DEFAULT 5.00,
+    last_profile_edit TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
 

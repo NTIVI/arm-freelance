@@ -73,12 +73,15 @@ app.post('/api/auth/login', async (req, res) => {
       // Create user
       const id = 'u-' + Math.random().toString(36).substr(2, 9);
       const newUser = await pool.query(
-        'INSERT INTO users (id, "fullName", email, role, phone) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-        [id, fullName, email, role || 'client', phone || '']
+        'INSERT INTO users (id, "fullName", email, role, phone, avatar_url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+        [id, fullName, email, role || 'client', phone || '', req.body.avatarUrl || '']
       );
       user = newUser.rows[0];
     } else {
       user = userRes.rows[0];
+      if (user.is_fired) {
+        return res.status(403).json({ error: 'You have been fired from ArmTurn.', fired_reason: user.fired_reason });
+      }
     }
     
     res.json(user);
@@ -112,14 +115,17 @@ app.post('/api/auth/register-driver', async (req, res) => {
       // Update role to driver
       const updatedUser = await pool.query('UPDATE users SET role = $1 WHERE id = $2 RETURNING *', ['driver', user.id]);
       user = updatedUser.rows[0];
+      if (user.is_fired) {
+        return res.status(403).json({ error: 'You have been fired.', fired_reason: user.fired_reason });
+      }
     }
     
     // 2. Register driver records with status 'pending'
     const driverId = 'd-' + Math.random().toString(36).substr(2, 9);
     await pool.query(
-      `INSERT INTO drivers (id, user_id, car_model, car_number, capacity, status, passport_url, lat, lng, online) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
-      [driverId, user.id, carModel, carNumber, parseInt(capacity, 10), 'pending', passportUrl || '', 40.1772, 44.5034, false]
+      `INSERT INTO drivers (id, user_id, car_model, car_number, capacity, status, passport_url, car_photo_url, lat, lng, online) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+      [driverId, user.id, carModel, carNumber, parseInt(capacity, 10), 'pending', passportUrl || '', req.body.carPhotoUrl || '', 40.1772, 44.5034, false]
     );
     
     res.json({ success: true, user, message: 'Driver registration submitted. Awaiting administrator approval.' });
@@ -249,19 +255,21 @@ app.get('/api/driver/orders/:userId', async (req, res) => {
     }
     
     // Fetch all orders that are either:
-    // A) 'pending' (anyone can accept)
+    // A) 'pending' AND date > CURRENT_DATE (anyone can accept for future)
     // B) Accepted/Started by THIS driver
+    const todayStr = new Date().toISOString().split('T')[0];
     const ordersRes = await pool.query(`
       SELECT o.*, r.title as route_title, r.cover_image, r.duration, u."fullName" as client_name, u.phone as client_phone
       FROM orders o
       JOIN routes r ON o.route_id = r.id
       JOIN users u ON o.client_id = u.id
-      WHERE o.status = 'pending' OR o.driver_id = $1
+      WHERE (o.status = 'pending' AND o.date > $2) OR o.driver_id = $1
       ORDER BY o.created_at DESC
-    `, [driver.id]);
+    `, [driver.id, todayStr]);
     
     res.json({
       driverId: driver.id,
+      driverProfile: driver,
       orders: ordersRes.rows
     });
   } catch (err) {
@@ -359,6 +367,66 @@ app.post('/api/admin/drivers/:id/status', async (req, res) => {
       [status, id]
     );
     res.json({ success: true, message: `Driver status updated to: ${status}`, driver: updateRes.rows[0] });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Admin Fire Driver
+app.post('/api/admin/drivers/:id/fire', async (req, res) => {
+  const { id } = req.params;
+  const { reason } = req.body;
+  try {
+    const driverRes = await pool.query('SELECT user_id FROM drivers WHERE id = $1', [id]);
+    if (driverRes.rowCount === 0) return res.status(404).json({ error: 'Driver not found' });
+    const userId = driverRes.rows[0].user_id;
+
+    await pool.query('UPDATE users SET is_fired = TRUE, fired_reason = $1 WHERE id = $2', [reason || 'Fired by Admin', userId]);
+    // Optional: Delete from drivers table so they don't appear in lists anymore
+    await pool.query('DELETE FROM drivers WHERE id = $1', [id]);
+
+    res.json({ success: true, message: 'Driver fired completely.' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Client Edit Profile
+app.put('/api/client/:id/profile', async (req, res) => {
+  const { id } = req.params;
+  const { fullName, avatarUrl } = req.body;
+  try {
+    const updated = await pool.query(
+      'UPDATE users SET "fullName" = $1, avatar_url = $2 WHERE id = $3 RETURNING *',
+      [fullName, avatarUrl, id]
+    );
+    res.json({ success: true, user: updated.rows[0], message: 'Profile updated!' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Driver Edit Profile
+app.put('/api/driver/:id/profile', async (req, res) => {
+  const { id } = req.params;
+  const { carModel, carNumber, capacity, carPhotoUrl } = req.body;
+  try {
+    const driverRes = await pool.query('SELECT last_profile_edit FROM drivers WHERE id = $1', [id]);
+    if (driverRes.rowCount === 0) return res.status(404).json({ error: 'Driver not found' });
+    
+    const lastEdit = driverRes.rows[0].last_profile_edit;
+    if (lastEdit) {
+      const daysSinceEdit = (new Date() - new Date(lastEdit)) / (1000 * 60 * 60 * 24);
+      if (daysSinceEdit < 7) {
+        return res.status(403).json({ error: `You can only edit your profile once every 7 days. (${Math.ceil(7 - daysSinceEdit)} days left)` });
+      }
+    }
+
+    const updated = await pool.query(
+      'UPDATE drivers SET car_model = $1, car_number = $2, capacity = $3, car_photo_url = $4, last_profile_edit = CURRENT_TIMESTAMP WHERE id = $5 RETURNING *',
+      [carModel, carNumber, parseInt(capacity, 10), carPhotoUrl, id]
+    );
+    res.json({ success: true, driver: updated.rows[0], message: 'Profile updated successfully!' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

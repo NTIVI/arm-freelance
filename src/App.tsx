@@ -25,6 +25,7 @@ export default function App() {
   const [driverProfile, setDriverProfile] = useState<any>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authTab, setAuthTab] = useState<'client' | 'driver'>('client');
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
   const [authForm, setAuthForm] = useState({
     email: '',
     fullName: '',
@@ -33,11 +34,18 @@ export default function App() {
     carModel: '',
     carNumber: '',
     capacity: '4',
-    passportUrl: ''
+    passportUrl: '',
+    avatarUrl: '',
+    carPhotoUrl: ''
   });
 
+  // Language System
+  const [language, setLanguage] = useState('RU');
+  const [showLangMenu, setShowLangMenu] = useState(false);
+  const languages = ['RU', 'AM', 'EN', 'FR', 'DE', 'GE', 'JP', 'CN', 'UA'];
+
   // Navigation / Views
-  const [activeView, setActiveView] = useState<'landing' | 'booking' | 'driver' | 'admin'>('landing');
+  const [activeView, setActiveView] = useState<'landing' | 'booking' | 'driver' | 'admin' | 'client_profile'>('landing');
 
   // Business Logic Data
   const [routes, setRoutes] = useState<any[]>([]);
@@ -64,6 +72,8 @@ export default function App() {
   const [adminRadar, setAdminRadar] = useState<any[]>([]);
   const [adminWallet, setAdminWallet] = useState<any>(null);
   const [adminTab, setAdminTab] = useState<'radar' | 'drivers' | 'users' | 'wallet' | 'routes'>('radar');
+  const [adminAuth, setAdminAuth] = useState(false);
+  const [adminCreds, setAdminCreds] = useState({ login: '', password: '' });
 
   // CMS Route Form
   const [cmsRouteForm, setCmsRouteForm] = useState({
@@ -194,25 +204,31 @@ export default function App() {
     }
 
     try {
-      if (authTab === 'client') {
+      if (authMode === 'login' || authTab === 'client') {
         const res = await fetch(`${API_BASE}/api/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email: authForm.email,
             fullName: authForm.fullName,
-            role: 'client',
-            phone: authForm.phone
+            role: authTab,
+            phone: authForm.phone,
+            avatarUrl: authForm.avatarUrl || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + authForm.fullName
           })
         });
         const loggedUser = await res.json();
-        if (!res.ok) throw new Error(loggedUser.error);
+        if (!res.ok) {
+          if (loggedUser.error.includes('fired')) {
+             showToast('error', `Fired: ${loggedUser.fired_reason}`);
+          }
+          throw new Error(loggedUser.error);
+        }
         
         setUser(loggedUser);
         localStorage.setItem('armturn_user', JSON.stringify(loggedUser));
         showToast('success', `Welcome back, ${loggedUser.fullName}!`);
         setShowAuthModal(false);
-        setActiveView('booking');
+        setActiveView(loggedUser.role === 'client' ? 'booking' : 'driver');
       } else {
         // Register Driver
         const res = await fetch(`${API_BASE}/api/auth/register-driver`, {
@@ -226,11 +242,17 @@ export default function App() {
             carModel: authForm.carModel,
             carNumber: authForm.carNumber,
             capacity: authForm.capacity,
-            passportUrl: authForm.passportUrl || 'https://vercel.com/blob/mock-scan.png'
+            passportUrl: authForm.passportUrl || 'https://vercel.com/blob/mock-scan.png',
+            carPhotoUrl: authForm.carPhotoUrl || 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=300&q=80'
           })
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
+        if (!res.ok) {
+          if (data.error.includes('fired')) {
+             showToast('error', `Fired: ${data.fired_reason}`);
+          }
+          throw new Error(data.error);
+        }
         
         setUser(data.user);
         localStorage.setItem('armturn_user', JSON.stringify(data.user));
@@ -460,6 +482,39 @@ export default function App() {
             {/* Controls */}
             <div className="flex items-center space-x-5">
               
+              {/* Language Switcher */}
+              <div className="relative">
+                <button 
+                  onClick={() => setShowLangMenu(!showLangMenu)}
+                  className="p-2.5 rounded-xl border border-[var(--border-main)] hover:bg-[var(--border-main)]/35 text-[var(--text-main)] font-bold text-xs transition-all flex items-center space-x-1"
+                >
+                  <span>{language}</span>
+                </button>
+                <AnimatePresence>
+                  {showLangMenu && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute right-0 mt-2 w-32 bg-[var(--bg-main)] border border-[var(--border-main)] rounded-2xl shadow-2xl overflow-hidden z-50"
+                    >
+                      {languages.map(lang => (
+                        <button
+                          key={lang}
+                          onClick={() => {
+                            setLanguage(lang);
+                            setShowLangMenu(false);
+                          }}
+                          className={`w-full text-left px-4 py-2.5 text-xs font-bold transition-colors ${language === lang ? 'bg-[#FFB347]/20 text-[#FFB347]' : 'hover:bg-[var(--border-main)]/50 text-[var(--text-main)]'}`}
+                        >
+                          {lang}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
               {/* Theme toggler */}
               <button 
                 onClick={toggleTheme}
@@ -480,10 +535,20 @@ export default function App() {
                 </button>
               ) : (
                 <div className="flex items-center space-x-3">
-                  <div className="flex items-center space-x-2 bg-[var(--border-main)]/50 border border-[var(--border-main)] px-4 py-2 rounded-2xl">
-                    <User className="w-4 h-4 text-[#FFB347]" />
-                    <span className="text-xs font-bold text-[var(--text-main)] capitalize">{user.role}</span>
-                  </div>
+                  <button 
+                    onClick={() => {
+                      if (user.role === 'client') setActiveView('client_profile');
+                      else setActiveView('driver');
+                    }}
+                    className="flex items-center space-x-2 bg-[var(--border-main)]/50 hover:bg-[var(--border-main)] border border-[var(--border-main)] px-4 py-2 rounded-2xl transition-colors"
+                  >
+                    {user.avatar_url ? (
+                      <img src={user.avatar_url} alt="Profile" className="w-5 h-5 rounded-full object-cover" />
+                    ) : (
+                      <User className="w-4 h-4 text-[#FFB347]" />
+                    )}
+                    <span className="text-xs font-bold text-[var(--text-main)] capitalize">{user.fullName || user.role}</span>
+                  </button>
                   <button 
                     onClick={() => {
                       localStorage.removeItem('armturn_user');
@@ -1038,6 +1103,126 @@ export default function App() {
           )}
 
           {/* ==========================================
+              CLIENT PROFILE VIEW
+              ========================================== */}
+          {activeView === 'client_profile' && user && user.role === 'client' && (
+            <motion.div 
+              key="client_profile"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              className="space-y-10"
+            >
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-[var(--border-main)] pb-6 gap-4">
+                <div>
+                  <h1 className="text-3xl font-bold font-playfair text-[var(--text-main)]">Your Profile & Travel History</h1>
+                  <p className="text-xs text-[var(--text-muted)] mt-1">Manage your details, track your completed trips, and view earned bonuses.</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Profile Card */}
+                <div className="lg:col-span-1 glass-card-modern p-6 space-y-6 shadow-xl relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#FFB347] to-[#C0392B]"></div>
+                  
+                  <div className="flex flex-col items-center text-center space-y-4 pt-4">
+                    <div className="w-24 h-24 rounded-full border-4 border-[var(--border-main)] overflow-hidden shadow-2xl relative bg-slate-900/50">
+                      {user.avatar_url ? (
+                        <img src={user.avatar_url} alt={user.fullName} className="w-full h-full object-cover" />
+                      ) : (
+                        <User className="w-12 h-12 text-[#FFB347] mx-auto mt-5" />
+                      )}
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-[var(--text-main)] font-playfair">{user.fullName}</h2>
+                      <span className="text-[10px] text-[#FFB347] font-mono tracking-widest uppercase">{user.level || 'Bronze'} Level</span>
+                    </div>
+                    <div className="w-full space-y-3 pt-4 border-t border-[var(--border-main)]/50 text-left">
+                      <div>
+                        <span className="text-[10px] uppercase font-bold text-[var(--text-muted)]">Email</span>
+                        <div className="text-xs font-semibold text-[var(--text-main)]">{user.email}</div>
+                      </div>
+                      <div>
+                        <span className="text-[10px] uppercase font-bold text-[var(--text-muted)]">Phone</span>
+                        <div className="text-xs font-semibold text-[var(--text-main)]">{user.phone || 'N/A'}</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="pt-2 border-t border-[var(--border-main)]/50">
+                     <button
+                       onClick={async () => {
+                         const newName = prompt('Enter your new full name:', user.fullName);
+                         if (!newName) return;
+                         const newAvatar = prompt('Enter your new avatar URL:', user.avatar_url || '');
+                         try {
+                           const res = await fetch(`${API_BASE}/api/client/${user.id}/profile`, {
+                             method: 'PUT', headers: { 'Content-Type': 'application/json' },
+                             body: JSON.stringify({ fullName: newName, avatarUrl: newAvatar || '' })
+                           });
+                           if (res.ok) {
+                             const data = await res.json();
+                             setUser(data.user);
+                             localStorage.setItem('armturn_user', JSON.stringify(data.user));
+                             showToast('success', data.message);
+                           }
+                         } catch (err: any) { showToast('error', err.message); }
+                       }}
+                       className="w-full btn-modern btn-apricot text-xs font-bold py-3 shadow-xl"
+                     >
+                       Edit Profile
+                     </button>
+                  </div>
+                </div>
+
+                <div className="lg:col-span-2 space-y-8">
+                  {/* Trip Info */}
+                  <div className="glass-card-modern p-6 space-y-5 shadow-xl">
+                    <h3 className="text-lg font-bold text-[var(--text-main)] flex items-center space-x-2">
+                      <MapPin className="w-5 h-5 text-[#FFB347]" />
+                      <span>Trip Information (Where & When)</span>
+                    </h3>
+                    <div className="space-y-4">
+                      {clientOrders.length === 0 ? (
+                        <p className="text-xs text-[var(--text-muted)]">You have no recorded trips.</p>
+                      ) : (
+                        clientOrders.map((o: any) => (
+                           <div key={o.id} className="border border-[var(--border-main)] p-4 rounded-xl flex flex-col md:flex-row justify-between bg-[var(--bg-main)]/50">
+                             <div>
+                               <div className="font-bold text-sm text-[var(--text-main)]">{o.route_title}</div>
+                               <div className="text-[11px] text-[var(--text-muted)] mt-1">Date: {o.date}</div>
+                             </div>
+                             <div className="mt-2 md:mt-0 text-left md:text-right">
+                               <div className="text-xs font-bold text-[#FFB347] uppercase">{o.status}</div>
+                               {o.driver_name && <div className="text-[10px] text-[var(--text-muted)]">Driven by: {o.driver_name}</div>}
+                             </div>
+                           </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Bonuses */}
+                  <div className="glass-card-modern p-6 space-y-5 shadow-xl border-t border-t-[#C0392B]">
+                    <h3 className="text-lg font-bold text-[var(--text-main)] flex items-center space-x-2">
+                      <Sparkles className="w-5 h-5 text-[#C0392B]" />
+                      <span>Menu Bonuses</span>
+                    </h3>
+                    <div className="p-4 bg-gradient-to-tr from-[#FFB347]/10 to-[#C0392B]/5 border border-[#FFB347]/30 rounded-2xl relative overflow-hidden shadow-inner space-y-2">
+                      <h4 className="text-xs font-bold text-[var(--text-main)]">VIP Airport Transfer Unlocked!</h4>
+                      <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
+                        For booking in advance, you receive a free VIP airport pickup. Use code <strong>ARMTURN_VIP</strong> on your next booking to activate extra privileges.
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </motion.div>
+          )}
+
+          {/* ==========================================
               C. DRIVER CONSOLE (DRIVER)
               ========================================== */}
           {activeView === 'driver' && user && (
@@ -1217,13 +1402,24 @@ export default function App() {
 
                     </div>
 
-                    {/* Right Panel: Driver stats */}
+                    {/* Right Panel: Driver stats & Menus */}
                     <div className="lg:col-span-1 space-y-6">
-                      <div className="glass-card-modern p-6 space-y-5 shadow-xl">
+                      <div className="glass-card-modern p-6 space-y-5 shadow-xl relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-1.5 bg-[#FFB347]"></div>
                         <h3 className="text-base font-bold text-[var(--text-main)] flex items-center space-x-2">
                           <ShieldCheck className="w-4.5 h-4.5 text-[#FFB347]" />
-                          <span>Driver Partner Status</span>
+                          <span>Driver Partner Profile</span>
                         </h3>
+                        
+                        <div className="flex items-center space-x-4 pb-4 border-b border-[var(--border-main)]/50">
+                           <div className="w-16 h-16 rounded-xl overflow-hidden bg-slate-800">
+                              <img src={driverProfile?.car_photo_url || 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=150&q=80'} alt="Car" className="w-full h-full object-cover" />
+                           </div>
+                           <div>
+                              <div className="font-bold text-sm text-[var(--text-main)]">{driverProfile?.car_model || 'VIP V-Class'}</div>
+                              <div className="text-[10px] text-[var(--text-muted)] font-mono">{driverProfile?.car_number || 'XX XX XXX'}</div>
+                           </div>
+                        </div>
 
                         <div className="space-y-4 text-xs">
                           <div className="flex justify-between">
@@ -1231,11 +1427,11 @@ export default function App() {
                             <span className="font-bold text-emerald-500">Approved</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-[var(--text-muted)]">Vehicle Class</span>
-                            <span className="font-semibold text-[var(--text-main)]">VIP V-Class</span>
+                            <span className="text-[var(--text-muted)]">Rating</span>
+                            <span className="font-semibold text-[#FFB347] flex items-center"><Star className="w-3 h-3 mr-1 fill-current"/> {driverProfile?.rating || '5.0'}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-[var(--text-muted)]">Active Orders Count</span>
+                            <span className="text-[var(--text-muted)]">Completed Trips</span>
                             <span className="font-bold text-[var(--text-main)]">
                               {driverOrders.filter((o: any) => o.status === 'completed').length}
                             </span>
@@ -1245,7 +1441,63 @@ export default function App() {
                             <span className="font-bold text-rose-500">15%</span>
                           </div>
                         </div>
+                        
+                        <div className="pt-2 space-y-3">
+                           <button 
+                             onClick={async () => {
+                               const carNum = prompt('Enter new Car Number (Max 1 edit per 7 days):', driverProfile?.car_number || '');
+                               if (!carNum) return;
+                               const carPhoto = prompt('Enter new Car Photo URL:', driverProfile?.car_photo_url || '');
+                               try {
+                                 const res = await fetch(`${API_BASE}/api/driver/${activeDriverId}/profile`, {
+                                   method: 'PUT', headers: { 'Content-Type': 'application/json' },
+                                   body: JSON.stringify({ carNumber: carNum, carPhotoUrl: carPhoto, carModel: driverProfile?.car_model, capacity: driverProfile?.capacity })
+                                 });
+                                 const data = await res.json();
+                                 if (!res.ok) throw new Error(data.error);
+                                 setDriverProfile(data.driver);
+                                 showToast('success', data.message);
+                               } catch (err: any) { showToast('error', err.message); }
+                             }}
+                             className="w-full btn-modern btn-apricot text-xs font-bold py-2 shadow-sm"
+                           >
+                             Edit Profile
+                           </button>
+                        </div>
                       </div>
+                      
+                      <div className="glass-card-modern p-6 space-y-4 shadow-xl">
+                         <h3 className="text-sm font-bold text-[var(--text-main)] uppercase tracking-wider">Driver Menus</h3>
+                         <div className="space-y-2">
+                           <button className="w-full text-left px-4 py-3 bg-[var(--border-main)]/30 hover:bg-[var(--border-main)]/50 rounded-xl text-xs font-bold transition-colors">
+                             My Trips History
+                           </button>
+                           <button className="w-full text-left px-4 py-3 bg-[var(--border-main)]/30 hover:bg-[var(--border-main)]/50 rounded-xl text-xs font-bold transition-colors flex justify-between items-center">
+                             <span>Driver Bonuses</span>
+                             <span className="bg-[#FFB347]/20 text-[#FFB347] px-2 py-0.5 rounded-full text-[9px]">New</span>
+                           </button>
+                         </div>
+                      </div>
+
+                      <button
+                        onClick={async () => {
+                          if (confirm('Are you sure you want to quit your job? This action cannot be undone.')) {
+                             try {
+                               await fetch(`${API_BASE}/api/admin/drivers/${activeDriverId}/fire`, {
+                                 method: 'POST', headers: { 'Content-Type': 'application/json' },
+                                 body: JSON.stringify({ reason: 'Self-terminated' })
+                               });
+                               localStorage.removeItem('armturn_user');
+                               setUser(null);
+                               setActiveView('landing');
+                               showToast('success', 'You have successfully quit your job.');
+                             } catch(err:any) { showToast('error', err.message); }
+                          }
+                        }}
+                        className="w-full px-4 py-3 bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-500/20 rounded-xl text-xs font-bold transition-all"
+                      >
+                        Quit Job (Уволиться с работы)
+                      </button>
                     </div>
 
                   </div>
@@ -1266,7 +1518,46 @@ export default function App() {
               exit={{ opacity: 0, y: -15 }}
               className="space-y-10"
             >
-              <div className="border-b border-[var(--border-main)] pb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              {!adminAuth ? (
+                <div className="max-w-md mx-auto glass-card-modern p-8 shadow-2xl mt-12">
+                  <h2 className="text-2xl font-bold font-playfair text-[var(--text-main)] mb-6 text-center text-rose-500 flex items-center justify-center gap-2">
+                    <ShieldAlert className="w-6 h-6" /> Restricted Access
+                  </h2>
+                  <form onSubmit={(e) => {
+                    e.preventDefault();
+                    if (adminCreds.login === 'PIZDARINKA' && adminCreds.password === 'NT7447NT') {
+                      setAdminAuth(true);
+                      showToast('success', 'Admin access granted.');
+                    } else {
+                      showToast('error', 'Invalid credentials.');
+                    }
+                  }} className="space-y-4 text-xs">
+                    <div>
+                      <label className="block font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">Admin Login</label>
+                      <input
+                        type="text"
+                        value={adminCreds.login}
+                        onChange={(e) => setAdminCreds({ ...adminCreds, login: e.target.value })}
+                        className="w-full px-4 py-2.5 bg-[var(--bg-main)] border border-[var(--border-main)] rounded-xl focus:outline-none focus:border-rose-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">Passphrase</label>
+                      <input
+                        type="password"
+                        value={adminCreds.password}
+                        onChange={(e) => setAdminCreds({ ...adminCreds, password: e.target.value })}
+                        className="w-full px-4 py-2.5 bg-[var(--bg-main)] border border-[var(--border-main)] rounded-xl focus:outline-none focus:border-rose-500"
+                        required
+                      />
+                    </div>
+                    <button type="submit" className="w-full py-3 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl transition-all shadow-lg">Authenticate</button>
+                  </form>
+                </div>
+              ) : (
+                <>
+                  <div className="border-b border-[var(--border-main)] pb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                   <h1 className="text-3xl font-bold font-playfair text-[var(--text-main)]">ArmTurn Secret Admin Panel</h1>
                   <p className="text-xs text-[var(--text-muted)] mt-1">Gaining total control of route configurations, user permissions, and real-time telemetry</p>
@@ -1320,6 +1611,12 @@ export default function App() {
                     </div>
 
                     <div className="h-96 relative bg-slate-950/60 rounded-3xl border border-[var(--border-main)]/60 flex items-center justify-center overflow-hidden">
+                      <iframe 
+                        src="https://yandex.ru/map-widget/v1/?ll=44.5152,40.1811&z=8" 
+                        className="absolute inset-0 w-full h-full opacity-60 pointer-events-none" 
+                        frameBorder="0" 
+                        allowFullScreen={true}
+                      ></iframe>
                       {/* Simulating beautiful topographic vector map of Armenia */}
                       <svg className="absolute inset-0 w-full h-full p-6" viewBox="0 0 600 300">
                         {/* Boundaries and topographic contours */}
@@ -1457,18 +1754,22 @@ export default function App() {
                             <td className="py-4 px-4 text-right">
                               <div className="flex items-center justify-end space-x-2">
                                 <button
-                                  onClick={() => handleAdminApproveDriver(driver.id, 'approved')}
-                                  className="p-1.5 bg-emerald-500/10 hover:bg-emerald-500 text-emerald-400 hover:text-black border border-emerald-500/20 rounded-lg transition-all"
-                                  title="Approve Driver"
-                                >
-                                  <Check className="w-4 h-4" />
-                                </button>
-                                <button
-                                  onClick={() => handleAdminApproveDriver(driver.id, 'rejected')}
+                                  onClick={async () => {
+                                    const reason = prompt('Enter firing reason:');
+                                    if (reason) {
+                                      try {
+                                        await fetch(`${API_BASE}/api/admin/drivers/${driver.id}/fire`, {
+                                          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reason })
+                                        });
+                                        showToast('success', 'Driver fired and removed.');
+                                        fetchAdminData();
+                                      } catch(err:any) { showToast('error', err.message); }
+                                    }
+                                  }}
                                   className="p-1.5 bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white border border-rose-500/20 rounded-lg transition-all"
-                                  title="Reject Driver"
+                                  title="Fire Driver"
                                 >
-                                  <X className="w-4 h-4" />
+                                  <Trash2 className="w-4 h-4" />
                                 </button>
                               </div>
                             </td>
@@ -1520,15 +1821,25 @@ export default function App() {
                             </td>
                             <td className="py-4 px-4 text-right">
                               <button
-                                onClick={() => handleAdminShadowBan(u.id)}
-                                className={`px-4 py-1.5 font-bold rounded-lg transition-all ${
-                                  u.shadow_banned 
-                                    ? 'bg-emerald-500/10 hover:bg-emerald-500 text-emerald-400 hover:text-black border border-emerald-500/20' 
-                                    : 'bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white border border-rose-500/20'
-                                }`}
-                              >
-                                {u.shadow_banned ? 'Lift Ban' : 'Shadow Ban'}
-                              </button>
+                                  onClick={() => handleAdminShadowBan(u.id)}
+                                  className={`px-4 py-1.5 font-bold rounded-lg transition-all ${
+                                    u.shadow_banned 
+                                      ? 'bg-emerald-500/10 hover:bg-emerald-500 text-emerald-400 hover:text-black border border-emerald-500/20' 
+                                      : 'bg-amber-500/10 hover:bg-amber-500 text-amber-400 hover:text-white border border-amber-500/20'
+                                  }`}
+                                >
+                                  {u.shadow_banned ? 'Lift Ban' : 'Block Access'}
+                                </button>
+                                <button
+                                  onClick={async () => {
+                                    if(confirm('Are you sure you want to permanently delete this user?')) {
+                                      showToast('error', 'Delete endpoint not implemented yet, but button ready.');
+                                    }
+                                  }}
+                                  className="px-4 py-1.5 font-bold rounded-lg transition-all bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white border border-rose-500/20 ml-2"
+                                >
+                                  Delete
+                                </button>
                             </td>
                           </tr>
                         ))}
@@ -1802,6 +2113,8 @@ export default function App() {
 
                 </div>
               )}
+              </>
+            )}
 
             </motion.div>
           )}
@@ -1854,7 +2167,7 @@ export default function App() {
               </h2>
 
               {/* Tabs */}
-              <div className="flex bg-[var(--border-main)]/50 border border-[var(--border-main)] p-1 rounded-2xl mb-6 text-xs font-bold">
+              <div className="flex bg-[var(--border-main)]/50 border border-[var(--border-main)] p-1 rounded-2xl mb-4 text-xs font-bold">
                 <button
                   onClick={() => setAuthTab('client')}
                   className={`w-1/2 py-2.5 rounded-xl transition-all ${authTab === 'client' ? 'bg-[#FFB347] text-black shadow-md' : 'text-[var(--text-muted)]'}`}
@@ -1868,47 +2181,83 @@ export default function App() {
                   Driver Partner
                 </button>
               </div>
+              
+              <div className="flex justify-center mb-6 space-x-4 text-xs">
+                <button onClick={() => setAuthMode('login')} className={`font-bold uppercase tracking-wider ${authMode === 'login' ? 'text-[var(--text-main)] border-b-2 border-[#FFB347]' : 'text-[var(--text-muted)]'}`}>Login</button>
+                <button onClick={() => setAuthMode('register')} className={`font-bold uppercase tracking-wider ${authMode === 'register' ? 'text-[var(--text-main)] border-b-2 border-[#FFB347]' : 'text-[var(--text-muted)]'}`}>Register</button>
+              </div>
 
               <form onSubmit={handleLogin} className="space-y-4 text-xs text-left">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">Full Name*</label>
-                    <input
-                      type="text"
-                      placeholder="Anna Grigoryan"
-                      value={authForm.fullName}
-                      onChange={(e) => setAuthForm({ ...authForm, fullName: e.target.value })}
-                      className="w-full px-4 py-2.5 bg-[var(--bg-main)] border border-[var(--border-main)] rounded-xl focus:outline-none focus:border-[#FFB347]"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">Email (Gmail)*</label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {authMode === 'register' && (
+                    <div>
+                      <label className="block font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">Full Name*</label>
+                      <input
+                        type="text"
+                        placeholder="Anna Grigoryan"
+                        value={authForm.fullName}
+                        onChange={(e) => setAuthForm({ ...authForm, fullName: e.target.value })}
+                        className="w-full px-4 py-2.5 bg-[var(--bg-main)] border border-[var(--border-main)] rounded-xl focus:outline-none focus:border-[#FFB347]"
+                        required={authMode === 'register'}
+                      />
+                    </div>
+                  )}
+                  <div className={authMode === 'login' ? 'col-span-2' : ''}>
+                    <label className="block font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">Email (Login)*</label>
                     <input
                       type="email"
-                      placeholder="anna@gmail.com"
+                      placeholder="email@example.com"
                       value={authForm.email}
                       onChange={(e) => setAuthForm({ ...authForm, email: e.target.value })}
                       className="w-full px-4 py-2.5 bg-[var(--bg-main)] border border-[var(--border-main)] rounded-xl focus:outline-none focus:border-[#FFB347]"
                       required
                     />
                   </div>
+                  {authMode === 'login' && (
+                    <div className="col-span-2">
+                       <label className="block font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">Full Name (Mock Password)*</label>
+                       <input
+                         type="text"
+                         placeholder="Anna Grigoryan"
+                         value={authForm.fullName}
+                         onChange={(e) => setAuthForm({ ...authForm, fullName: e.target.value })}
+                         className="w-full px-4 py-2.5 bg-[var(--bg-main)] border border-[var(--border-main)] rounded-xl focus:outline-none focus:border-[#FFB347]"
+                         required
+                       />
+                    </div>
+                  )}
                 </div>
 
-                <div>
-                  <label className="block font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">Phone Number*</label>
-                  <input
-                    type="text"
-                    placeholder="+374 99 111 222"
-                    value={authForm.phone}
-                    onChange={(e) => setAuthForm({ ...authForm, phone: e.target.value })}
-                    className="w-full px-4 py-2.5 bg-[var(--bg-main)] border border-[var(--border-main)] rounded-xl focus:outline-none focus:border-[#FFB347]"
-                    required
-                  />
-                </div>
+                {authMode === 'register' && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+                    <div>
+                      <label className="block font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">Phone Number*</label>
+                      <input
+                        type="text"
+                        placeholder="+374 99 111 222"
+                        value={authForm.phone}
+                        onChange={(e) => setAuthForm({ ...authForm, phone: e.target.value })}
+                        className="w-full px-4 py-2.5 bg-[var(--bg-main)] border border-[var(--border-main)] rounded-xl focus:outline-none focus:border-[#FFB347]"
+                        required
+                      />
+                    </div>
+                    {authTab === 'client' && (
+                       <div>
+                         <label className="block font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">Profile Photo (Avatar URL)</label>
+                         <input
+                           type="text"
+                           placeholder="https://..."
+                           value={authForm.avatarUrl}
+                           onChange={(e) => setAuthForm({ ...authForm, avatarUrl: e.target.value })}
+                           className="w-full px-4 py-2.5 bg-[var(--bg-main)] border border-[var(--border-main)] rounded-xl focus:outline-none"
+                         />
+                       </div>
+                    )}
+                  </motion.div>
+                )}
 
                 {/* Driver Extended Form Fields */}
-                {authTab === 'driver' && (
+                {authTab === 'driver' && authMode === 'register' && (
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
@@ -1965,13 +2314,26 @@ export default function App() {
                     </div>
 
                     <div>
-                      <label className="block font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">Scan Passport/ID Scan Upload Link</label>
+                      <label className="block font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">Passport / ID Document Photo URL</label>
                       <input
                         type="text"
                         placeholder="https://..."
                         value={authForm.passportUrl}
                         onChange={(e) => setAuthForm({ ...authForm, passportUrl: e.target.value })}
                         className="w-full px-4 py-2.5 bg-[var(--bg-main)] border border-[var(--border-main)] rounded-xl focus:outline-none"
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">Vehicle Photo URL</label>
+                      <input
+                        type="text"
+                        placeholder="https://..."
+                        value={authForm.carPhotoUrl}
+                        onChange={(e) => setAuthForm({ ...authForm, carPhotoUrl: e.target.value })}
+                        className="w-full px-4 py-2.5 bg-[var(--bg-main)] border border-[var(--border-main)] rounded-xl focus:outline-none"
+                        required
                       />
                     </div>
                   </motion.div>
