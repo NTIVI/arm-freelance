@@ -599,6 +599,10 @@ app.get('/api/admin/wallet', async (req, res) => {
 });
 
 // Start Express Server
-app.listen(port, () => {
-  console.log(`ArmTurn Fullstack API Server running on port ${port}`);
-});
+if (process.env.NODE_ENV !== 'production' || process.env.RENDER) {
+  app.listen(port, () => {
+    console.log(`ArmTurn Fullstack API Server running on port ${port}`);
+  });
+}
+
+export default app;
