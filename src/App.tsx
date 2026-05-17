@@ -206,6 +206,8 @@ export default function App() {
           })
         });
         const loggedUser = await res.json();
+        if (!res.ok) throw new Error(loggedUser.error);
+        
         setUser(loggedUser);
         localStorage.setItem('armturn_user', JSON.stringify(loggedUser));
         showToast('success', `Welcome back, ${loggedUser.fullName}!`);
