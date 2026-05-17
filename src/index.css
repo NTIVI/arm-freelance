@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-main: #FAF9F5; /* Warm white/cream background */
+    --bg-card: rgba(255, 255, 255, 0.7);
+    --text-main: #1C1917; /* Slate dark stone text */
+    --text-muted: #78716C;
+    --border-main: #E7E5E4;
+    --apricot: #FFB347; /* Primary Apricot Orange */
+    --pomegranate: #C0392B; /* Secondary Pomegranate Red */
+    --sevan-blue: #0EA5E9; /* Deep Sky Blue for Lake Sevan */
+    --gold: #D4AF37;
+  }
+
+  .dark {
+    --bg-main: #0B0F19; /* Luxurious dark basalt/granite background */
+    --bg-card: rgba(15, 23, 42, 0.65);
+    --text-main: #F8FAFC;
+    --text-muted: #94A3B8;
+    --border-main: #1E293B;
+    --gold: #C5A880; /* Matte Gold for dark theme */
+  }
+
+  body {
+    @apply transition-colors duration-500 ease-in-out;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-playfair {
+    font-family: 'Playfair Display', serif;
+    color: var(--text-main);
+  }
+}
+
+@layer utilities {
+  .glass-card-modern {
+    @apply backdrop-blur-xl border rounded-[2rem] shadow-2xl transition-all duration-500;
+    background-color: var(--bg-card);
+    border-color: var(--border-main);
+  }
+
+  .glass-panel-modern {
+    @apply backdrop-blur-2xl border-b transition-all duration-500;
+    background-color: var(--bg-card);
+    border-color: var(--border-main);
+  }
+
+  .text-apricot { color: var(--apricot); }
+  .text-pomegranate { color: var(--pomegranate); }
+  .text-sevan { color: var(--sevan-blue); }
+  .text-gold { color: var(--gold); }
+
+  .bg-apricot { background-color: var(--apricot); color: #000; }
+  .bg-pomegranate { background-color: var(--pomegranate); color: #fff; }
+  .bg-sevan { background-color: var(--sevan-blue); color: #fff; }
+  .bg-gold { background-color: var(--gold); color: #000; }
+
+  .armenian-watermark-modern {
+    background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 0L72 48H48L60 0zM60 120L48 72H72L60 120zM0 60L48 72V48L0 60zM120 60L72 48V72L120 60zM60 60M30 30L45 45H30V30zM90 90L75 75H90V90zM90 30L75 45H90V30zM30 90L45 75H30V90z' fill='%23FFB347' fill-opacity='0.025'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+  }
+
+  .btn-modern {
+    @apply px-7 py-3 rounded-full font-bold transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center space-x-2 text-sm;
+  }
+  
+  .btn-apricot {
+    background-color: var(--apricot);
+    color: #1C1917;
+    @apply shadow-amber-500/10 hover:shadow-amber-500/20;
+  }
+  
+  .btn-pomegranate {
+    background-color: var(--pomegranate);
+    color: white;
+    @apply shadow-rose-500/10 hover:shadow-rose-500/20;
+  }
+  
+  .btn-gold {
+    background-color: var(--gold);
+    color: #1C1917;
+    @apply shadow-amber-600/10 hover:shadow-amber-600/20;
+  }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.4; }
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 8s ease-in-out infinite;
+}
